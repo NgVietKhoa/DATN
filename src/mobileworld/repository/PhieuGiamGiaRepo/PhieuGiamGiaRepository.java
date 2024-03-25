@@ -26,7 +26,7 @@ public class PhieuGiamGiaRepository {
         List<PhieuGiamGia> ds = new ArrayList<>();
         String sql = """
     SELECT [TenGiamGia]
-                                              ,[Số lượng dùng]
+                                              ,SoLuongDung
                                               ,[PhanTramGiam]
                                               ,[SoTienGiamToiDa]
                                               ,[HoaDonToiThieu]
@@ -74,7 +74,7 @@ public class PhieuGiamGiaRepository {
         String sql = """
                    INSERT INTO [dbo].[PhieuGiamGia]
                               ([TenGiamGia]
-                              ,[Số lượng dùng]
+                              ,SoLuongDung
                               ,[PhanTramGiam]
                               ,[SoTienGiamToiDa]
                               ,[HoaDonToiThieu]
@@ -496,7 +496,7 @@ public class PhieuGiamGiaRepository {
         List<PhieuGiamGia> ds = new ArrayList<>();
         String sql = """                                                            
                      SELECT [TenGiamGia]
-                     ,[Số lượng dùng]
+                     ,SoLuongDung
                      ,[PhanTramGiam]
                      ,[SoTienGiamToiDa]
                      ,[HoaDonToiThieu]
@@ -549,7 +549,7 @@ public class PhieuGiamGiaRepository {
         List<PhieuGiamGia> ds = new ArrayList<>();
         String sql = """                                                            
                      SELECT [TenGiamGia]
-                     ,[Số lượng dùng]
+                     ,SoLuongDung
                      ,[PhanTramGiam]
                      ,[SoTienGiamToiDa]
                      ,[HoaDonToiThieu]
@@ -564,7 +564,7 @@ public class PhieuGiamGiaRepository {
                                           ,[UpdatedBy]
                      ,[ID]
                       FROM [dbo].[PhieuGiamGia]  
-                      where [Số lượng dùng] = ?                                    					 
+                      where SoLuongDung = ?                                    					 
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, soLan);
@@ -598,7 +598,7 @@ public class PhieuGiamGiaRepository {
         List<PhieuGiamGia> ds = new ArrayList<>();
         String sql = """                                                            
                      SELECT [TenGiamGia]
-                     ,[Số lượng dùng]
+                     ,SoLuongDung
                      ,[PhanTramGiam]
                      ,[SoTienGiamToiDa]
                      ,[HoaDonToiThieu]
