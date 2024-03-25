@@ -21,7 +21,6 @@ public class HoaDonService {
 //    public List<HoaDonModel> getAll() {
 //        return repo.getAll();
 //    }
-
     public List<HoaDonModel> getAllHD() {
         return repo.getAllHD();
     }
@@ -53,9 +52,9 @@ public class HoaDonService {
     public List<HoaDonModel> getAllQR(String result) {
         return repo.getAllQR(result);
     }
-        public List<HoaDonModel> filterHoaDon(String ht, int trangThai) {
-            return repo.filterHoaDon(ht, trangThai);
-        }
 
+    public List<HoaDonModel> filterHoaDon(String ht, int trangThai) {
+        return repo.filterHoaDon(ht, trangThai);
+    }
 
 }

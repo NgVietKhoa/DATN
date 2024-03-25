@@ -10,7 +10,9 @@ public class DBConnect {
     public static final String PORT = "1433";
     public static final String DBNAME = "NHOM3_MOBILEWORLD_SD1702SP24_BL2";
     public static final String USERNAME = "sa";
-    public static final String PASSWORD = "Minh221245";
+//    public static final String PASSWORD = "nvk8112006"; Khoa
+//    public static final String PASSWORD = "Minh221245"; Minh
+    public static final String PASSWORD = "8935001853152";
 
     public static Connection getConnection() {
 

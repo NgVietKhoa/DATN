@@ -4,7 +4,6 @@
  */
 package mobileworld.repository.HoaDonRepo;
 
-
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import com.github.sarxos.webcam.WebcamResolution;
@@ -93,6 +92,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import mobileworld.config.DBConnect;
 import org.apache.poi.ss.usermodel.Table;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -505,27 +509,27 @@ public class HoaDonRepository {
         return list;
     }
 
-    public boolean xuatHoaDon() {
+    public static boolean xuatHoaDon() {
         try (Connection connection = DBConnect.getConnection()) {
             String query = """
-                SELECT 
-                     HoaDon.ID, 
-                     HoaDon.IDNhanVien, 
-                     HoaDon.TenKhachHang, 
-                     HoaDon.SoDienThoaiKhachHang, 
-                     HoaDon.DiaChiKhachHang, 
-                     HoaDon.NgayThanhToan, 
-                     PhuongThucThanhToan.TenKieuThanhToan, 
-                     HoaDon.TongTien, 
-                     HoaDon.TrangThai
-                 FROM   
-                     dbo.HoaDon 
-                 INNER JOIN
-                     dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon 
-                 INNER JOIN
-                     dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
-                 ORDER BY HoaDon.NgayThanhToan ASC
-                """;
+                    SELECT 
+                         HoaDon.ID, 
+                         HoaDon.IDNhanVien, 
+                         HoaDon.TenKhachHang, 
+                         HoaDon.SoDienThoaiKhachHang, 
+                         HoaDon.DiaChiKhachHang, 
+                         HoaDon.NgayThanhToan, 
+                         PhuongThucThanhToan.TenKieuThanhToan, 
+                         HoaDon.TongTien, 
+                         HoaDon.TrangThai
+                     FROM   
+                         dbo.HoaDon 
+                     INNER JOIN
+                         dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon 
+                     INNER JOIN
+                         dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
+                            ORDER BY HoaDon.NgayThanhToan ASC
+                    """;
 
             try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
 
@@ -537,25 +541,22 @@ public class HoaDonRepository {
                 fontHeader.setBold(true);
                 CellStyle styleHeader = workbook.createCellStyle();
                 styleHeader.setFont(fontHeader);
-                styleHeader.setBorderTop(BorderStyle.THIN);
-                styleHeader.setBorderBottom(BorderStyle.THIN);
-                styleHeader.setBorderLeft(BorderStyle.THIN);
-                styleHeader.setBorderRight(BorderStyle.THIN);
 
                 // Tạo phông in đậm cho dữ liệu
                 Font fontData = workbook.createFont();
                 CellStyle styleData = workbook.createCellStyle();
                 styleData.setFont(fontData);
-                styleData.setBorderTop(BorderStyle.THIN);
-                styleData.setBorderBottom(BorderStyle.THIN);
-                styleData.setBorderLeft(BorderStyle.THIN);
-                styleData.setBorderRight(BorderStyle.THIN);
 
                 ResultSetMetaData metaData = resultSet.getMetaData();
                 int columnCount = metaData.getColumnCount();
                 Row headerRow = sheet.createRow(0);
-
-                // Tạo header cho danh sách hóa đơn và đặt viền
+                // Tạo cell style cho border
+                CellStyle styleBorder = workbook.createCellStyle();
+                styleBorder.setBorderTop(BorderStyle.THIN);
+                styleBorder.setBorderBottom(BorderStyle.THIN);
+                styleBorder.setBorderLeft(BorderStyle.THIN);
+                styleBorder.setBorderRight(BorderStyle.THIN);
+                // Tạo header cho danh sách hóa đơn
                 for (int i = 1; i <= columnCount; i++) {
                     String columnName = metaData.getColumnName(i);
                     Cell cell = headerRow.createCell(i - 1);
@@ -563,7 +564,6 @@ public class HoaDonRepository {
                     cell.setCellStyle(styleHeader);
                 }
 
-                // Đổ dữ liệu vào bảng danh sách hóa đơn và đặt viền
                 int rowIndex = 1;
                 while (resultSet.next()) {
                     Row row = sheet.createRow(rowIndex++);
@@ -577,7 +577,7 @@ public class HoaDonRepository {
                     idCell.setHyperlink(hyperlink);
                     idCell.setCellStyle(styleData); // Sử dụng phông in đậm cho dữ liệu
 
-                    // Điền dữ liệu vào các cột còn lại và đặt viền
+                    // Điền dữ liệu vào các cột còn lại
                     for (int i = 2; i <= columnCount; i++) {
                         Cell dataCell = row.createCell(i - 1);
                         dataCell.setCellValue(resultSet.getString(i));
@@ -592,6 +592,23 @@ public class HoaDonRepository {
                     row.createCell(5).setCellValue(resultSet.getTimestamp("NgayThanhToan").toLocalDateTime());
                     row.createCell(6).setCellValue(resultSet.getString("TenKieuThanhToan"));
                     row.createCell(7).setCellValue(resultSet.getString("TongTien"));
+                    row.createCell(8).setCellValue(resultSet.getString("TrangThai"));
+
+                    // Tạo header cho danh sách hóa đơn với border
+                    for (int i = 1; i <= columnCount; i++) {
+                        String columnName = metaData.getColumnName(i);
+                        Cell cell = headerRow.createCell(i - 1);
+                        cell.setCellValue(columnName);
+                        cell.setCellStyle(styleHeader);
+                        cell.setCellStyle(styleBorder); // Thêm border
+                    }
+                    // Điền dữ liệu vào các cột còn lại với border
+                    for (int i = 2; i <= columnCount; i++) {
+                        Cell dataCell = row.createCell(i - 1);
+                        dataCell.setCellValue(resultSet.getString(i));
+                        dataCell.setCellStyle(styleData); // Sử dụng phông in đậm cho dữ liệu
+                        dataCell.setCellStyle(styleBorder); // Thêm border
+                    }
 
                     // Lấy ID hóa đơn để lấy thông tin chi tiết hóa đơn
                     String idHoaDon = resultSet.getString("ID");
@@ -601,363 +618,457 @@ public class HoaDonRepository {
                     // Tạo sheet mới cho chi tiết hóa đơn
                     Sheet chiTietSheet = workbook.createSheet("Chi tiết hóa đơn - " + idHoaDon);
                     Row headerChiTietRow = chiTietSheet.createRow(0);
-                    String[] chiTietHeaders = {"ID hóa đơn", "Tên sản phẩm", "Số lượng", "Giá bán", "Giảm giá", "Tổng tiền"};
+                    String[] chiTietHeaders = {"ID hóa đơn", "Tên sản phẩm", "Tên NSX", "Tên Màu", "Dung Luọng Pin", "Imel", "Giá bán", "Tổng tiền"};
                     for (int i = 0; i < chiTietHeaders.length; i++) {
                         Cell chiTietCell = headerChiTietRow.createCell(i);
                         chiTietCell.setCellValue(chiTietHeaders[i]);
                         chiTietCell.setCellStyle(styleData);
+
                     }
 
-                    // Đổ dữ liệu chi tiết hóa đơn vào sheet mới và đặt viền
+                    // Đổ dữ liệu chi tiết hóa đơn vào sheet mới
                     int chiTietRowIndex = 1;
                     for (HoaDonChiTietModel hoaDonChiTiet : hoaDonChiTietList) {
                         Row chiTietRow = chiTietSheet.createRow(chiTietRowIndex++);
                         chiTietRow.createCell(0).setCellValue(hoaDonChiTiet.getIdHD());
                         chiTietRow.createCell(1).setCellValue(hoaDonChiTiet.getTenDSP());
-                        chiTietRow.createCell(2).setCellValue(hoaDonChiTiet.getSoLuong());
-                        chiTietRow.createCell(3).setCellValue(hoaDonChiTiet.getGiaBan().doubleValue());
-                        // chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getGiamGia());
-                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getTongTien().doubleValue());
+                        chiTietRow.createCell(2).setCellValue(hoaDonChiTiet.getTenNSX());
+                        chiTietRow.createCell(3).setCellValue(hoaDonChiTiet.getTenMau());
+                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getDungLuongPin());
+                        chiTietRow.createCell(5).setCellValue(hoaDonChiTiet.getImel());
+                        chiTietRow.createCell(6).setCellValue(hoaDonChiTiet.getGiaBan().doubleValue());
+                        chiTietRow.createCell(7).setCellValue(hoaDonChiTiet.getTongTien().doubleValue());
+                    }
 
-                        // Đặt viền cho tất cả các ô trong dòng chi tiết hóa đơn
-                        for (int i = 0; i < chiTietRow.getLastCellNum(); i++) {
-                            Cell chiTietCell = chiTietRow.getCell(i);
-                            if (chiTietCell != null) {
-                                chiTietCell.setCellStyle(styleData);
+                }
+
+                // Tạo JComboBox để chọn kiểu file
+                String[] fileTypes = {".xlsx", ".xls"}; // Các kiểu file Excel bạn muốn cho phép
+                JComboBox<String> fileTypeComboBox = new JComboBox<>(fileTypes);
+                JPanel fileTypePanel = new JPanel();
+                fileTypePanel.add(new JLabel("Chọn kiểu file:"));
+                fileTypePanel.add(fileTypeComboBox);
+
+                int option = JOptionPane.showOptionDialog(null, fileTypePanel, "Chọn kiểu file",
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+
+                if (option == JOptionPane.OK_OPTION) {
+                    // Lấy kiểu file được chọn
+//                    String selectedFileType = (String) fileTypeComboBox.getSelectedItem();
+
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setDialogTitle("Chọn nơi lưu file Excel");
+                    int userSelection = fileChooser.showSaveDialog(null);
+                    if (userSelection == JFileChooser.APPROVE_OPTION) {
+                        File fileToSave = fileChooser.getSelectedFile();
+
+                        // Lấy kiểu file được chọn
+                        String selectedFileType = (String) fileTypeComboBox.getSelectedItem();
+
+                        // Kiểm tra và điều chỉnh tên file nếu cần thiết
+                        String filePath = fileToSave.getAbsolutePath();
+                        if (!filePath.toLowerCase().endsWith(selectedFileType)) {
+                            filePath += selectedFileType;
+                        }
+                        File file = new File(filePath);
+
+                        // Kiểm tra xem tên file đã tồn tại chưa
+                        while (file.exists()) {
+                            JOptionPane.showMessageDialog(null, "Tên file đã tồn tại. Vui lòng chọn tên file khác.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                            userSelection = fileChooser.showSaveDialog(null);
+                            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                                fileToSave = fileChooser.getSelectedFile();
+                                filePath = fileToSave.getAbsolutePath();
+                                if (!filePath.toLowerCase().endsWith(selectedFileType)) {
+                                    filePath += selectedFileType;
+                                }
+                                file = new File(filePath);
+                            } else {
+                                System.out.println("Không có nơi lưu được chọn.");
+                                return false;
                             }
                         }
-                    }
-                }
 
-                String fileName = "DSP_" + System.currentTimeMillis() + ".xlsx";
-                try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
-                    workbook.write(fileOut);
+                        // Tiến hành lưu file
+                        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+                            workbook.write(fileOut);
+                        }
+                        System.out.println("Đã xuất file Excel: " + filePath);
+                        return true;
+                    } else {
+                        System.out.println("Không có nơi lưu được chọn.");
+                        return false;
+                    }
+
+//                    // Yêu cầu người dùng chọn nơi lưu trữ và nhập tên file
+//                    JFileChooser fileChooser = new JFileChooser();
+//                    fileChooser.setDialogTitle("Chọn nơi lưu file Excel");
+//                    int userSelection = fileChooser.showSaveDialog(null);
+//                    if (userSelection == JFileChooser.APPROVE_OPTION) {
+//                        File fileToSave = fileChooser.getSelectedFile();
+//
+//                        // Đảm bảo có đuôi của kiểu file được chọn
+//                        String filePath = fileToSave.getAbsolutePath();
+//                        if (!filePath.toLowerCase().endsWith(selectedFileType)) {
+//                            filePath += selectedFileType;
+//                        }
+//
+//                        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+//                            workbook.write(fileOut);
+//                        }
+//                        System.out.println("Đã xuất file Excel: " + filePath);
+//                        return true;
+//                    } else {
+//                        System.out.println("Không có nơi lưu được chọn.");
+//                        return false;
+//                    }
                 }
-                System.out.println("Đã xuất file Excel: " + fileName);
-                return true;
             }
 
+//                JFileChooser fileChooser = new JFileChooser();
+//                fileChooser.setDialogTitle("Chọn nơi lưu file Excel");
+//                int userSelection = fileChooser.showSaveDialog(null);
+//                if (userSelection == JFileChooser.APPROVE_OPTION) {
+//                    File fileToSave = fileChooser.getSelectedFile();
+//
+//                    // Đảm bảo có đuôi ".xlsx"
+//                    String filePath = fileToSave.getAbsolutePath();
+//                    if (!filePath.toLowerCase().endsWith(".xlsx")) {
+//                        filePath += ".xlsx";
+//                    }
+//
+//                    try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+//                        workbook.write(fileOut);
+//                    }
+//                    System.out.println("Đã xuất file Excel: " + filePath);
+//                    return true;
+//                } else {
+//                    System.out.println("Không có nơi lưu được chọn.");
+//                    return false;
+//                }
+//            }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
         return false;
     }
+    // Phần code khác, như DBConnect, HoaDonCTRepository và HoaDonChiTietModel, bạn cần
+    //    public boolean xuatHoaDon() {
+    //        try (Connection connection = DBConnect.getConnection()) {
+    //            String query = """
+    //                    SELECT 
+    //                         HoaDon.ID, 
+    //                         HoaDon.IDNhanVien, 
+    //                         HoaDon.TenKhachHang, 
+    //                         HoaDon.SoDienThoaiKhachHang, 
+    //                         HoaDon.DiaChiKhachHang, 
+    //                         HoaDon.NgayThanhToan, 
+    //                         PhuongThucThanhToan.TenKieuThanhToan, 
+    //                         HoaDon.TongTien, 
+    //                         HoaDon.TrangThai
+    //                     FROM   
+    //                         dbo.HoaDon 
+    //                     INNER JOIN
+    //                         dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon 
+    //                     INNER JOIN
+    //                         dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
+    //                    """;
+    //
+    //            try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
+    //                
+    //                Workbook workbook = new XSSFWorkbook();
+    //                Sheet sheet = workbook.createSheet("Danh sách hóa đơn");
+    //                
+    //                // Tạo phông in đậm cho header
+    //                Font fontHeader = workbook.createFont();
+    //                fontHeader.setBold(true);
+    //                CellStyle styleHeader = workbook.createCellStyle();
+    //                styleHeader.setFont(fontHeader);
+    //
+    //                // Tạo phông in đậm cho dữ liệu
+    //                Font fontData = workbook.createFont();
+    //                CellStyle styleData = workbook.createCellStyle();
+    //                styleData.setFont(fontData);
+    //
+    //                ResultSetMetaData metaData = resultSet.getMetaData();
+    //                int columnCount = metaData.getColumnCount();
+    //                Row headerRow = sheet.createRow(0);
+    //
+    //                // Tạo header cho danh sách hóa đơn
+    //                for (int i = 1; i <= columnCount; i++) {
+    //                    String columnName = metaData.getColumnName(i);
+    //                    Cell cell = headerRow.createCell(i - 1);
+    //                    cell.setCellValue(columnName);
+    //                    cell.setCellStyle(styleHeader);
+    //                }
+    //                int rowIndex = 1;
+    //                while (resultSet.next()) {
+    //                    Row row = sheet.createRow(rowIndex++);
+    //
+    //                    // Tạo hyperlink cho ID
+    //                    CreationHelper createHelper = workbook.getCreationHelper();
+    //                    Hyperlink hyperlink = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+    //                    hyperlink.setAddress("'Chi tiết hóa đơn - " + resultSet.getString("ID") + "'!A1");
+    //                    Cell idCell = row.createCell(0);
+    //                    idCell.setCellValue(resultSet.getString("ID"));
+    //                    idCell.setHyperlink(hyperlink);
+    //                    idCell.setCellStyle(styleData); // Sử dụng phông in đậm cho dữ liệu
+    //
+    //                    // Điền dữ liệu vào các cột còn lại
+    //                    for (int i = 2; i <= columnCount; i++) {
+    //                        Cell dataCell = row.createCell(i - 1);
+    //                        dataCell.setCellValue(resultSet.getString(i));
+    //                        dataCell.setCellStyle(styleData); // Sử dụng phông in đậm cho dữ liệu
+    //                    }
+    //
+    //                    // Tiếp tục xử lý các chi tiết hóa đơn...
+    //                    row.createCell(1).setCellValue(resultSet.getString("IDNhanVien"));
+    //                    row.createCell(2).setCellValue(resultSet.getString("TenKhachHang"));
+    //                    row.createCell(3).setCellValue(resultSet.getString("SoDienThoaiKhachHang"));
+    //                    row.createCell(4).setCellValue(resultSet.getString("DiaChiKhachHang"));
+    //                    row.createCell(5).setCellValue(resultSet.getTimestamp("NgayThanhToan").toLocalDateTime());
+    //                    row.createCell(6).setCellValue(resultSet.getString("TenKieuThanhToan"));
+    //                    row.createCell(7).setCellValue(resultSet.getString("TongTien"));
+    //
+    //                    // Lấy ID hóa đơn để lấy thông tin chi tiết hóa đơn
+    //                    String idHoaDon = resultSet.getString("ID");
+    //                    HoaDonCTRepository repo = new HoaDonCTRepository();
+    //                    List<HoaDonChiTietModel> hoaDonChiTietList = repo.getAll(idHoaDon);
+    //
+    //                    // Tạo sheet mới cho chi tiết hóa đơn
+    //                    Sheet chiTietSheet = workbook.createSheet("Chi tiết hóa đơn - " + idHoaDon);
+    //                    Row headerChiTietRow = chiTietSheet.createRow(0);
+    //                    String[] chiTietHeaders = {"ID hóa đơn", "Tên sản phẩm", "Số lượng", "Giá bán", "Giảm giá", "Tổng tiền"};
+    //                    for (int i = 0; i < chiTietHeaders.length; i++) {
+    //                        Cell chiTietCell = headerChiTietRow.createCell(i);
+    //                        chiTietCell.setCellValue(chiTietHeaders[i]);
+    //                        chiTietCell.setCellStyle(styleData);
+    //                    }
+    //
+    //                    // Đổ dữ liệu chi tiết hóa đơn vào sheet mới
+    //                    int chiTietRowIndex = 1;
+    //                    for (HoaDonChiTietModel hoaDonChiTiet : hoaDonChiTietList) {
+    //                        Row chiTietRow = chiTietSheet.createRow(chiTietRowIndex++);
+    //                        chiTietRow.createCell(0).setCellValue(hoaDonChiTiet.getIdHD());
+    //                        chiTietRow.createCell(1).setCellValue(hoaDonChiTiet.getTenDSP());
+    //                        chiTietRow.createCell(2).setCellValue(hoaDonChiTiet.getSoLuong());
+    //                        chiTietRow.createCell(3).setCellValue(hoaDonChiTiet.getGiaBan().doubleValue());
+    ////                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getGiamGia());
+    //                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getTongTien().doubleValue());
+    //                    }
+    //                }
+    //                
+    //                
+    //                String fileName = "DSP_" + System.currentTimeMillis() + ".xlsx";
+    //                try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
+    //                    workbook.write(fileOut);
+    //                }
+    //                System.out.println("Đã xuất file Excel: " + fileName);
+    //                return true;
+    //            }
+    //            
+    //        } catch (SQLException | IOException e) {
+    //            e.printStackTrace();
+    //        }
+    //        return false;
+    //    }
+    //    public boolean xuatHoaDon() {
+    //        try (Connection connection = DBConnect.getConnection()) {
+    //            String query = """
+    //                        SELECT 
+    //                             HoaDon.ID, 
+    //                             HoaDon.IDNhanVien, 
+    //                             HoaDon.TenKhachHang, 
+    //                             HoaDon.SoDienThoaiKhachHang, 
+    //                             HoaDon.DiaChiKhachHang, 
+    //                             HoaDon.NgayThanhToan, 
+    //                             PhuongThucThanhToan.TenKieuThanhToan, 
+    //                             HoaDon.TongTien, 
+    //                             HoaDon.TrangThai
+    //                         FROM   
+    //                             dbo.HoaDon 
+    //                         INNER JOIN
+    //                             dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon 
+    //                         INNER JOIN
+    //                             dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
+    //                        """;
+    //
+    //            try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
+    //                Workbook workbook = new XSSFWorkbook();
+    //                Sheet sheet = workbook.createSheet("Danh sách hóa đơn");
+    //
+    //                // Tạo phông in đậm
+    //                Font font = workbook.createFont();
+    //                font.setBold(true);
+    //                CellStyle style = workbook.createCellStyle();
+    //                style.setFont(font);
+    //
+    //                ResultSetMetaData metaData = resultSet.getMetaData();
+    //                int columnCount = metaData.getColumnCount();
+    //                Row headerRow = sheet.createRow(0);
+    //
+    //                for (int i = 1; i <= columnCount; i++) {
+    //                    String columnName = metaData.getColumnName(i);
+    //                    Cell cell = headerRow.createCell(i - 1);
+    //                    cell.setCellValue(columnName);
+    //                    cell.setCellStyle(style);
+    //                }
+    //
+    //                int rowIndex = 1;
+    //                while (resultSet.next()) {
+    //                    Row row = sheet.createRow(rowIndex++);
+    //
+    //                    // Tạo hyperlink cho ID
+    //                    CreationHelper createHelper = workbook.getCreationHelper();
+    //                    Hyperlink hyperlink = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+    //                    hyperlink.setAddress("'Chi tiết hóa đơn - " + resultSet.getString("ID") + "'!A1");
+    //                    Cell idCell = row.createCell(0);
+    //                    idCell.setCellValue(resultSet.getString("ID"));
+    //                    idCell.setHyperlink(hyperlink);
+    //
+    //                    row.createCell(1).setCellValue(resultSet.getString("IDNhanVien"));
+    //                    row.createCell(2).setCellValue(resultSet.getString("TenKhachHang"));
+    //                    row.createCell(3).setCellValue(resultSet.getString("SoDienThoaiKhachHang"));
+    //                    row.createCell(4).setCellValue(resultSet.getString("DiaChiKhachHang"));
+    //                    row.createCell(5).setCellValue(resultSet.getTimestamp("NgayThanhToan").toLocalDateTime());
+    //                    row.createCell(6).setCellValue(resultSet.getString("TenKieuThanhToan"));
+    //                    row.createCell(7).setCellValue(resultSet.getString("TongTien"));
+    //
+    //                    // Lấy ID hóa đơn để lấy thông tin chi tiết hóa đơn
+    //                    String idHoaDon = resultSet.getString("ID");
+    //                    HoaDonCTRepository repo = new HoaDonCTRepository();
+    //                    List<HoaDonChiTietModel> hoaDonChiTietList = repo.getAll(idHoaDon);
+    //
+    //                    // Tạo sheet mới cho chi tiết hóa đơn
+    //                    Sheet chiTietSheet = workbook.createSheet("Chi tiết hóa đơn - " + idHoaDon);
+    //                    Row headerChiTietRow = chiTietSheet.createRow(0);
+    //                    String[] chiTietHeaders = {"ID hóa đơn", "Tên sản phẩm", "Số lượng", "Giá bán", "Giảm giá", "Tổng tiền"};
+    //                    for (int i = 0; i < chiTietHeaders.length; i++) {
+    //                        Cell chiTietCell = headerChiTietRow.createCell(i);
+    //                        chiTietCell.setCellValue(chiTietHeaders[i]);
+    //                        chiTietCell.setCellStyle(style);
+    //                    }
+    //
+    //                    // Đổ dữ liệu chi tiết hóa đơn vào sheet mới
+    //                    int chiTietRowIndex = 1;
+    //                    for (HoaDonChiTietModel hoaDonChiTiet : hoaDonChiTietList) {
+    //                        Row chiTietRow = chiTietSheet.createRow(chiTietRowIndex++);
+    //                        chiTietRow.createCell(0).setCellValue(hoaDonChiTiet.getIdHD());
+    //                        chiTietRow.createCell(1).setCellValue(hoaDonChiTiet.getTenDSP());
+    //                        chiTietRow.createCell(2).setCellValue(hoaDonChiTiet.getSoLuong());
+    //                        chiTietRow.createCell(3).setCellValue(hoaDonChiTiet.getGiaBan().doubleValue());
+    ////                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getGiamGia());
+    //                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getTongTien().doubleValue());
+    //                    }
+    //                }
+    //
+    //                String fileName = "DSP_" + System.currentTimeMillis() + ".xlsx";
+    //                try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
+    //                    workbook.write(fileOut);
+    //                }
+    //                System.out.println("Đã xuất file Excel: " + fileName);
+    //                return true;
+    //            }
+    //        } catch (SQLException | IOException e) {
+    //            e.printStackTrace();
+    //        }
+    //        return false;
+    //    }
+    //    public boolean xuatHoaDon() {
+    //        try (Connection connection = DBConnect.getConnection()) {
+    //            String query = """
+    //                        SELECT 
+    //                             HoaDon.ID, 
+    //                             HoaDon.IDNhanVien, 
+    //                             HoaDon.TenKhachHang, 
+    //                             HoaDon.SoDienThoaiKhachHang, 
+    //                             HoaDon.DiaChiKhachHang, 
+    //                             HoaDon.NgayThanhToan, 
+    //                             PhuongThucThanhToan.TenKieuThanhToan, 
+    //                             HoaDon.TongTien, 
+    //                             HoaDon.TrangThai
+    //                         FROM   
+    //                             dbo.HoaDon 
+    //                         INNER JOIN
+    //                             dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon 
+    //                         INNER JOIN
+    //                             dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
+    //                        """;
+    //
+    //            try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
+    //                Workbook workbook = new XSSFWorkbook();
+    //                Sheet sheet = workbook.createSheet("Danh sách hóa đơn");
+    //
+    //                // Tạo phông in đậm
+    //                Font font = workbook.createFont();
+    //                font.setBold(true);
+    //                CellStyle style = workbook.createCellStyle();
+    //                style.setFont(font);
+    //
+    //                ResultSetMetaData metaData = resultSet.getMetaData();
+    //                int columnCount = metaData.getColumnCount();
+    //                Row headerRow = sheet.createRow(0);
+    //
+    //                for (int i = 1; i <= columnCount; i++) {
+    //                    String columnName = metaData.getColumnName(i);
+    //                    Cell cell = headerRow.createCell(i - 1);
+    //                    cell.setCellValue(columnName);
+    //                    cell.setCellStyle(style);
+    //                }
+    //
+    //                int rowIndex = 1;
+    //                while (resultSet.next()) {
+    //                    Row row = sheet.createRow(rowIndex++);
+    //                    row.createCell(0).setCellValue(resultSet.getString("ID"));
+    //                    row.createCell(1).setCellValue(resultSet.getString("IDNhanVien"));
+    //                    row.createCell(2).setCellValue(resultSet.getString("TenKhachHang"));
+    //                    row.createCell(3).setCellValue(resultSet.getString("SoDienThoaiKhachHang"));
+    //                    row.createCell(4).setCellValue(resultSet.getString("DiaChiKhachHang"));
+    //                    row.createCell(5).setCellValue(resultSet.getTimestamp("NgayThanhToan").toLocalDateTime());
+    //                    row.createCell(6).setCellValue(resultSet.getString("TenKieuThanhToan"));
+    //                    row.createCell(7).setCellValue(resultSet.getString("TongTien"));
+    //
+    //                    // Lấy ID hóa đơn để lấy thông tin chi tiết hóa đơn
+    //                    String idHoaDon = resultSet.getString("ID");
+    //                    HoaDonCTRepository repo = new HoaDonCTRepository();
+    //                    List<HoaDonChiTietModel> hoaDonChiTietList = repo.getAll(idHoaDon);
+    //
+    //                    // Tạo sheet mới cho chi tiết hóa đơn
+    //                    Sheet chiTietSheet = workbook.createSheet("Chi tiết hóa đơn - " + idHoaDon);
+    //                    Row headerChiTietRow = chiTietSheet.createRow(0);
+    //                    String[] chiTietHeaders = {"ID hóa đơn", "Tên sản phẩm", "Số lượng", "Giá bán", "Giảm giá", "Tổng tiền"};
+    //                    for (int i = 0; i < chiTietHeaders.length; i++) {
+    //                        Cell chiTietCell = headerChiTietRow.createCell(i);
+    //                        chiTietCell.setCellValue(chiTietHeaders[i]);
+    //                        chiTietCell.setCellStyle(style);
+    //                    }
+    //
+    //                    // Đổ dữ liệu chi tiết hóa đơn vào sheet mới
+    //                    int chiTietRowIndex = 1;
+    //                    for (HoaDonChiTietModel hoaDonChiTiet : hoaDonChiTietList) {
+    //                        Row chiTietRow = chiTietSheet.createRow(chiTietRowIndex++);
+    //                        chiTietRow.createCell(0).setCellValue(hoaDonChiTiet.getIdHD());
+    //                        chiTietRow.createCell(1).setCellValue(hoaDonChiTiet.getTenDSP());
+    //                        chiTietRow.createCell(2).setCellValue(hoaDonChiTiet.getSoLuong());
+    //                        chiTietRow.createCell(3).setCellValue(hoaDonChiTiet.getGiaBan().doubleValue());
+    ////                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getGiamGia());
+    //                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getTongTien().doubleValue());
+    //                    }
+    //                }
+    //
+    //                String fileName = "DSP_" + System.currentTimeMillis() + ".xlsx";
+    //                try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
+    //                    workbook.write(fileOut);
+    //                }
+    //                System.out.println("Đã xuất file Excel: " + fileName);
+    //                return true;
+    //            }
+    //        } catch (SQLException | IOException e) {
+    //            e.printStackTrace();
+    //        }
+    //        return false;
+    //    }
 
-//    public boolean xuatHoaDon() {
-//        try (Connection connection = DBConnect.getConnection()) {
-//            String query = """
-//                    SELECT 
-//                         HoaDon.ID, 
-//                         HoaDon.IDNhanVien, 
-//                         HoaDon.TenKhachHang, 
-//                         HoaDon.SoDienThoaiKhachHang, 
-//                         HoaDon.DiaChiKhachHang, 
-//                         HoaDon.NgayThanhToan, 
-//                         PhuongThucThanhToan.TenKieuThanhToan, 
-//                         HoaDon.TongTien, 
-//                         HoaDon.TrangThai
-//                     FROM   
-//                         dbo.HoaDon 
-//                     INNER JOIN
-//                         dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon 
-//                     INNER JOIN
-//                         dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
-//                    """;
-//
-//            try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
-//                
-//                Workbook workbook = new XSSFWorkbook();
-//                Sheet sheet = workbook.createSheet("Danh sách hóa đơn");
-//                
-//                // Tạo phông in đậm cho header
-//                Font fontHeader = workbook.createFont();
-//                fontHeader.setBold(true);
-//                CellStyle styleHeader = workbook.createCellStyle();
-//                styleHeader.setFont(fontHeader);
-//
-//                // Tạo phông in đậm cho dữ liệu
-//                Font fontData = workbook.createFont();
-//                CellStyle styleData = workbook.createCellStyle();
-//                styleData.setFont(fontData);
-//
-//                ResultSetMetaData metaData = resultSet.getMetaData();
-//                int columnCount = metaData.getColumnCount();
-//                Row headerRow = sheet.createRow(0);
-//
-//                // Tạo header cho danh sách hóa đơn
-//                for (int i = 1; i <= columnCount; i++) {
-//                    String columnName = metaData.getColumnName(i);
-//                    Cell cell = headerRow.createCell(i - 1);
-//                    cell.setCellValue(columnName);
-//                    cell.setCellStyle(styleHeader);
-//                }
-//                int rowIndex = 1;
-//                while (resultSet.next()) {
-//                    Row row = sheet.createRow(rowIndex++);
-//
-//                    // Tạo hyperlink cho ID
-//                    CreationHelper createHelper = workbook.getCreationHelper();
-//                    Hyperlink hyperlink = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
-//                    hyperlink.setAddress("'Chi tiết hóa đơn - " + resultSet.getString("ID") + "'!A1");
-//                    Cell idCell = row.createCell(0);
-//                    idCell.setCellValue(resultSet.getString("ID"));
-//                    idCell.setHyperlink(hyperlink);
-//                    idCell.setCellStyle(styleData); // Sử dụng phông in đậm cho dữ liệu
-//
-//                    // Điền dữ liệu vào các cột còn lại
-//                    for (int i = 2; i <= columnCount; i++) {
-//                        Cell dataCell = row.createCell(i - 1);
-//                        dataCell.setCellValue(resultSet.getString(i));
-//                        dataCell.setCellStyle(styleData); // Sử dụng phông in đậm cho dữ liệu
-//                    }
-//
-//                    // Tiếp tục xử lý các chi tiết hóa đơn...
-//                    row.createCell(1).setCellValue(resultSet.getString("IDNhanVien"));
-//                    row.createCell(2).setCellValue(resultSet.getString("TenKhachHang"));
-//                    row.createCell(3).setCellValue(resultSet.getString("SoDienThoaiKhachHang"));
-//                    row.createCell(4).setCellValue(resultSet.getString("DiaChiKhachHang"));
-//                    row.createCell(5).setCellValue(resultSet.getTimestamp("NgayThanhToan").toLocalDateTime());
-//                    row.createCell(6).setCellValue(resultSet.getString("TenKieuThanhToan"));
-//                    row.createCell(7).setCellValue(resultSet.getString("TongTien"));
-//
-//                    // Lấy ID hóa đơn để lấy thông tin chi tiết hóa đơn
-//                    String idHoaDon = resultSet.getString("ID");
-//                    HoaDonCTRepository repo = new HoaDonCTRepository();
-//                    List<HoaDonChiTietModel> hoaDonChiTietList = repo.getAll(idHoaDon);
-//
-//                    // Tạo sheet mới cho chi tiết hóa đơn
-//                    Sheet chiTietSheet = workbook.createSheet("Chi tiết hóa đơn - " + idHoaDon);
-//                    Row headerChiTietRow = chiTietSheet.createRow(0);
-//                    String[] chiTietHeaders = {"ID hóa đơn", "Tên sản phẩm", "Số lượng", "Giá bán", "Giảm giá", "Tổng tiền"};
-//                    for (int i = 0; i < chiTietHeaders.length; i++) {
-//                        Cell chiTietCell = headerChiTietRow.createCell(i);
-//                        chiTietCell.setCellValue(chiTietHeaders[i]);
-//                        chiTietCell.setCellStyle(styleData);
-//                    }
-//
-//                    // Đổ dữ liệu chi tiết hóa đơn vào sheet mới
-//                    int chiTietRowIndex = 1;
-//                    for (HoaDonChiTietModel hoaDonChiTiet : hoaDonChiTietList) {
-//                        Row chiTietRow = chiTietSheet.createRow(chiTietRowIndex++);
-//                        chiTietRow.createCell(0).setCellValue(hoaDonChiTiet.getIdHD());
-//                        chiTietRow.createCell(1).setCellValue(hoaDonChiTiet.getTenDSP());
-//                        chiTietRow.createCell(2).setCellValue(hoaDonChiTiet.getSoLuong());
-//                        chiTietRow.createCell(3).setCellValue(hoaDonChiTiet.getGiaBan().doubleValue());
-////                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getGiamGia());
-//                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getTongTien().doubleValue());
-//                    }
-//                }
-//                
-//                
-//                String fileName = "DSP_" + System.currentTimeMillis() + ".xlsx";
-//                try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
-//                    workbook.write(fileOut);
-//                }
-//                System.out.println("Đã xuất file Excel: " + fileName);
-//                return true;
-//            }
-//            
-//        } catch (SQLException | IOException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
-//    public boolean xuatHoaDon() {
-//        try (Connection connection = DBConnect.getConnection()) {
-//            String query = """
-//                        SELECT 
-//                             HoaDon.ID, 
-//                             HoaDon.IDNhanVien, 
-//                             HoaDon.TenKhachHang, 
-//                             HoaDon.SoDienThoaiKhachHang, 
-//                             HoaDon.DiaChiKhachHang, 
-//                             HoaDon.NgayThanhToan, 
-//                             PhuongThucThanhToan.TenKieuThanhToan, 
-//                             HoaDon.TongTien, 
-//                             HoaDon.TrangThai
-//                         FROM   
-//                             dbo.HoaDon 
-//                         INNER JOIN
-//                             dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon 
-//                         INNER JOIN
-//                             dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
-//                        """;
-//
-//            try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
-//                Workbook workbook = new XSSFWorkbook();
-//                Sheet sheet = workbook.createSheet("Danh sách hóa đơn");
-//
-//                // Tạo phông in đậm
-//                Font font = workbook.createFont();
-//                font.setBold(true);
-//                CellStyle style = workbook.createCellStyle();
-//                style.setFont(font);
-//
-//                ResultSetMetaData metaData = resultSet.getMetaData();
-//                int columnCount = metaData.getColumnCount();
-//                Row headerRow = sheet.createRow(0);
-//
-//                for (int i = 1; i <= columnCount; i++) {
-//                    String columnName = metaData.getColumnName(i);
-//                    Cell cell = headerRow.createCell(i - 1);
-//                    cell.setCellValue(columnName);
-//                    cell.setCellStyle(style);
-//                }
-//
-//                int rowIndex = 1;
-//                while (resultSet.next()) {
-//                    Row row = sheet.createRow(rowIndex++);
-//
-//                    // Tạo hyperlink cho ID
-//                    CreationHelper createHelper = workbook.getCreationHelper();
-//                    Hyperlink hyperlink = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
-//                    hyperlink.setAddress("'Chi tiết hóa đơn - " + resultSet.getString("ID") + "'!A1");
-//                    Cell idCell = row.createCell(0);
-//                    idCell.setCellValue(resultSet.getString("ID"));
-//                    idCell.setHyperlink(hyperlink);
-//
-//                    row.createCell(1).setCellValue(resultSet.getString("IDNhanVien"));
-//                    row.createCell(2).setCellValue(resultSet.getString("TenKhachHang"));
-//                    row.createCell(3).setCellValue(resultSet.getString("SoDienThoaiKhachHang"));
-//                    row.createCell(4).setCellValue(resultSet.getString("DiaChiKhachHang"));
-//                    row.createCell(5).setCellValue(resultSet.getTimestamp("NgayThanhToan").toLocalDateTime());
-//                    row.createCell(6).setCellValue(resultSet.getString("TenKieuThanhToan"));
-//                    row.createCell(7).setCellValue(resultSet.getString("TongTien"));
-//
-//                    // Lấy ID hóa đơn để lấy thông tin chi tiết hóa đơn
-//                    String idHoaDon = resultSet.getString("ID");
-//                    HoaDonCTRepository repo = new HoaDonCTRepository();
-//                    List<HoaDonChiTietModel> hoaDonChiTietList = repo.getAll(idHoaDon);
-//
-//                    // Tạo sheet mới cho chi tiết hóa đơn
-//                    Sheet chiTietSheet = workbook.createSheet("Chi tiết hóa đơn - " + idHoaDon);
-//                    Row headerChiTietRow = chiTietSheet.createRow(0);
-//                    String[] chiTietHeaders = {"ID hóa đơn", "Tên sản phẩm", "Số lượng", "Giá bán", "Giảm giá", "Tổng tiền"};
-//                    for (int i = 0; i < chiTietHeaders.length; i++) {
-//                        Cell chiTietCell = headerChiTietRow.createCell(i);
-//                        chiTietCell.setCellValue(chiTietHeaders[i]);
-//                        chiTietCell.setCellStyle(style);
-//                    }
-//
-//                    // Đổ dữ liệu chi tiết hóa đơn vào sheet mới
-//                    int chiTietRowIndex = 1;
-//                    for (HoaDonChiTietModel hoaDonChiTiet : hoaDonChiTietList) {
-//                        Row chiTietRow = chiTietSheet.createRow(chiTietRowIndex++);
-//                        chiTietRow.createCell(0).setCellValue(hoaDonChiTiet.getIdHD());
-//                        chiTietRow.createCell(1).setCellValue(hoaDonChiTiet.getTenDSP());
-//                        chiTietRow.createCell(2).setCellValue(hoaDonChiTiet.getSoLuong());
-//                        chiTietRow.createCell(3).setCellValue(hoaDonChiTiet.getGiaBan().doubleValue());
-////                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getGiamGia());
-//                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getTongTien().doubleValue());
-//                    }
-//                }
-//
-//                String fileName = "DSP_" + System.currentTimeMillis() + ".xlsx";
-//                try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
-//                    workbook.write(fileOut);
-//                }
-//                System.out.println("Đã xuất file Excel: " + fileName);
-//                return true;
-//            }
-//        } catch (SQLException | IOException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
-//    public boolean xuatHoaDon() {
-//        try (Connection connection = DBConnect.getConnection()) {
-//            String query = """
-//                        SELECT 
-//                             HoaDon.ID, 
-//                             HoaDon.IDNhanVien, 
-//                             HoaDon.TenKhachHang, 
-//                             HoaDon.SoDienThoaiKhachHang, 
-//                             HoaDon.DiaChiKhachHang, 
-//                             HoaDon.NgayThanhToan, 
-//                             PhuongThucThanhToan.TenKieuThanhToan, 
-//                             HoaDon.TongTien, 
-//                             HoaDon.TrangThai
-//                         FROM   
-//                             dbo.HoaDon 
-//                         INNER JOIN
-//                             dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon 
-//                         INNER JOIN
-//                             dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
-//                        """;
-//
-//            try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
-//                Workbook workbook = new XSSFWorkbook();
-//                Sheet sheet = workbook.createSheet("Danh sách hóa đơn");
-//
-//                // Tạo phông in đậm
-//                Font font = workbook.createFont();
-//                font.setBold(true);
-//                CellStyle style = workbook.createCellStyle();
-//                style.setFont(font);
-//
-//                ResultSetMetaData metaData = resultSet.getMetaData();
-//                int columnCount = metaData.getColumnCount();
-//                Row headerRow = sheet.createRow(0);
-//
-//                for (int i = 1; i <= columnCount; i++) {
-//                    String columnName = metaData.getColumnName(i);
-//                    Cell cell = headerRow.createCell(i - 1);
-//                    cell.setCellValue(columnName);
-//                    cell.setCellStyle(style);
-//                }
-//
-//                int rowIndex = 1;
-//                while (resultSet.next()) {
-//                    Row row = sheet.createRow(rowIndex++);
-//                    row.createCell(0).setCellValue(resultSet.getString("ID"));
-//                    row.createCell(1).setCellValue(resultSet.getString("IDNhanVien"));
-//                    row.createCell(2).setCellValue(resultSet.getString("TenKhachHang"));
-//                    row.createCell(3).setCellValue(resultSet.getString("SoDienThoaiKhachHang"));
-//                    row.createCell(4).setCellValue(resultSet.getString("DiaChiKhachHang"));
-//                    row.createCell(5).setCellValue(resultSet.getTimestamp("NgayThanhToan").toLocalDateTime());
-//                    row.createCell(6).setCellValue(resultSet.getString("TenKieuThanhToan"));
-//                    row.createCell(7).setCellValue(resultSet.getString("TongTien"));
-//
-//                    // Lấy ID hóa đơn để lấy thông tin chi tiết hóa đơn
-//                    String idHoaDon = resultSet.getString("ID");
-//                    HoaDonCTRepository repo = new HoaDonCTRepository();
-//                    List<HoaDonChiTietModel> hoaDonChiTietList = repo.getAll(idHoaDon);
-//
-//                    // Tạo sheet mới cho chi tiết hóa đơn
-//                    Sheet chiTietSheet = workbook.createSheet("Chi tiết hóa đơn - " + idHoaDon);
-//                    Row headerChiTietRow = chiTietSheet.createRow(0);
-//                    String[] chiTietHeaders = {"ID hóa đơn", "Tên sản phẩm", "Số lượng", "Giá bán", "Giảm giá", "Tổng tiền"};
-//                    for (int i = 0; i < chiTietHeaders.length; i++) {
-//                        Cell chiTietCell = headerChiTietRow.createCell(i);
-//                        chiTietCell.setCellValue(chiTietHeaders[i]);
-//                        chiTietCell.setCellStyle(style);
-//                    }
-//
-//                    // Đổ dữ liệu chi tiết hóa đơn vào sheet mới
-//                    int chiTietRowIndex = 1;
-//                    for (HoaDonChiTietModel hoaDonChiTiet : hoaDonChiTietList) {
-//                        Row chiTietRow = chiTietSheet.createRow(chiTietRowIndex++);
-//                        chiTietRow.createCell(0).setCellValue(hoaDonChiTiet.getIdHD());
-//                        chiTietRow.createCell(1).setCellValue(hoaDonChiTiet.getTenDSP());
-//                        chiTietRow.createCell(2).setCellValue(hoaDonChiTiet.getSoLuong());
-//                        chiTietRow.createCell(3).setCellValue(hoaDonChiTiet.getGiaBan().doubleValue());
-////                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getGiamGia());
-//                        chiTietRow.createCell(4).setCellValue(hoaDonChiTiet.getTongTien().doubleValue());
-//                    }
-//                }
-//
-//                String fileName = "DSP_" + System.currentTimeMillis() + ".xlsx";
-//                try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
-//                    workbook.write(fileOut);
-//                }
-//                System.out.println("Đã xuất file Excel: " + fileName);
-//                return true;
-//            }
-//        } catch (SQLException | IOException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
     public boolean inHD(String invoiceId) {
 
         Connection connection = null;
@@ -1082,84 +1193,6 @@ public class HoaDonRepository {
         document.close();
     }
 
-//    private WebcamPanel webcamPanel;
-//    private Webcam webcam;
-//    private QR qrCodeListener;
-//
-//    public interface QR {
-//
-//        void onQRCodeScan(String result);
-//    }
-//
-//    public void setQRCodeListener(QR listener) {
-//        this.qrCodeListener = listener;
-//    }
-//
-//    public boolean QRCodeScannerApp() {
-//        SwingUtilities.invokeLater(() -> {
-//            try {
-//                initialize();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        });
-//        return false;
-//    }
-//
-//    private void initialize() {
-//        Webcam.setDriver(new WebcamDefaultDriver());
-//
-//        webcam = Webcam.getDefault();
-//        webcam.setViewSize(WebcamResolution.VGA.getSize());
-//
-//        webcamPanel = new WebcamPanel(webcam, true);
-//        webcamPanel.setImageSizeDisplayed(true);
-//        webcamPanel.setFPSDisplayed(true);
-//
-//        JFrame frame = new JFrame("QR Code Scanner");
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.add(webcamPanel);
-//        frame.pack();
-//        frame.setLocationRelativeTo(null);
-//        frame.setVisible(true);
-//
-//        startQRCodeScanner();
-//    }
-//
-//    private void startQRCodeScanner() {
-//        Thread thread = new Thread(() -> {
-//            while (true) {
-//                if (webcam.isOpen()) {
-//                    BufferedImage image = webcam.getImage();
-//                    if (image != null) {
-//                        Result result = decodeQRCode(image);
-//                        if (result != null) {
-//                            if (qrCodeListener != null) {
-//                                qrCodeListener.onQRCodeScan(result.getText());
-//                            }
-//
-//                            System.out.println("Giá trị QR Code: " + result.getText());
-//                        }
-//                    }
-//                }
-//            }
-//        });
-//
-//        thread.setDaemon(true);
-//        thread.start();
-//    }
-//
-//    private Result decodeQRCode(BufferedImage image) {
-//        BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(
-//                new BufferedImageLuminanceSource(image)));
-//        try {
-//            return new MultiFormatReader().decode(binaryBitmap);
-//        } catch (NotFoundException e) {
-//            // Xử lý ngoại lệ khi không tìm thấy mã QR
-//            System.err.println("Không tìm thấy mã QR Code trong ảnh.");
-//        }
-//        return null;
-//    }
     public static void main(String[] args) {
         List<HoaDonModel> list1 = new HoaDonRepository().getAllQR("HÐ00002");
         for (HoaDonModel hoaDonModel : list1) {
