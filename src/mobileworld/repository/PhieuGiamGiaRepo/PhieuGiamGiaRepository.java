@@ -117,7 +117,7 @@ public class PhieuGiamGiaRepository {
         String sql = """
                  UPDATE [dbo].[PhieuGiamGia]
                                       SET [TenGiamGia] = ?
-                                         ,[Số lượng dùng] = ?
+                                         ,SoLuongDung = ?
                                          ,[PhanTramGiam] = ?
                                          ,[SoTienGiamToiDa] = ?
                                          ,[HoaDonToiThieu] = ?
@@ -193,7 +193,7 @@ public class PhieuGiamGiaRepository {
         List<PhieuGiamGia> ds = new ArrayList<>();
         String sql = """
                         SELECT [TenGiamGia]
-                         ,[Số lượng dùng]
+                         , SoLuongDung
                          ,[PhanTramGiam]
                          ,[SoTienGiamToiDa]
                          ,[HoaDonToiThieu]
@@ -242,7 +242,7 @@ public class PhieuGiamGiaRepository {
         List<PhieuGiamGia> ds = new ArrayList<>();
         String sql = """                                                            
                      SELECT [TenGiamGia]
-                     ,[Số lượng dùng]
+                     ,SoLuongDung
                      ,[PhanTramGiam]
                      ,[SoTienGiamToiDa]
                      ,[HoaDonToiThieu]
@@ -300,7 +300,7 @@ public class PhieuGiamGiaRepository {
         List<PhieuGiamGia> ds = new ArrayList<>();
         String sql = """                                                            
                      SELECT [TenGiamGia]
-                     ,[Số lượng dùng]
+                     ,SoLuongDung
                      ,[PhanTramGiam]
                      ,[SoTienGiamToiDa]
                      ,[HoaDonToiThieu]
@@ -349,7 +349,7 @@ public class PhieuGiamGiaRepository {
         List<PhieuGiamGia> ds = new ArrayList<>();
         String sql = """                                                            
                      SELECT [TenGiamGia]
-                     ,[Số lượng dùng]
+                     ,SoLuongDung
                      ,[PhanTramGiam]
                      ,[SoTienGiamToiDa]
                      ,[HoaDonToiThieu]
@@ -398,7 +398,7 @@ public class PhieuGiamGiaRepository {
         List<PhieuGiamGia> ds = new ArrayList<>();
         String sql = """                                                            
                      SELECT [TenGiamGia]
-                     ,[Số lượng dùng]
+                     ,SoLuongDung
                      ,[PhanTramGiam]
                      ,[SoTienGiamToiDa]
                      ,[HoaDonToiThieu]
@@ -447,7 +447,7 @@ public class PhieuGiamGiaRepository {
         List<PhieuGiamGia> ds = new ArrayList<>();
         String sql = """                                                            
                      SELECT [TenGiamGia]
-                     ,[Số lượng dùng]
+                     ,SoLuongDung
                      ,[PhanTramGiam]
                      ,[SoTienGiamToiDa]
                      ,[HoaDonToiThieu]

@@ -6,31 +6,26 @@ public class KhachHang {
 
     private String ten;
     private String sdt;
-    private float gioiTinh;
+    private boolean gioiTinh;
     private Date ngaySinh;
     private String diaChi;
-    private float deleted;
-    private Date createdAt;
-    private String createdBy;
-    private Date updatedAt;
-    private String updateBy;
+    private int deleted;
+    private String createdat;
+    private String createdby;
+    private String updatedat;
+    private String updatedby;
     private String id;
 
     public KhachHang() {
     }
 
-    public KhachHang(String ten, String sdt, float gioiTinh, Date ngaySinh, String diaChi, float deleted, Date createdAt, String createdBy, Date updatedAt, String updateBy, String id) {
+      public KhachHang(String ten, String sdt, boolean gioiTinh, String diaChi, int deleted) {
         this.ten = ten;
         this.sdt = sdt;
         this.gioiTinh = gioiTinh;
-        this.ngaySinh = ngaySinh;
         this.diaChi = diaChi;
         this.deleted = deleted;
-        this.createdAt = createdAt;
-        this.createdBy = createdBy;
-        this.updatedAt = updatedAt;
-        this.updateBy = updateBy;
-        this.id = id;
+       
     }
 
     public String getTen() {
@@ -49,11 +44,11 @@ public class KhachHang {
         this.sdt = sdt;
     }
 
-    public float getGioiTinh() {
+    public boolean isGioiTinh() {
         return gioiTinh;
     }
 
-    public void setGioiTinh(float gioiTinh) {
+    public void setGioiTinh(boolean gioiTinh) {
         this.gioiTinh = gioiTinh;
     }
 
@@ -73,44 +68,44 @@ public class KhachHang {
         this.diaChi = diaChi;
     }
 
-    public float getDeleted() {
+    public int getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(float deleted) {
+    public void setDeleted(int deleted) {
         this.deleted = deleted;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getCreatedat() {
+        return createdat;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCreatedat(String createdat) {
+        this.createdat = createdat;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public String getCreatedby() {
+        return createdby;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedby(String createdby) {
+        this.createdby = createdby;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public String getUpdatedat() {
+        return updatedat;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdatedat(String updatedat) {
+        this.updatedat = updatedat;
     }
 
-    public String getUpdateBy() {
-        return updateBy;
+    public String getUpdatedby() {
+        return updatedby;
     }
 
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
+    public void setUpdatedby(String updatedby) {
+        this.updatedby = updatedby;
     }
 
     public String getId() {
@@ -120,5 +115,8 @@ public class KhachHang {
     public void setId(String id) {
         this.id = id;
     }
+
+   
+    
 
 }

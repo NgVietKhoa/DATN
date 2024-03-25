@@ -23,7 +23,7 @@ public class NhanVien {
     public NhanVien() {
     }
 
-    public NhanVien(String tenNhanVien, Date ngaySinh, String diaChi, String sdt, String email, String idChucVu, String password, float deleted, Date createdAt, String createdBy, Date updatedAt, String updateBy, String id, String cccd) {
+    public NhanVien(String tenNhanVien, Date ngaySinh, String diaChi, String sdt, String email, String idChucVu, String password, float deleted, Date createdAt, String createdBy, Date updatedAt, String updateBy) {
         this.tenNhanVien = tenNhanVien;
         this.ngaySinh = ngaySinh;
         this.diaChi = diaChi;
@@ -36,9 +36,8 @@ public class NhanVien {
         this.createdBy = createdBy;
         this.updatedAt = updatedAt;
         this.updateBy = updateBy;
-        this.id = id;
-        this.cccd = cccd;
     }
+
 
     public int getStt() {
         return stt;

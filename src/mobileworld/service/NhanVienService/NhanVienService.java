@@ -19,4 +19,20 @@ public class NhanVienService {
     public String getChucVuFromDatabase(String chucVuId) {
         return repo.getChucVuFromDatabase(chucVuId);
     }
+
+    public boolean delete(String id) {
+        return repo.delete(id);
+    }
+
+    public boolean update(NhanVien nv, String oldID) {
+        return repo.update(nv, oldID);
+    }
+
+    public boolean add(NhanVien nv) {
+        return repo.add(nv);
+    }
+
+    public List<NhanVien> search(String search) {
+        return repo.search(search);
+    }
 }

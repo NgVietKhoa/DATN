@@ -12,8 +12,8 @@ import mobileworld.form.ViewBanHang;
 import mobileworld.form.ViewSanPham;
 import mobileworld.form.ViewHoaDon;
 import mobileworld.form.ViewGiamGia1;
-import mobileworld.form.ViewNhanVien;
-import mobileworld.form.ViewKhachHang;
+import mobileworld.form.ViewKhachHangNew;
+import mobileworld.form.ViewNhanVienNew;
 import mobileworld.form.ViewThongKe;
 import mobileworld.model.ModelMenu;
 import net.miginfocom.swing.MigLayout;
@@ -70,9 +70,9 @@ public class Main extends javax.swing.JFrame {
                 case 3 ->
                     showForm(new ViewGiamGia1());
                 case 4 ->
-                    showForm(new ViewNhanVien());
+                    showForm(new ViewNhanVienNew());
                 case 5 ->
-                    showForm(new ViewKhachHang());
+                    showForm(new ViewKhachHangNew());
                 case 6 ->
                     showForm(new ViewThongKe());
                 default -> {
