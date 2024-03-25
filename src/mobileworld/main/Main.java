@@ -11,7 +11,7 @@ import mobileworld.component.Menu;
 import mobileworld.form.ViewBanHang;
 import mobileworld.form.ViewSanPham;
 import mobileworld.form.ViewHoaDon;
-import mobileworld.form.ViewGiamGia;
+import mobileworld.form.ViewGiamGia1;
 import mobileworld.form.ViewNhanVien;
 import mobileworld.form.ViewKhachHang;
 import mobileworld.form.ViewThongKe;
@@ -68,7 +68,7 @@ public class Main extends javax.swing.JFrame {
                 case 2 ->
                     showForm(viewHoaDon);
                 case 3 ->
-                    showForm(new ViewGiamGia());
+                    showForm(new ViewGiamGia1());
                 case 4 ->
                     showForm(new ViewNhanVien());
                 case 5 ->

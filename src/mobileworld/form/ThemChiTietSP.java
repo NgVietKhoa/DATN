@@ -540,6 +540,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
             JOptionPane.showMessageDialog(this, "Giá Bán Phải Là Số", "Error", JOptionPane.ERROR_MESSAGE);
         }
         String imel = txtAreaImel.getText();
+        System.out.println(""+imel);
         LocalDate dateTime = LocalDate.now();
         String Cpu = (String) cboCPU.getSelectedItem();
         String Nsx = (String) cboNsx.getSelectedItem();
