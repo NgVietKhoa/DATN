@@ -36,8 +36,8 @@ public class RamRepository {
                             INSERT INTO [dbo].[Ram]
                             ([DungLuongRam]
                             ,[Deleted]
-                            ,[Created at]
-                            ,[Created by])
+                            ,[CreatedAt]
+                             ,[CreatedBy])
                       VALUES
                             (?,?,?,?)
                  """;

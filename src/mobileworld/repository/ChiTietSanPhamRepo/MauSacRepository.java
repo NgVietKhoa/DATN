@@ -36,8 +36,8 @@ public class MauSacRepository {
                             INSERT INTO [dbo].[MauSac]
                             ([TenMau]
                             ,[Deleted]
-                            ,[Created at]
-                            ,[Created by])
+                            ,[CreatedAt]
+                            ,[CreatedBy])
                       VALUES
                             (?,?,?,?)
                  """;

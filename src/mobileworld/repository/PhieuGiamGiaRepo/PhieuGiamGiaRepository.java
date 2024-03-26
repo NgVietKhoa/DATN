@@ -257,7 +257,7 @@ public class PhieuGiamGiaRepository {
                                                          ,[UpdatedBy]
                      ,[ID]
                      FROM [dbo].[PhieuGiamGia]  
-                     where TenGiamGia like '%'+?+'%' Or [Số lượng dùng] like '%'+?+'%'  OR PhanTramGiam like ?
+                     where TenGiamGia like '%'+?+'%' Or SoLuongDung like '%'+?+'%'  OR PhanTramGiam like ?
                      or SoTienGiamToiDa like '%'+?+'%' or HoaDonToiThieu like '%'+?+'%' or NgayBatDau like '%' + ?+ '%'
                      or NgayKetThuc like '%' + ?+ '%' or Id like '%'+?+'%'
                    """;
@@ -643,18 +643,20 @@ public class PhieuGiamGiaRepository {
         return ds;
     }
 
-    public boolean updateTTThread(String ID, int trangThai, float Deleted) {
+    public boolean updateTTThread(String ID, int trangThai, float Deleted, LocalDate ngayHT) {
         int check = 0;
         String sql = """
                  UPDATE [dbo].[PhieuGiamGia]
                                       SET [TrangThai] = ?
-                                      ,[Deleted] =?                 
+                                      ,[Deleted] =?          
+                                      ,[UpdatedAt] = ?
                                     WHERE ID=?
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, trangThai);
             ps.setObject(2, Deleted);
-            ps.setObject(3, ID);
+            ps.setObject(3, ngayHT);
+            ps.setObject(4, ID);
             check = ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

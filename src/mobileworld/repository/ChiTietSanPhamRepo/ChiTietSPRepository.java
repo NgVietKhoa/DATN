@@ -400,7 +400,7 @@ public class ChiTietSPRepository {
     public boolean add(ChiTietSP ctsp) {
         String sql = """
                      -- Thêm imel mới vào bảng Imel
-                     INSERT INTO dbo.Imel (
+                     INSERT INTO [dbo].[Imel] (
                          [Imel],
                          [Deleted],
                          [CreatedAt],

@@ -82,9 +82,19 @@ public class ViewInputPhieuGiamGia extends javax.swing.JPanel {
 
         txtSoLan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtSoLan.setLabelText("Số Lượng Được Phép Sử Dụng");
+        txtSoLan.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSoLanKeyReleased(evt);
+            }
+        });
 
         txtPhanTramGiam.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtPhanTramGiam.setLabelText("Phần Trăm Giảm");
+        txtPhanTramGiam.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPhanTramGiamKeyReleased(evt);
+            }
+        });
 
         txtTen.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtTen.setLabelText("Tên Khuyến Mãi");
@@ -92,16 +102,16 @@ public class ViewInputPhieuGiamGia extends javax.swing.JPanel {
         txtHoaDonToiThieu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtHoaDonToiThieu.setLabelText("Hóa Đơn Tối Thiểu");
         txtHoaDonToiThieu.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtHoaDonToiThieuKeyTyped(evt);
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtHoaDonToiThieuKeyReleased(evt);
             }
         });
 
         txtSoTienGiamToiDa.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtSoTienGiamToiDa.setLabelText("Số Tiền Giảm Tối Đa");
         txtSoTienGiamToiDa.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtSoTienGiamToiDaKeyTyped(evt);
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSoTienGiamToiDaKeyReleased(evt);
             }
         });
 
@@ -262,48 +272,10 @@ public class ViewInputPhieuGiamGia extends javax.swing.JPanel {
             tt = 2;
         }
 
-        PhieuGiamGia pgg = new PhieuGiamGia(ten, soLan, phanTram, soTiemGiamMax, hoaDonMin, ngayBD, ngayKT, tt, ten, 1, ngayThucTe, maNV, ngayThucTe, maNV);       
+        PhieuGiamGia pgg = new PhieuGiamGia(ten, soLan, phanTram, soTiemGiamMax, hoaDonMin, ngayBD, ngayKT, tt, ten, 1, ngayThucTe, maNV, ngayThucTe, maNV);
         return pgg;
     }
 
-
-    private void txtHoaDonToiThieuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHoaDonToiThieuKeyTyped
-        // TODO add your handling code here:
-        if (!txtHoaDonToiThieu.getText().trim().isEmpty()) {
-            String text = txtHoaDonToiThieu.getText();
-            text = text.replaceAll("[^\\d]", "");
-
-            if (!text.isEmpty()) {
-                try {
-                    long number = Long.parseLong(text);
-                    DecimalFormat decimalFormat = new DecimalFormat("#,##0");
-                    txtHoaDonToiThieu.setText(decimalFormat.format(number));
-                } catch (NumberFormatException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-
-    }//GEN-LAST:event_txtHoaDonToiThieuKeyTyped
-
-    private void txtSoTienGiamToiDaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSoTienGiamToiDaKeyTyped
-        // TODO add your handling code here:
-        if (!txtSoTienGiamToiDa.getText().trim().isBlank()) {
-            Document document = txtSoTienGiamToiDa.getDocument();
-            try {
-                String text = document.getText(0, document.getLength());
-                text = text.replaceAll("[^\\d]", "");
-                long number = Long.parseLong(text);
-
-                DecimalFormat decimalFormat = new DecimalFormat("#,##0");
-                String formattedNumber = decimalFormat.format(number);
-                txtSoTienGiamToiDa.setText(formattedNumber);
-
-            } catch (BadLocationException | NumberFormatException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }//GEN-LAST:event_txtSoTienGiamToiDaKeyTyped
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
@@ -371,7 +343,6 @@ public class ViewInputPhieuGiamGia extends javax.swing.JPanel {
             return;
         }
 
-
         if (ngayKTLocalDate.isBefore(ngayBDLocalDate)) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn lại ngày kết thúc");
             return;
@@ -381,9 +352,6 @@ public class ViewInputPhieuGiamGia extends javax.swing.JPanel {
 //            JOptionPane.showMessageDialog(this, "Ngay bat dau va ket thuc khong duoc la cung 1 ngay");
 //            return;
 //        }
-
-
-
         int lc = JOptionPane.showConfirmDialog(this, "Bạn có muốn Add dữ liệu không?", "Notification", JOptionPane.YES_NO_OPTION);
         if (lc == JOptionPane.YES_OPTION) {
             sr.addData(getFormData());
@@ -445,6 +413,79 @@ public class ViewInputPhieuGiamGia extends javax.swing.JPanel {
         // TODO add your handling code here:
 //        askIdentityQuestion();
     }//GEN-LAST:event_btnLogoActionPerformed
+
+    private void txtSoLanKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSoLanKeyReleased
+        // TODO add your handling code here:
+        if (!txtSoLan.getText().trim().isBlank()) {
+            Document document = txtSoLan.getDocument();
+            try {
+                String text = document.getText(0, document.getLength());
+                if (!text.isEmpty()) {
+                    text = text.replaceAll("[^\\d]", "");
+                    long number = Long.parseLong(text);
+                    DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+                    String formattedNumber = decimalFormat.format(number);
+                    txtSoLan.setText(formattedNumber);
+                }
+            } catch (BadLocationException | NumberFormatException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_txtSoLanKeyReleased
+
+    private void txtHoaDonToiThieuKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHoaDonToiThieuKeyReleased
+        // TODO add your handling code here:
+        if (!txtHoaDonToiThieu.getText().trim().isEmpty()) {
+            String text = txtHoaDonToiThieu.getText();
+            text = text.replaceAll("[^\\d]", "");
+
+            if (!text.isEmpty()) {
+                try {
+                    long number = Long.parseLong(text);
+
+                    // Định dạng số và hiển thị trong JTextField
+                    DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+                    txtHoaDonToiThieu.setText(decimalFormat.format(number));
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số");
+                    return;
+                }
+            }
+        }
+    }//GEN-LAST:event_txtHoaDonToiThieuKeyReleased
+
+    private void txtSoTienGiamToiDaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSoTienGiamToiDaKeyReleased
+        // TODO add your handling code here:
+        if (!txtSoTienGiamToiDa.getText().trim().isBlank()) {
+            Document document = txtSoTienGiamToiDa.getDocument();
+            try {
+                String text = document.getText(0, document.getLength());
+                text = text.replaceAll("[^\\d]", "");
+                long number = Long.parseLong(text);
+
+                DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+                String formattedNumber = decimalFormat.format(number);
+                txtSoTienGiamToiDa.setText(formattedNumber);
+
+            } catch (BadLocationException | NumberFormatException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_txtSoTienGiamToiDaKeyReleased
+
+    private void txtPhanTramGiamKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhanTramGiamKeyReleased
+        // TODO add your handling code here:
+        if (!txtPhanTramGiam.getText().trim().isEmpty()) {
+            String text = txtPhanTramGiam.getText().trim().replaceAll("[^\\d]", "");
+            if (!text.isEmpty()) {
+                long number = Long.parseLong(text);
+                DecimalFormat decimalFormat = new DecimalFormat("###'%'");
+                String formattedNumber = decimalFormat.format(number);
+                txtPhanTramGiam.setText(formattedNumber);
+            }
+        }
+
+    }//GEN-LAST:event_txtPhanTramGiamKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

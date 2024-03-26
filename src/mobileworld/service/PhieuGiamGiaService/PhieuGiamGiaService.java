@@ -70,8 +70,8 @@ public class PhieuGiamGiaService {
         return repo.timKiemPhanTram(phanTram);
     }
 
-  public boolean updateTTThread(String ID, int trangThai,float Deleted) {
-      return repo.updateTTThread(ID, trangThai, Deleted);
+   public boolean updateTTThread(String ID, int trangThai, float Deleted, LocalDate ngayHT) {
+      return repo.updateTTThread(ID, trangThai, Deleted, ngayHT);
     }
 
 }

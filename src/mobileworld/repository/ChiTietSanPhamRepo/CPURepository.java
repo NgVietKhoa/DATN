@@ -36,8 +36,8 @@ public class CPURepository {
                                         INSERT INTO [dbo].[CPU]
                                                         ([CPU]
                                                         ,[Deleted]
-                                                        ,[Created at]
-                                                        ,[Created by])
+                                                        ,[CreatedAt]
+                                                        ,[CreatedBy])
                                                   VALUES
                                                         (?,?,?,?)
                  """;

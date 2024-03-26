@@ -37,17 +37,18 @@ public class ThreadTinhTrang extends Thread {
         for (PhieuGiamGia pgg : ds) {
             LocalDate ngayBDLocalDate = pgg.getNgayBatDau().toLocalDate();
             LocalDate ngayKTLocalDate = pgg.getNgayKetThuc().toLocalDate();
-
+            LocalDate ngayHT= LocalDate.now();
+            
             if (ngayBDLocalDate.isEqual(LocalDate.now()) && pgg.getDeleted() == 1) {
                 trangThaiBatDau = 1;
                 deleted = (float) 1.0;
-                sr.updateTTThread(pgg.getID(), trangThaiBatDau, deleted);
+                sr.updateTTThread(pgg.getID(), trangThaiBatDau, deleted,ngayHT);
             }
             
             if (ngayBDLocalDate.isBefore(LocalDate.now()) && ngayKTLocalDate.isBefore(LocalDate.now())) {
                 trangThaiKetThuc = 0;
                 deleted = (float) 0.0;
-                sr.updateTTThread(pgg.getID(), trangThaiKetThuc, deleted);
+                sr.updateTTThread(pgg.getID(), trangThaiKetThuc, deleted,ngayHT);
             }
         }
     }

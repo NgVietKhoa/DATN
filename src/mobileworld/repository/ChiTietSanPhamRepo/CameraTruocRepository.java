@@ -36,8 +36,8 @@ public class CameraTruocRepository {
                      INSERT INTO [dbo].[CameraTruoc]
                      ([SoMP]
                      ,[Deleted]
-                     ,[Created at]
-                     ,[Created by])
+                      ,[CreatedAt]
+                                          ,[CreatedBy])
                      VALUES
                      (?,?,?,?)
                      """;

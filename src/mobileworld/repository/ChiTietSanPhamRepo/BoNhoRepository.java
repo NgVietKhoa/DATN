@@ -36,8 +36,8 @@ public class BoNhoRepository {
                             INSERT INTO [dbo].[BoNho]
                             ([DungLuongBoNho]
                             ,[Deleted]
-                            ,[Created at]
-                            ,[Created by])
+                            ,[CreatedAt]
+                            ,[CreatedBy])
                       VALUES
                             (?,?,?,?)
                  """;

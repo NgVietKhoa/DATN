@@ -36,8 +36,8 @@ public class CameraSauRepository {
                      INSERT INTO [dbo].[CameraSau]
                      ([SoMP]
                      ,[Deleted]
-                     ,[Created at]
-                     ,[Created by])
+                     ,[CreatedAt]
+                     ,[CreatedBy])
                      VALUES
                      (?,?,?,?)
                      """;
