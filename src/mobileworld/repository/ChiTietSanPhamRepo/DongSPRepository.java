@@ -119,8 +119,8 @@ public class DongSPRepository {
                  INSERT INTO [dbo].[DongSP]
                             ([TenDsp]
                             ,[Deleted]
-                            ,[Created at]
-                            ,[Created by]
+                        ,[CreatedAt]
+                        ,[CreatedBy])
                             )
                       VALUES
                             (?,?,?,?)
@@ -162,8 +162,8 @@ public class DongSPRepository {
                 UPDATE [dbo].[DongSP]
                     SET [TenDsp] = ?
                        ,[Deleted] = ?
-                       ,[Updated at] = ?
-                       ,[Updated by] = ?
+                       ,[UpdatedAt] = ?
+                                              ,[UpdatedBy] = ?
                   WHERE ID = ?
                  """;
 

@@ -53,46 +53,4 @@ public class MauSacRepository {
         }
         return check > 0;
     }
-
-    public boolean remove(String id) {
-        int check = 0;
-        String sql = """
-                 UPDATE [dbo].[MauSac]
-                               SET 
-                                  [Deleted] = 0
-                             WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
-
-    public boolean update(MauSac ms, String id) {
-        int check = 0;
-        String sql = """
-                UPDATE [dbo].[MauSac]
-                    SET [TenMau] = ?
-                       ,[Deleted] = ?
-                       ,[Updated at] = ?
-                       ,[Updated by] = ?
-                  WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, ms.getTenMau());
-            ps.setObject(2, ms.getDeleted());
-            ps.setObject(3, ms.getCreatedAt());
-            ps.setObject(4, ms.getCreatedBy());
-            ps.setObject(5, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
 }

@@ -36,8 +36,8 @@ public class PinRepository {
                             INSERT INTO [dbo].[Pin]
                             ([DungLuongPin]
                             ,[Deleted]
-                            ,[Created at]
-                            ,[Created by])
+                      ,[CreatedAt]
+                                                  ,[CreatedBy])
                       VALUES
                             (?,?,?,?)
                  """;
@@ -47,48 +47,6 @@ public class PinRepository {
             ps.setObject(2, pin.getDeleted());
             ps.setObject(3, pin.getCreatedAt());
             ps.setObject(4, pin.getCreatedBy());
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
-
-    public boolean remove(String id) {
-        int check = 0;
-        String sql = """
-                 UPDATE [dbo].[Pin]
-                               SET 
-                                  [Deleted] = 0
-                             WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
-
-    public boolean update(Pin pin, String id) {
-        int check = 0;
-        String sql = """
-                UPDATE [dbo].[Pin]
-                    SET [DungLuongPin] = ?
-                       ,[Deleted] = ?
-                       ,[Updated at] = ?
-                       ,[Updated by] = ?
-                  WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, pin.getDungLuongPin());
-            ps.setObject(2, pin.getDeleted());
-            ps.setObject(3, pin.getCreatedAt());
-            ps.setObject(4, pin.getCreatedBy());
-            ps.setObject(5, id);
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

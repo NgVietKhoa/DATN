@@ -53,46 +53,4 @@ public class RamRepository {
         }
         return check > 0;
     }
-
-    public boolean remove(String id) {
-        int check = 0;
-        String sql = """
-                 UPDATE [dbo].[Ram]
-                               SET 
-                                  [Deleted] = 0
-                             WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
-
-    public boolean update(Ram ram, String id) {
-        int check = 0;
-        String sql = """
-                UPDATE [dbo].[Ram]
-                    SET [DungLuongRam] = ?
-                       ,[Deleted] = ?
-                       ,[Updated at] = ?
-                       ,[Updated by] = ?
-                  WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, ram.getDungLuongRam());
-            ps.setObject(2, ram.getDeleted());
-            ps.setObject(3, ram.getCreatedAt());
-            ps.setObject(4, ram.getCreatedBy());
-            ps.setObject(5, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
 }

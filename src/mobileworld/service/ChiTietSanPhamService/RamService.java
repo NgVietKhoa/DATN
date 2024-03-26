@@ -15,12 +15,4 @@ public class RamService {
     public boolean add(Ram ram) {
         return repo.add(ram);
     }
-
-    public boolean remove(String id) {
-        return repo.remove(id);
-    }
-
-    public boolean update(Ram ram, String id) {
-        return repo.update(ram, id);
-    }
 }

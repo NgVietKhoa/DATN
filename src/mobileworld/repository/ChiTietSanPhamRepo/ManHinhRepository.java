@@ -36,8 +36,8 @@ public class ManHinhRepository {
                             INSERT INTO [dbo].[ManHinh]
                             ([LoaiManHinh]
                             ,[Deleted]
-                            ,[Created at]
-                            ,[Created by])
+                      ,[CreatedAt]
+                                             ,[CreatedBy])
                       VALUES
                             (?,?,?,?)
                  """;
@@ -47,48 +47,6 @@ public class ManHinhRepository {
             ps.setObject(2, mh.getDeleted());
             ps.setObject(3, mh.getCreatedAt());
             ps.setObject(4, mh.getCreatedBy());
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
-
-    public boolean remove(String id) {
-        int check = 0;
-        String sql = """
-                 UPDATE [dbo].[ManHinh]
-                               SET 
-                                  [Deleted] = 0
-                             WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
-
-    public boolean update(ManHinh mh, String id) {
-        int check = 0;
-        String sql = """
-                UPDATE [dbo].[ManHinh]
-                    SET [LoaiManHinh] = ?
-                       ,[Deleted] = ?
-                       ,[Updated at] = ?
-                       ,[Updated by] = ?
-                  WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, mh.getLoaiManHinh());
-            ps.setObject(2, mh.getDeleted());
-            ps.setObject(3, mh.getCreatedAt());
-            ps.setObject(4, mh.getCreatedBy());
-            ps.setObject(5, id);
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

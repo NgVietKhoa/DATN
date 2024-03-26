@@ -53,46 +53,4 @@ public class BoNhoRepository {
         }
         return check > 0;
     }
-
-    public boolean remove(String id) {
-        int check = 0;
-        String sql = """
-                 UPDATE [dbo].[BoNho]
-                               SET 
-                                  [Deleted] = 0
-                             WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
-
-    public boolean update(BoNho bn, String id) {
-        int check = 0;
-        String sql = """
-                UPDATE [dbo].[BoNho]
-                    SET [DungLuongBoNho] = ?
-                       ,[Deleted] = ?
-                       ,[Updated at] = ?
-                       ,[Updated by] = ?
-                  WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, bn.getDungLuongBoNho());
-            ps.setObject(2, bn.getDeleted());
-            ps.setObject(3, bn.getCreatedAt());
-            ps.setObject(4, bn.getCreatedBy());
-            ps.setObject(5, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
 }

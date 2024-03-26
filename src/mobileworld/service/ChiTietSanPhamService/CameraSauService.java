@@ -15,12 +15,4 @@ public class CameraSauService {
     public boolean add(CameraSau cam) {
         return repo.add(cam);
     }
-
-    public boolean remove(String id) {
-        return repo.remove(id);
-    }
-
-    public boolean update(CameraSau cam, String id) {
-        return repo.update(cam, id);
-    }
 }

@@ -15,12 +15,4 @@ public class BoNhoService {
     public boolean add(BoNho bn) {
         return repo.add(bn);
     }
-
-    public boolean remove(String id) {
-        return repo.remove(id);
-    }
-
-    public boolean update(BoNho bn, String id) {
-        return repo.update(bn, id);
-    }
 }

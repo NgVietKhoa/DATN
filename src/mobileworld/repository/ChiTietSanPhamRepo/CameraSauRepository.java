@@ -53,46 +53,4 @@ public class CameraSauRepository {
         }
         return check > 0;
     }
-
-    public boolean remove(String id) {
-        int check = 0;
-        String sql = """
-                 UPDATE [dbo].[CameraSau]
-                               SET 
-                                  [Deleted] = 0
-                             WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
-
-    public boolean update(CameraSau cam, String id) {
-        int check = 0;
-        String sql = """
-                UPDATE [dbo].[CameraSau]
-                    SET [SoMP] = ?
-                       ,[Deleted] = ?
-                       ,[Updated at] = ?
-                       ,[Updated by] = ?
-                  WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, cam.getSoMP());
-            ps.setObject(2, cam.getDeleted());
-            ps.setObject(3, cam.getCreatedAt());
-            ps.setObject(4, cam.getCreatedBy());
-            ps.setObject(5, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
 }

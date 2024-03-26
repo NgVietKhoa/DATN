@@ -53,46 +53,4 @@ public class CPURepository {
         }
         return check > 0;
     }
-
-    public boolean remove(String id) {
-        int check = 0;
-        String sql = """
-                 UPDATE [dbo].[CPU]
-                               SET 
-                                  [Deleted] = 0
-                             WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
-
-    public boolean update(CPU cpu, String id) {
-        int check = 0;
-        String sql = """
-                UPDATE [dbo].[CPU]
-                    SET [CPU] = ?
-                       ,[Deleted] = ?
-                       ,[Updated at] = ?
-                       ,[Updated by] = ?
-                  WHERE ID = ?
-                 """;
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, cpu.getCpu());
-            ps.setObject(2, cpu.getDeleted());
-            ps.setObject(3, cpu.getCreatedAt());
-            ps.setObject(4, cpu.getCreatedBy());
-            ps.setObject(5, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
 }

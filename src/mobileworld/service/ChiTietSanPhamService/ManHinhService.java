@@ -16,12 +16,4 @@ public class ManHinhService {
         return repo.add(mh);
 
     }
-
-    public boolean remove(String id) {
-        return repo.remove(id);
-    }
-
-    public boolean update(ManHinh mh, String id) {
-        return repo.update(mh, id);
-    }
 }
