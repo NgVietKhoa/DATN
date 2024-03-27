@@ -35,11 +35,11 @@ public class PhieuGiamGiaRepository {
                                               ,[TrangThai]
                                               ,[MoTa]
                                               ,[Deleted]
-                                               ,[CreatedAt]
-                                                    ,[CreatedBy]
-                                                    ,[UpdatedAt]
-                                                    ,[UpdatedBy]
-                                                    ,[ID]
+                                              ,[CreatedAt]
+                                              ,[CreatedBy]
+                                              ,[UpdatedAt]
+                                              ,[UpdatedBy]
+                                              ,[ID]
                                           FROM [dbo].[PhieuGiamGia] order by [CreatedAt] DESC
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {

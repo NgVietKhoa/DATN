@@ -175,102 +175,82 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
     //set date combobox
     private void setDataCboPin(List<Pin> setPin) {
         cbbPin.removeAllElements();
-        cbbPin.addElement(null);
 
         for (Pin pinE : setPin) {
             cbbPin.addElement(pinE.getDungLuongPin());
         }
-        cboPin.setSelectedItem(null);
     }
 
     private void setDataCboManHinh(List<ManHinh> setMh) {
         cbbManHinh.removeAllElements();
-        cbbManHinh.addElement(null);
 
         for (ManHinh mh : setMh) {
             cbbManHinh.addElement(mh.getLoaiManHinh());
         }
-        cboManHinh.setSelectedItem(null);
     }
 
     private void setDataCboMauSac(List<MauSac> setMs) {
         cbbMauSac.removeAllElements();
-        cbbMauSac.addElement(null);
 
         for (MauSac ms : setMs) {
             cbbMauSac.addElement(ms.getTenMau());
         }
-        cboMauSac.setSelectedItem(null);
     }
 
     private void setDataCboCpu(List<CPU> setCpu) {
         cbbCpu.removeAllElements();
-        cbbCpu.addElement(null);
 
         for (CPU cpu : setCpu) {
             cbbCpu.addElement(cpu.getCpu());
         }
-        cboCPU.setSelectedItem(null);
     }
 
     private void setDataCboRam(List<Ram> setRam) {
         cbbRam.removeAllElements();
-        cbbRam.addElement(null);
 
         for (Ram ram : setRam) {
             cbbRam.addElement(ram.getDungLuongRam());
         }
-        cboRam.setSelectedItem(null);
     }
 
     private void setDataCboRom(List<BoNho> setRom) {
         cbbRom.removeAllElements();
-        cbbRom.addElement(null);
 
         for (BoNho rom : setRom) {
             cbbRom.addElement(rom.getDungLuongBoNho());
         }
-        cboRom.setSelectedItem(null);
     }
 
     private void setDataCboCameraSau(List<CameraSau> setCamSau) {
         cbbCameraSau.removeAllElements();
-        cbbCameraSau.addElement(null);
 
         for (CameraSau cam : setCamSau) {
             cbbCameraSau.addElement(cam.getSoMP());
         }
-        cboCameraTruoc.setSelectedItem(null);
     }
 
     private void setDataCboCameraTruoc(List<CameraTruoc> setCamTruoc) {
         cbbCameraTruoc.removeAllElements();
-        cbbCameraTruoc.addElement(null);
 
         for (CameraTruoc cam : setCamTruoc) {
             cbbCameraTruoc.addElement(cam.getSoMP());
         }
-        cboCameraTruoc.setSelectedItem(null);
     }
 
     private void setDataCboNsx(List<NhaSanXuat> setNsx) {
         cbbNsx.removeAllElements();
-        cbbNsx.addElement(null);
 
         for (NhaSanXuat nsx : setNsx) {
             cbbNsx.addElement(nsx.getTenNsx());
         }
-        cboNsx.setSelectedItem(null);
     }
 
     private void setDataCboDsp(List<DongSPViewModel> setDsp) {
         cbbDongSP.removeAllElements();
-        cbbDongSP.addElement(null);
 
         for (DongSPViewModel dsp : setDsp) {
             cbbDongSP.addElement(dsp.getTenDsp());
         }
-        cboTenDsp.setSelectedItem(null);
     }
 
     @Override
@@ -540,7 +520,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
             JOptionPane.showMessageDialog(this, "Giá Bán Phải Là Số", "Error", JOptionPane.ERROR_MESSAGE);
         }
         String imel = txtAreaImel.getText();
-        System.out.println(""+imel);
+        System.out.println("" + imel);
         LocalDate dateTime = LocalDate.now();
         String Cpu = (String) cboCPU.getSelectedItem();
         String Nsx = (String) cboNsx.getSelectedItem();
@@ -1024,7 +1004,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
 
     private void btnQuayLaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuayLaiActionPerformed
         ViewSanPham viewSanPham = new ViewSanPham();
-        JPanel panelCTSP = viewSanPham.getPanelSPCT(); // Sử dụng instance hiện tại của ViewSanPham
+        JPanel panelCTSP = viewSanPham.getPanelSPCT();
         JPanel viewThemThuocTinhSP = panelAddThuocTinhSP;
         viewThemThuocTinhSP.removeAll();
         viewThemThuocTinhSP.add(panelCTSP);

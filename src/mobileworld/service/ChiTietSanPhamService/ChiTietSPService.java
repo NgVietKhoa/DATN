@@ -1,5 +1,6 @@
 package mobileworld.service.ChiTietSanPhamService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import mobileworld.model.ChiTietSP;
 import mobileworld.repository.ChiTietSanPhamRepo.ChiTietSPRepository;
@@ -33,10 +34,6 @@ public class ChiTietSPService {
         return repo.update(ctsp, id);
     }
 
-    public List<ChiTietSanPhamViewModel> search(String sreach) {
-        return repo.search(sreach);
-    }
-
     public List<ChiTietSanPhamViewModel> getAllCTSP() {
         return repo.getAllCTSP();
     }
@@ -45,8 +42,16 @@ public class ChiTietSPService {
         return repo.xuatSanPham();
     }
 
-    public List<ChiTietSanPhamViewModel> searchBoLoc(String search) {
-        return repo.searchBoLoc(search);
+    public List<ChiTietSanPhamViewModel> search(String keyword) {
+        return repo.search(keyword);
+    }
+
+    public List<ChiTietSanPhamViewModel> LocSP(String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
+        return repo.LocSP(Nsx, Pin, ManHinh, Cpu, sapXepGiaTangDan);
+    }
+    
+    public List<ChiTietSanPhamViewModel> LocCTSP(String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
+        return repo.LocCTSP(Nsx, Pin, ManHinh, Cpu, sapXepGiaTangDan);
     }
 
 }

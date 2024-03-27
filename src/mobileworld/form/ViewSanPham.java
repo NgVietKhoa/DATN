@@ -77,7 +77,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     private final NhaSanXuatService NsxService = new NhaSanXuatService();
     private final ImelService imelService = new ImelService();
     private List<ChiTietSanPhamViewModel> searchResults = new ArrayList<>();
-    private List<ChiTietSanPhamViewModel> updateCtsp = new ArrayList<>();
+    private List<ChiTietSanPhamViewModel> BoLocCtsp = new ArrayList<>();
     private List<ChiTietSanPhamViewModel> listDsp = new ArrayList<>();
     private List<DongSPViewModel> listConHang = new ArrayList<>();
     private List<DongSPViewModel> listHetHang = new ArrayList<>();
@@ -125,62 +125,58 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         tblCTSP.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                int index = tblCTSP.rowAtPoint(evt.getPoint());
+                int index = tblCTSP.getSelectedRow();
                 if (index >= 0 && evt.getClickCount() == 2) {
                     ArrayList<ChiTietSanPhamViewModel> productListImel = getSelectedProductListImel();
                     if (productListImel.isEmpty()) {
                         if (rbnImel.isSelected()) {
-                            ChiTietSanPhamViewModel ctspViewModel = ctspService.getAll().get(index);
-
-                            String idChiTietSP = ctspViewModel.getId();
-                            String Pin = ctspViewModel.getDungLuongPin();
-                            String Ram = ctspViewModel.getDungLuongRam();
-                            String ManHinh = ctspViewModel.getLoaiManHinh();
-                            String NSX = ctspViewModel.getTenNsx();
-                            String TenDsp = ctspViewModel.getTenDsp();
-                            String MauSac = ctspViewModel.getTenMau();
-                            String Cpu = ctspViewModel.getCpu();
-                            String Rom = ctspViewModel.getDungLuongBoNho();
-                            String CameraTruoc = ctspViewModel.getCameraTruoc();
-                            String CameraSau = ctspViewModel.getCameraSau();
-                            BigDecimal gia = ctspViewModel.getGiaBan();
-                            String Imel = ctspViewModel.getImel();
-                            String MoTa = ctspViewModel.getGhiChu();
-
-                            // Open your ThongTinChiTietSP dialog or perform any other action here
-                            ThongTinChiTietSP chiTietSP = new ThongTinChiTietSP(idChiTietSP, CameraSau, CameraTruoc, Cpu, Imel, ManHinh, MauSac, NSX, Pin, Ram, Rom, TenDsp, gia, MoTa);
-                            chiTietSP.setVisible(true);
+                            if (searchResults != null && !searchResults.isEmpty()) {
+                                displayProductDetails(searchResults.get(index));
+                            } else if (BoLocCtsp != null && !BoLocCtsp.isEmpty()) {
+                                displayProductDetails(BoLocCtsp.get(index));
+                            } else {
+                                displayProductDetails(ctspService.getAll().get(index));
+                            }
                         } else if (rbnTatCaImel.isSelected()) {
                             JOptionPane.showMessageDialog(null, "Vui lòng chọn xem IMEL để xem chi tiết sản phẩm!");
                         }
                     } else {
-                        int productListImelIndex = productListImel.indexOf(productListImel.get(index));
-                        if (rbnImel.isSelected()) {
-                            ChiTietSanPhamViewModel product = productListImel.get(productListImelIndex);
-                            String idChiTietSP = product.getId();
-                            String Pin = product.getDungLuongPin();
-                            String Ram = product.getDungLuongRam();
-                            String ManHinh = product.getLoaiManHinh();
-                            String NSX = product.getTenNsx();
-                            String TenDsp = product.getTenDsp();
-                            String MauSac = product.getTenMau();
-                            String Cpu = product.getCpu();
-                            String Rom = product.getDungLuongBoNho();
-                            String CameraTruoc = product.getCameraTruoc();
-                            String CameraSau = product.getCameraSau();
-                            BigDecimal gia = product.getGiaBan();
-                            String Imel = product.getImel();
-                            String MoTa = product.getGhiChu();
-
-                            // Open your ThongTinChiTietSP dialog or perform any other action here
-                            ThongTinChiTietSP chiTietSP = new ThongTinChiTietSP(idChiTietSP, CameraSau, CameraTruoc, Cpu, Imel, ManHinh, MauSac, NSX, Pin, Ram, Rom, TenDsp, gia, MoTa);
-                            chiTietSP.setVisible(true);
-                        } else if (rbnTatCaImel.isSelected()) {
-                            JOptionPane.showMessageDialog(null, "Vui lòng chọn xem IMEL để xem chi tiết sản phẩm!");
+                        if (searchResults != null && !searchResults.isEmpty()) {
+                            ChiTietSanPhamViewModel product = searchResults.get(index);
+                            displayProductDetails(product);
+                        } else if (BoLocCtsp != null && !BoLocCtsp.isEmpty()) {
+                            ChiTietSanPhamViewModel BoLocproduct = BoLocCtsp.get(index);
+                            displayProductDetails(BoLocproduct);
+                        } else {
+                            int productListImelIndex = productListImel.indexOf(productListImel.get(index));
+                            if (rbnImel.isSelected()) {
+                                displayProductDetails(productListImel.get(productListImelIndex));
+                            } else if (rbnTatCaImel.isSelected()) {
+                                JOptionPane.showMessageDialog(null, "Vui lòng chọn xem IMEL để xem chi tiết sản phẩm!");
+                            }
                         }
                     }
-
                 }
+            }
+
+            private void displayProductDetails(ChiTietSanPhamViewModel product) {
+                String idChiTietSP = product.getId();
+                String Pin = product.getDungLuongPin();
+                String Ram = product.getDungLuongRam();
+                String ManHinh = product.getLoaiManHinh();
+                String NSX = product.getTenNsx();
+                String TenDsp = product.getTenDsp();
+                String MauSac = product.getTenMau();
+                String Cpu = product.getCpu();
+                String Rom = product.getDungLuongBoNho();
+                String CameraTruoc = product.getCameraTruoc();
+                String CameraSau = product.getCameraSau();
+                BigDecimal gia = product.getGiaBan();
+                String Imel = product.getImel();
+                String MoTa = product.getGhiChu();
+
+                ThongTinChiTietSP chiTietSP = new ThongTinChiTietSP(idChiTietSP, CameraSau, CameraTruoc, Cpu, Imel, ManHinh, MauSac, NSX, Pin, Ram, Rom, TenDsp, gia, MoTa);
+                chiTietSP.setVisible(true);
             }
         });
 
@@ -254,12 +250,15 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         return panelSanPhamCT;
     }
 
+    public JPanel getPanelSP() {
+        return panelSanPham;
+    }
+
     public boolean getSelectedProductList() {
         int index = tblSP.getSelectedRow();
         if (index >= 0) {
-            String idDSP = (String) tblSP.getValueAt(index, 1);// Lấy iddsp từ dòng được chọn
+            String idDSP = (String) tblSP.getValueAt(index, 1);
 
-            // Chuyển sang tab thứ nhất của materialTabbed1 (Nếu cần)
             materialTabbed1.setSelectedIndex(1);
 
             // Gọi hàm getSP với iddsp đã lấy
@@ -277,9 +276,8 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         ArrayList<ChiTietSanPhamViewModel> productList = new ArrayList<>();
         int index = tblSP.getSelectedRow();
         if (index >= 0) {
-            String idDSP = (String) tblSP.getValueAt(index, 1); // Lấy iddsp từ dòng được chọn
+            String idDSP = (String) tblSP.getValueAt(index, 1);
 
-            // Chuyển sang tab thứ nhất của materialTabbed1 (Nếu cần)
             materialTabbed1.setSelectedIndex(1);
 
             // Gọi hàm getSP với iddsp đã lấy
@@ -335,11 +333,22 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
     private void clearData() {
         txtTimKiem.setText("");
-        cboCPU.setSelectedIndex(0);
-        cboGia.setSelectedIndex(0);
-        cboManHinh.setSelectedIndex(0);
-        cboPin.setSelectedIndex(0);
-        cboNsx.setSelectedIndex(0);
+        if (cboCPU.getSelectedItem() != null) {
+            cboCPU.setSelectedItem(null);
+        }
+        if (cboGia.getSelectedItem() != null) {
+            cboGia.setSelectedItem(null);
+        }
+        if (cboManHinh.getSelectedItem() != null) {
+            cboManHinh.setSelectedItem(null);
+        }
+        if (cboPin.getSelectedItem() != null) {
+            cboPin.setSelectedItem(null);
+        }
+        if (cboNsx.getSelectedItem() != null) {
+            cboNsx.setSelectedItem(null);
+        }
+        rbnTatCaImel.setSelected(true);
         showDataTableCTSPImel(ctspService.getAll());
         showDataTableSP(dspService.getAll());
         showDataTableCTSP(ctspService.getAllCTSP());
@@ -472,7 +481,6 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     /////load combobox
     private void setDataCboPin(List<Pin> setPin) {
         cbbPin.removeAllElements();
-        cbbPin.addElement(null);
 
         for (Pin pinE : setPin) {
             cbbPin.addElement(pinE.getDungLuongPin());
@@ -482,7 +490,6 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
     private void setDataCboManHinh(List<ManHinh> setMh) {
         cbbManHinh.removeAllElements();
-        cbbManHinh.addElement(null);
 
         for (ManHinh mh : setMh) {
             cbbManHinh.addElement(mh.getLoaiManHinh());
@@ -492,7 +499,6 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
     private void setDataCboNsx(List<NhaSanXuat> setNsx) {
         cbbNsx.removeAllElements();
-        cbbNsx.addElement(null);
 
         for (NhaSanXuat nsx : setNsx) {
             cbbNsx.addElement(nsx.getTenNsx());
@@ -502,7 +508,6 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
     private void setDataCboCpu(List<CPU> setCpu) {
         cbbCpu.removeAllElements();
-        cbbCpu.addElement(null);
 
         for (CPU cpu : setCpu) {
             cbbCpu.addElement(cpu.getCpu());
@@ -513,6 +518,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     private void setDataCboGia() {
         cboGia.addItem("Giá Tăng Dần");
         cboGia.addItem("Giá Giảm Dần");
+        cboGia.setSelectedItem(null);
     }
 
     //getformcombobox
@@ -605,6 +611,32 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     public boolean update(ChiTietSP ctsp, String id) {
         onDataChange();
         return true;
+    }
+
+    private void filterCTSP() {
+        String nsx = (String) cboNsx.getSelectedItem();
+        String pin = (String) cboPin.getSelectedItem();
+        String manHinh = (String) cboManHinh.getSelectedItem();
+        String cpu = (String) cboCPU.getSelectedItem();
+
+        // Kiểm tra xem giá trị được chọn từ combobox có null không
+        boolean sapXepGiaTangDan = "Giá Tăng Dần".equals(cboGia.getSelectedItem());
+
+        BoLocCtsp = ctspService.LocCTSP(nsx, pin, manHinh, cpu, sapXepGiaTangDan);
+        showDataTableCTSP(BoLocCtsp);
+    }
+
+    private void filterSP() {
+        String nsx = (String) cboNsx.getSelectedItem();
+        String pin = (String) cboPin.getSelectedItem();
+        String manHinh = (String) cboManHinh.getSelectedItem();
+        String cpu = (String) cboCPU.getSelectedItem();
+
+        // Kiểm tra xem giá trị được chọn từ combobox có null không
+        boolean sapXepGiaTangDan = "Giá Tăng Dần".equals(cboGia.getSelectedItem());
+
+        List<ChiTietSanPhamViewModel> filteredProducts = ctspService.LocSP(nsx, pin, manHinh, cpu, sapXepGiaTangDan);
+        showDataTableCTSP(filteredProducts);
     }
 
     @SuppressWarnings("unchecked")
@@ -1004,6 +1036,11 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         jPanel2.add(cboCPU);
 
         cboGia.setLabeText("Giá");
+        cboGia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboGiaActionPerformed(evt);
+            }
+        });
         jPanel2.add(cboGia);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -1377,6 +1414,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyReleased
         if (txtTimKiem.getText().trim().equals("")) {
             showDataTableCTSP(ctspService.getAll());
+            searchResults = null;
         } else {
             searchResults = ctspService.search(txtTimKiem.getText());
             showDataTableCTSP(searchResults);
@@ -1604,15 +1642,33 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 if (rbnPin.isSelected()) {
                     addSuccess = ttspService.addPin(getFormDataPin());
                     showDataTablePin(ttspService.getAllPin());
+                    setDataCboPin(pinService.getAll());
                     clearThuocTinhSP();
+                    if (rbnTatCaImel.isSelected()) {
+                        showDataTableCTSP(ctspService.getAllCTSP());
+                    } else if (rbnImel.isSelected()) {
+                        showDataTableCTSP(ctspService.getAll());
+                    }
                 } else if (rbnCpu.isSelected()) {
                     addSuccess = ttspService.addCPU(getFormDataCPU());
                     showDataTableCPU(ttspService.getAllCPU());
+                    setDataCboCpu(cpuService.getAll());
                     clearThuocTinhSP();
+                    if (rbnTatCaImel.isSelected()) {
+                        showDataTableCTSP(ctspService.getAllCTSP());
+                    } else if (rbnImel.isSelected()) {
+                        showDataTableCTSP(ctspService.getAll());
+                    }
                 } else if (rbnManHinh.isSelected()) {
                     addSuccess = ttspService.addManHinh(getFormDataManHinh());
                     showDataTableManHinh(ttspService.getAllManHinh());
+                    setDataCboManHinh(mhService.getAll());
                     clearThuocTinhSP();
+                    if (rbnTatCaImel.isSelected()) {
+                        showDataTableCTSP(ctspService.getAllCTSP());
+                    } else if (rbnImel.isSelected()) {
+                        showDataTableCTSP(ctspService.getAll());
+                    }
                 } else if (rbnMauSac.isSelected()) {
                     addSuccess = ttspService.addMauSac(getFormDataMauSac());
                     showDataTableMauSac(ttspService.getAllMauSac());
@@ -1658,17 +1714,35 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 Pin selectedPin = ttspService.getAllPin().get(selectedRow);
                 updateSuccess = ttspService.updatePin(getFormDataPin(), selectedPin.getId());
                 showDataTablePin(ttspService.getAllPin());
+                setDataCboPin(pinService.getAll());
                 clearThuocTinhSP();
+                if (rbnTatCaImel.isSelected()) {
+                    showDataTableCTSP(ctspService.getAllCTSP());
+                } else if (rbnImel.isSelected()) {
+                    showDataTableCTSP(ctspService.getAll());
+                }
             } else if (rbnCpu.isSelected()) {
                 CPU selectedCPU = ttspService.getAllCPU().get(selectedRow);
                 updateSuccess = ttspService.updateCPU(getFormDataCPU(), selectedCPU.getId());
                 showDataTableCPU(ttspService.getAllCPU());
+                setDataCboCpu(cpuService.getAll());
                 clearThuocTinhSP();
+                if (rbnTatCaImel.isSelected()) {
+                    showDataTableCTSP(ctspService.getAllCTSP());
+                } else if (rbnImel.isSelected()) {
+                    showDataTableCTSP(ctspService.getAll());
+                }
             } else if (rbnManHinh.isSelected()) {
                 ManHinh selectedManHinh = ttspService.getAllManHinh().get(selectedRow);
                 updateSuccess = ttspService.updateManHinh(getFormDataManHinh(), selectedManHinh.getId());
                 showDataTableManHinh(ttspService.getAllManHinh());
+                setDataCboManHinh(mhService.getAll());
                 clearThuocTinhSP();
+                if (rbnTatCaImel.isSelected()) {
+                    showDataTableCTSP(ctspService.getAllCTSP());
+                } else if (rbnImel.isSelected()) {
+                    showDataTableCTSP(ctspService.getAll());
+                }
             } else if (rbnMauSac.isSelected()) {
                 MauSac selectedMauSac = ttspService.getAllMauSac().get(selectedRow);
                 updateSuccess = ttspService.updateMauSac(getFormDataMauSac(), selectedMauSac.getId());
@@ -1718,17 +1792,35 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 Pin removePin = ttspService.getAllPin().get(selectedRow);
                 removeSuccess = ttspService.removePin(removePin.getId());
                 showDataTablePin(ttspService.getAllPin());
+                setDataCboPin(pinService.getAll());
                 clearThuocTinhSP();
+                if (rbnTatCaImel.isSelected()) {
+                    showDataTableCTSP(ctspService.getAllCTSP());
+                } else if (rbnImel.isSelected()) {
+                    showDataTableCTSP(ctspService.getAll());
+                }
             } else if (rbnCpu.isSelected()) {
                 CPU removeCPU = ttspService.getAllCPU().get(selectedRow);
                 removeSuccess = ttspService.removeCPU(removeCPU.getId());
                 showDataTableCPU(ttspService.getAllCPU());
+                setDataCboCpu(cpuService.getAll());
                 clearThuocTinhSP();
+                if (rbnTatCaImel.isSelected()) {
+                    showDataTableCTSP(ctspService.getAllCTSP());
+                } else if (rbnImel.isSelected()) {
+                    showDataTableCTSP(ctspService.getAll());
+                }
             } else if (rbnManHinh.isSelected()) {
                 ManHinh removeManHinh = ttspService.getAllManHinh().get(selectedRow);
                 removeSuccess = ttspService.removeManHinh(removeManHinh.getId());
                 showDataTableManHinh(ttspService.getAllManHinh());
+                setDataCboManHinh(mhService.getAll());
                 clearThuocTinhSP();
+                if (rbnTatCaImel.isSelected()) {
+                    showDataTableCTSP(ctspService.getAllCTSP());
+                } else if (rbnImel.isSelected()) {
+                    showDataTableCTSP(ctspService.getAll());
+                }
             } else if (rbnMauSac.isSelected()) {
                 MauSac removeMauSac = ttspService.getAllMauSac().get(selectedRow);
                 removeSuccess = ttspService.removeMauSac(removeMauSac.getId());
@@ -1783,34 +1875,34 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     }//GEN-LAST:event_rbnTatCaActionPerformed
 
     private void cboNsxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboNsxActionPerformed
-        Object selectedObject = cboNsx.getSelectedItem();
-        if (selectedObject != null) {
-            String selectedBoLoc = selectedObject.toString();
-            showDataTableCTSP(ctspService.searchBoLoc(selectedBoLoc));
+        if (rbnImel.isSelected()) {
+            filterCTSP();
+        } else if (rbnTatCaImel.isSelected()) {
+            filterSP();
         }
     }//GEN-LAST:event_cboNsxActionPerformed
 
     private void cboPinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboPinActionPerformed
-        Object selectedObject = cboPin.getSelectedItem();
-        if (selectedObject != null) {
-            String selectedBoLoc = selectedObject.toString();
-            showDataTableCTSP(ctspService.searchBoLoc(selectedBoLoc));
+        if (rbnImel.isSelected()) {
+            filterCTSP();
+        } else if (rbnTatCaImel.isSelected()) {
+            filterSP();
         }
     }//GEN-LAST:event_cboPinActionPerformed
 
     private void cboManHinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboManHinhActionPerformed
-        Object selectedObject = cboManHinh.getSelectedItem();
-        if (selectedObject != null) {
-            String selectedBoLoc = selectedObject.toString();
-            showDataTableCTSP(ctspService.searchBoLoc(selectedBoLoc));
+        if (rbnImel.isSelected()) {
+            filterCTSP();
+        } else if (rbnTatCaImel.isSelected()) {
+            filterSP();
         }
     }//GEN-LAST:event_cboManHinhActionPerformed
 
     private void cboCPUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboCPUActionPerformed
-        Object selectedObject = cboCPU.getSelectedItem();
-        if (selectedObject != null) {
-            String selectedBoLoc = selectedObject.toString();
-            showDataTableCTSP(ctspService.searchBoLoc(selectedBoLoc));
+        if (rbnImel.isSelected()) {
+            filterCTSP();
+        } else if (rbnTatCaImel.isSelected()) {
+            filterSP();
         }
     }//GEN-LAST:event_cboCPUActionPerformed
 
@@ -1837,6 +1929,15 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         showDataTableCameraSau(ttspService.getAllCameraSau());
         clearThuocTinhSP();
     }//GEN-LAST:event_rbnCamSauActionPerformed
+
+
+    private void cboGiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboGiaActionPerformed
+        if (rbnImel.isSelected()) {
+            filterCTSP();
+        } else if (rbnTatCaImel.isSelected()) {
+            filterSP();
+        }
+    }//GEN-LAST:event_cboGiaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

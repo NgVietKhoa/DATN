@@ -7,6 +7,7 @@ import mobileworld.model.ChiTietSP;
 import mobileworld.viewModel.ChiTietSanPhamViewModel;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -136,6 +137,414 @@ public class ChiTietSPRepository {
         return listSP;
     }
 
+    public List<ChiTietSanPhamViewModel> search(String keyword) {
+        List<ChiTietSanPhamViewModel> searchResult = new ArrayList<>();
+
+        String sql = """
+                 SELECT
+                         CTS.IDImel,
+                         CTS.IDNSX,
+                         CTS.IDDongSP,
+                         CTS.IDMauSac,
+                         CTS.IDPin,
+                         CTS.IDManHinh,
+                         CTS.IDRam,
+                         CTS.IDBoNho,
+                         CTS.IDCPU,
+                         CTS.IDCamSau,
+                         CTS.IDCamTruoc,
+                         Imel.Imel,
+                         DS.TenDsp,
+                         NSX.TenNsx,
+                         Pin.DungLuongPin,
+                         ManHinh.LoaiManHinh,
+                         CPU.CPU,
+                         Ram.DungLuongRam,
+                         BoNho.DungLuongBoNho,
+                         MauSac.TenMau,
+                         CTS.GiaBan,
+                         CTS.GhiChu,
+                         COUNT(CTS.ID) AS SoLuong,
+                         CameraSau.SoMP,
+                         CameraTruoc.SoMP,
+                         CTS.ID
+                     FROM
+                         dbo.ChiTietSP AS CTS
+                         INNER JOIN dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID
+                         INNER JOIN dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
+                         INNER JOIN dbo.Pin ON CTS.IDPin = Pin.ID
+                         INNER JOIN dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
+                         INNER JOIN dbo.CPU ON CTS.IDCPU = CPU.ID
+                         INNER JOIN dbo.Ram ON CTS.IDRam = Ram.ID
+                         INNER JOIN dbo.BoNho ON CTS.IDBoNho = BoNho.ID
+                         INNER JOIN dbo.MauSac ON CTS.IDMauSac = MauSac.ID
+                         INNER JOIN dbo.CameraSau ON CTS.IDCamSau = CameraSau.ID
+                         INNER JOIN dbo.CameraTruoc ON CTS.IDCamTruoc = CameraTruoc.ID
+                         INNER JOIN dbo.Imel ON CTS.IDImel = Imel.ID
+                     WHERE
+                         CTS.Deleted = 1
+                         AND (
+                             CTS.IDImel LIKE ? OR
+                             DS.TenDsp LIKE ? OR
+                             NSX.TenNsx LIKE ? OR
+                             Pin.DungLuongPin LIKE ? OR
+                             ManHinh.LoaiManHinh LIKE ? OR
+                             CPU.CPU LIKE ? OR
+                             Ram.DungLuongRam LIKE ? OR
+                             BoNho.DungLuongBoNho LIKE ? OR
+                             MauSac.TenMau LIKE ? OR
+                             CTS.GhiChu LIKE ?
+                         )
+                     GROUP BY
+                         CTS.IDImel,
+                         CTS.IDNSX,
+                         CTS.IDDongSP,
+                         CTS.IDMauSac,
+                         CTS.IDPin,
+                         CTS.IDManHinh,
+                         CTS.IDRam,
+                         CTS.IDBoNho,
+                         CTS.IDCPU,
+                         CTS.IDCamSau,
+                         CTS.IDCamTruoc,
+                         Imel.Imel,
+                         DS.TenDsp,
+                         NSX.TenNsx,
+                         Pin.DungLuongPin,
+                         ManHinh.LoaiManHinh,
+                         CPU.CPU,
+                         Ram.DungLuongRam,
+                         BoNho.DungLuongBoNho,
+                         MauSac.TenMau,
+                         CTS.GiaBan,
+                         CTS.GhiChu,
+                         CameraSau.SoMP,
+                         CameraTruoc.SoMP,
+                         CTS.ID
+                     ORDER BY
+                         CTS.ID DESC;
+                 """;
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            for (int i = 1; i <= 10; i++) {
+                ps.setString(i, "%" + keyword + "%");
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
+                spvm.setIdimel(rs.getString(1));
+                spvm.setIdNsx(rs.getString(2));
+                spvm.setIdDsp(rs.getString(3));
+                spvm.setIdMauSac(rs.getString(4));
+                spvm.setIdPin(rs.getString(5));
+                spvm.setIdManHinh(rs.getString(6));
+                spvm.setIdRam(rs.getString(7));
+                spvm.setIdboNho(rs.getString(8));
+                spvm.setIdCpu(rs.getString(9));
+                spvm.setIdCameraSau(rs.getString(10));
+                spvm.setIdCameraTruoc(rs.getString(11));
+                spvm.setImel(rs.getString(12));
+                spvm.setTenDsp(rs.getString(13));
+                spvm.setTenNsx(rs.getString(14));
+                spvm.setDungLuongPin(rs.getString(15));
+                spvm.setLoaiManHinh(rs.getString(16));
+                spvm.setCpu(rs.getString(17));
+                spvm.setDungLuongRam(rs.getString(18));
+                spvm.setDungLuongBoNho(rs.getString(19));
+                spvm.setTenMau(rs.getString(20));
+                spvm.setGiaBan(rs.getBigDecimal(21));
+                spvm.setGhiChu(rs.getString(22));
+                spvm.setSoLuong(rs.getInt(23));
+                spvm.setCameraSau(rs.getString(24));
+                spvm.setCameraTruoc(rs.getString(25));
+                spvm.setId(rs.getString(26));
+                searchResult.add(spvm);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return searchResult;
+    }
+
+    public List<ChiTietSanPhamViewModel> LocCTSP(String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
+        List<ChiTietSanPhamViewModel> searchResult = new ArrayList<>();
+
+        String sql = "SELECT "
+                + "CTS.IDImel, "
+                + "CTS.IDNSX, "
+                + "CTS.IDDongSP, "
+                + "CTS.IDMauSac, "
+                + "CTS.IDPin, "
+                + "CTS.IDManHinh, "
+                + "CTS.IDRam, "
+                + "CTS.IDBoNho, "
+                + "CTS.IDCPU, "
+                + "CTS.IDCamSau, "
+                + "CTS.IDCamTruoc, "
+                + "Imel.Imel, "
+                + "DS.TenDsp, "
+                + "NSX.TenNsx, "
+                + "Pin.DungLuongPin, "
+                + "ManHinh.LoaiManHinh, "
+                + "CPU.CPU, "
+                + "Ram.DungLuongRam, "
+                + "BoNho.DungLuongBoNho, "
+                + "MauSac.TenMau, "
+                + "CTS.GiaBan, "
+                + "CTS.GhiChu, "
+                + "COUNT(CTS.ID) AS SoLuong, "
+                + "CameraSau.SoMP, "
+                + "CameraTruoc.SoMP, "
+                + "CTS.ID "
+                + "FROM "
+                + "dbo.ChiTietSP AS CTS "
+                + "INNER JOIN dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID "
+                + "INNER JOIN dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID "
+                + "INNER JOIN dbo.Pin ON CTS.IDPin = Pin.ID "
+                + "INNER JOIN dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID "
+                + "INNER JOIN dbo.CPU ON CTS.IDCPU = CPU.ID "
+                + "INNER JOIN dbo.Ram ON CTS.IDRam = Ram.ID "
+                + "INNER JOIN dbo.BoNho ON CTS.IDBoNho = BoNho.ID "
+                + "INNER JOIN dbo.MauSac ON CTS.IDMauSac = MauSac.ID "
+                + "INNER JOIN dbo.CameraSau ON CTS.IDCamSau = CameraSau.ID "
+                + "INNER JOIN dbo.CameraTruoc ON CTS.IDCamTruoc = CameraTruoc.ID "
+                + "INNER JOIN dbo.Imel ON CTS.IDImel = Imel.ID "
+                + "WHERE "
+                + "CTS.Deleted = 1 "
+                + "AND ( "
+                + "NSX.TenNsx LIKE ? OR "
+                + "Pin.DungLuongPin LIKE ? OR "
+                + "ManHinh.LoaiManHinh LIKE ? OR "
+                + "CPU.CPU LIKE ? "
+                + ") "
+                + "GROUP BY "
+                + "CTS.IDImel, "
+                + "CTS.IDNSX, "
+                + "CTS.IDDongSP, "
+                + "CTS.IDMauSac, "
+                + "CTS.IDPin, "
+                + "CTS.IDManHinh, "
+                + "CTS.IDRam, "
+                + "CTS.IDBoNho, "
+                + "CTS.IDCPU, "
+                + "CTS.IDCamSau, "
+                + "CTS.IDCamTruoc, "
+                + "Imel.Imel, "
+                + "DS.TenDsp, "
+                + "NSX.TenNsx, "
+                + "Pin.DungLuongPin, "
+                + "ManHinh.LoaiManHinh, "
+                + "CPU.CPU, "
+                + "Ram.DungLuongRam, "
+                + "BoNho.DungLuongBoNho, "
+                + "MauSac.TenMau, "
+                + "CTS.GiaBan, "
+                + "CTS.GhiChu, "
+                + "CameraSau.SoMP, "
+                + "CameraTruoc.SoMP, "
+                + "CTS.ID "
+                + "ORDER BY "
+                + "CTS.GiaBan " + (sapXepGiaTangDan ? "ASC" : "DESC");
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, Nsx);
+            ps.setObject(2, Pin);
+            ps.setObject(3, ManHinh);
+            ps.setObject(4, Cpu);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
+                spvm.setIdimel(rs.getString(1));
+                spvm.setIdNsx(rs.getString(2));
+                spvm.setIdDsp(rs.getString(3));
+                spvm.setIdMauSac(rs.getString(4));
+                spvm.setIdPin(rs.getString(5));
+                spvm.setIdManHinh(rs.getString(6));
+                spvm.setIdRam(rs.getString(7));
+                spvm.setIdboNho(rs.getString(8));
+                spvm.setIdCpu(rs.getString(9));
+                spvm.setIdCameraSau(rs.getString(10));
+                spvm.setIdCameraTruoc(rs.getString(11));
+                spvm.setImel(rs.getString(12));
+                spvm.setTenDsp(rs.getString(13));
+                spvm.setTenNsx(rs.getString(14));
+                spvm.setDungLuongPin(rs.getString(15));
+                spvm.setLoaiManHinh(rs.getString(16));
+                spvm.setCpu(rs.getString(17));
+                spvm.setDungLuongRam(rs.getString(18));
+                spvm.setDungLuongBoNho(rs.getString(19));
+                spvm.setTenMau(rs.getString(20));
+                spvm.setGiaBan(rs.getBigDecimal(21));
+                spvm.setGhiChu(rs.getString(22));
+                spvm.setSoLuong(rs.getInt(23));
+                spvm.setCameraSau(rs.getString(24));
+                spvm.setCameraTruoc(rs.getString(25));
+                spvm.setId(rs.getString(26));
+                searchResult.add(spvm);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return searchResult;
+    }
+
+    public List<ChiTietSanPhamViewModel> LocSP(String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
+        List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
+
+        String sql = "WITH DSP_Count AS ("
+                + "SELECT "
+                + "    IDDongSP, "
+                + "    COUNT(*) AS SoLuongDSP "
+                + "FROM "
+                + "    dbo.ChiTietSP "
+                + "WHERE "
+                + "    Deleted = 1 "
+                + "GROUP BY "
+                + "    IDDongSP "
+                + "), "
+                + "CTE_RN AS ("
+                + "SELECT "
+                + "    CTS.IDImel, "
+                + "    CTS.IDNSX, "
+                + "    CTS.IDDongSP, "
+                + "    CTS.IDMauSac, "
+                + "    CTS.IDPin, "
+                + "    CTS.IDManHinh, "
+                + "    CTS.IDRam, "
+                + "    CTS.IDBoNho, "
+                + "    CTS.IDCPU, "
+                + "    CTS.IDCamSau, "
+                + "    CTS.IDCamTruoc, "
+                + "    Imel.Imel, "
+                + "    DS.TenDSP, "
+                + "    NSX.TenNsx, "
+                + "    Pin.DungLuongPin, "
+                + "    ManHinh.LoaiManHinh, "
+                + "    CPU.CPU, "
+                + "    Ram.DungLuongRam, "
+                + "    BoNho.DungLuongBoNho, "
+                + "    MauSac.TenMau, "
+                + "    SUM(CTS.GiaBan) OVER(PARTITION BY CTS.IDDongSP) AS TongGiaBan, "
+                + "    CTS.GhiChu, "
+                + "    DC.SoLuongDSP, "
+                + "    CameraSau.SoMP AS CameraSau, "
+                + "    CameraTruoc.SoMP AS CameraTruoc, "
+                + "    CTS.ID, "
+                + "    ROW_NUMBER() OVER(PARTITION BY CTS.IDDongSP ORDER BY CTS.GiaBan " + (sapXepGiaTangDan ? "ASC" : "DESC") + ") AS RN "
+                + "FROM "
+                + "    dbo.ChiTietSP AS CTS "
+                + "INNER JOIN "
+                + "    DSP_Count AS DC ON CTS.IDDongSP = DC.IDDongSP "
+                + "INNER JOIN "
+                + "    dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID "
+                + "INNER JOIN "
+                + "    dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID "
+                + "INNER JOIN "
+                + "    dbo.Pin ON CTS.IDPin = Pin.ID "
+                + "INNER JOIN "
+                + "    dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID "
+                + "INNER JOIN "
+                + "    dbo.CPU ON CTS.IDCPU = CPU.ID "
+                + "INNER JOIN "
+                + "    dbo.Ram ON CTS.IDRam = Ram.ID "
+                + "INNER JOIN "
+                + "    dbo.BoNho ON CTS.IDBoNho = BoNho.ID "
+                + "INNER JOIN "
+                + "    dbo.MauSac ON CTS.IDMauSac = MauSac.ID "
+                + "INNER JOIN "
+                + "    dbo.CameraSau ON CTS.IDCamSau = CameraSau.ID "
+                + "INNER JOIN "
+                + "    dbo.CameraTruoc ON CTS.IDCamTruoc = CameraTruoc.ID "
+                + "INNER JOIN "
+                + "    dbo.Imel ON CTS.IDImel = Imel.ID "
+                + "WHERE "
+                + "CTS.Deleted = 1 "
+                + "AND ( "
+                + "NSX.TenNsx LIKE ? OR "
+                + "Pin.DungLuongPin LIKE ? OR "
+                + "ManHinh.LoaiManHinh LIKE ? OR "
+                + "CPU.CPU LIKE ? "
+                + ") "
+                + "), "
+                + "CTE_Final AS ("
+                + "SELECT "
+                + "    Imel, "
+                + "    IDNSX, "
+                + "    IDDongSP, "
+                + "    IDMauSac, "
+                + "    IDPin, "
+                + "    IDManHinh, "
+                + "    IDRam, "
+                + "    IDBoNho, "
+                + "    IDCPU, "
+                + "    IDCamSau, "
+                + "    IDCamTruoc, "
+                + "    TenDsp, "
+                + "    TenNsx, "
+                + "    DungLuongPin, "
+                + "    LoaiManHinh, "
+                + "    CPU, "
+                + "    DungLuongRam, "
+                + "    DungLuongBoNho, "
+                + "    TenMau, "
+                + "    (SELECT SUM(GiaBan) FROM dbo.ChiTietSP WHERE IDDongSP = CTE_RN.IDDongSP) AS TongGiaBan, "
+                + "    GhiChu, "
+                + "    SoLuongDSP, "
+                + "    CameraSau, "
+                + "    CameraTruoc, "
+                + "    ID, "
+                + "    ROW_NUMBER() OVER(PARTITION BY IDDongSP ORDER BY ID DESC) AS RN "
+                + "FROM "
+                + "    CTE_RN "
+                + "WHERE "
+                + "    RN = 1 "
+                + ") "
+                + "SELECT "
+                + "    * "
+                + "FROM "
+                + "    CTE_Final ";
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, Nsx);
+            ps.setObject(2, Pin);
+            ps.setObject(3, ManHinh);
+            ps.setObject(4, Cpu);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
+                spvm.setImel(rs.getString(1));
+                spvm.setIdNsx(rs.getString(2));
+                spvm.setIdDsp(rs.getString(3));
+                spvm.setIdMauSac(rs.getString(4));
+                spvm.setIdPin(rs.getString(5));
+                spvm.setIdManHinh(rs.getString(6));
+                spvm.setIdRam(rs.getString(7));
+                spvm.setIdboNho(rs.getString(8));
+                spvm.setIdCpu(rs.getString(9));
+                spvm.setIdCameraSau(rs.getString(10));
+                spvm.setIdCameraTruoc(rs.getString(11));
+                spvm.setTenDsp(rs.getString(12));
+                spvm.setTenNsx(rs.getString(13));
+                spvm.setDungLuongPin(rs.getString(14));
+                spvm.setLoaiManHinh(rs.getString(15));
+                spvm.setCpu(rs.getString(16));
+                spvm.setDungLuongRam(rs.getString(17));
+                spvm.setDungLuongBoNho(rs.getString(18));
+                spvm.setTenMau(rs.getString(19));
+                spvm.setGiaBan(rs.getBigDecimal(20));
+                spvm.setGhiChu(rs.getString(21));
+                spvm.setSoLuong(rs.getInt(22));
+                spvm.setCameraSau(rs.getString(23));
+                spvm.setCameraTruoc(rs.getString(24));
+                spvm.setId(rs.getString(25));
+                listSP.add(spvm);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listSP;
+    }
+
     public List<ChiTietSanPhamViewModel> getSP(String idDsp) {
         List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
 
@@ -173,7 +582,7 @@ public class ChiTietSPRepository {
                             Ram.DungLuongRam,
                             BoNho.DungLuongBoNho,
                             MauSac.TenMau,
-                            CTS.GiaBan,
+                            SUM(CTS.GiaBan) OVER(PARTITION BY CTS.IDDongSP) AS TongGiaBan,
                             CTS.GhiChu,
                             DC.SoLuongDSP,
                             CameraSau.SoMP AS CameraSau,
@@ -229,7 +638,7 @@ public class ChiTietSPRepository {
                         DungLuongRam,
                         DungLuongBoNho,
                         TenMau,
-                        GiaBan,
+                        TongGiaBan,
                         GhiChu,
                         SoLuongDSP,
                         CameraSau,
@@ -519,155 +928,111 @@ public class ChiTietSPRepository {
         return check > 0;
     }
 
-    public List<ChiTietSanPhamViewModel> search(String search) {
-        List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
-        List<ChiTietSanPhamViewModel> allSP = getAll();
-
-        // Filtering based on search criteria
-        for (ChiTietSanPhamViewModel sp : allSP) {
-            if (matchesSearchCriteria(sp, search)) {
-                listSP.add(sp);
-            }
-        }
-
-        return listSP;
-    }
-
-    private boolean matchesSearchCriteria(ChiTietSanPhamViewModel sp, String search) {
-        String searchTerm = search.toLowerCase(); // Convert search term to lowercase for case-insensitive comparison
-        // Check if any field of the product contains the search term
-        return sp.getImel().toLowerCase().contains(searchTerm)
-                || sp.getTenDsp().toLowerCase().contains(searchTerm)
-                || sp.getTenNsx().toLowerCase().contains(searchTerm)
-                || sp.getDungLuongPin().toLowerCase().contains(searchTerm)
-                || sp.getLoaiManHinh().toLowerCase().contains(searchTerm)
-                || sp.getCpu().toLowerCase().contains(searchTerm)
-                || sp.getDungLuongRam().toLowerCase().contains(searchTerm)
-                || sp.getDungLuongBoNho().toLowerCase().contains(searchTerm)
-                || sp.getGiaBan().toString().toLowerCase().contains(searchTerm)
-                || sp.getCameraSau().toLowerCase().contains(searchTerm)
-                || sp.getCameraTruoc().toLowerCase().contains(searchTerm);
-    }
-
-    public List<ChiTietSanPhamViewModel> searchBoLoc(String search) {
-        List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
-        List<ChiTietSanPhamViewModel> allSP = getAll();
-
-        // Filtering based on search criteria
-        for (ChiTietSanPhamViewModel sp : allSP) {
-            if (matchesSearchCriteria(sp, search)) {
-                listSP.add(sp);
-            }
-        }
-
-        return listSP;
-    }
-
     public List<ChiTietSanPhamViewModel> getAllCTSP() {
         List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
 
         String sql = """
         WITH DSP_Count AS (
-                        SELECT
+                            SELECT
+                                IDDongSP,
+                                COUNT(*) AS SoLuongDSP
+                            FROM
+                                dbo.ChiTietSP
+                            WHERE 
+                                Deleted = 1
+                            GROUP BY
+                                IDDongSP
+                        ),
+                        CTE_RN AS (
+                            SELECT
+                                CTS.IDImel,
+                                CTS.IDNSX,
+                                CTS.IDDongSP,
+                                CTS.IDMauSac,
+                                CTS.IDPin,
+                                CTS.IDManHinh,
+                                CTS.IDRam,
+                                CTS.IDBoNho,
+                                CTS.IDCPU,
+                                CTS.IDCamSau,
+                                CTS.IDCamTruoc,
+                                Imel.Imel,
+                                DS.TenDSP,
+                                NSX.TenNsx,
+                                Pin.DungLuongPin,
+                                ManHinh.LoaiManHinh,
+                                CPU.CPU,
+                                Ram.DungLuongRam,
+                                BoNho.DungLuongBoNho,
+                                MauSac.TenMau,
+                                SUM(CTS.GiaBan) OVER(PARTITION BY CTS.IDDongSP) AS TongGiaBan,
+                                CTS.GhiChu,
+                                DC.SoLuongDSP,
+                                CameraSau.SoMP AS CameraSau,
+                                CameraTruoc.SoMP AS CameraTruoc,
+                                CTS.ID,
+                                ROW_NUMBER() OVER(PARTITION BY CTS.IDDongSP ORDER BY CTS.ID DESC) AS RN
+                            FROM
+                                dbo.ChiTietSP AS CTS
+                            INNER JOIN 
+                                DSP_Count AS DC ON CTS.IDDongSP = DC.IDDongSP
+                            INNER JOIN 
+                                dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID
+                            INNER JOIN 
+                                dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
+                            INNER JOIN 
+                                dbo.Pin ON CTS.IDPin = Pin.ID
+                            INNER JOIN 
+                                dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
+                            INNER JOIN 
+                                dbo.CPU ON CTS.IDCPU = CPU.ID
+                            INNER JOIN 
+                                dbo.Ram ON CTS.IDRam = Ram.ID
+                            INNER JOIN 
+                                dbo.BoNho ON CTS.IDBoNho = BoNho.ID
+                            INNER JOIN 
+                                dbo.MauSac ON CTS.IDMauSac = MauSac.ID
+                            INNER JOIN 
+                                dbo.CameraSau ON CTS.IDCamSau = CameraSau.ID
+                            INNER JOIN 
+                                dbo.CameraTruoc ON CTS.IDCamTruoc = CameraTruoc.ID
+                            INNER JOIN 
+                                dbo.Imel ON CTS.IDImel = Imel.ID
+                            WHERE 
+                                CTS.Deleted = 1
+                        )
+                        SELECT 
+                            IDImel,
+                            IDNSX,
                             IDDongSP,
-                            COUNT(*) AS SoLuongDSP
-                        FROM
-                            dbo.ChiTietSP
+                            IDMauSac,
+                            IDPin,
+                            IDManHinh,
+                            IDRam,
+                            IDBoNho,
+                            IDCPU,
+                            IDCamSau,
+                            IDCamTruoc,
+                            TenDsp,
+                            TenNsx,
+                            DungLuongPin,
+                            LoaiManHinh,
+                            CPU,
+                            DungLuongRam,
+                            DungLuongBoNho,
+                            TenMau,
+                            TongGiaBan,
+                            GhiChu,
+                            SoLuongDSP,
+                            CameraSau,
+                            CameraTruoc,
+                            ID    
+                        FROM 
+                            CTE_RN
                         WHERE 
-                            Deleted = 1
-                        GROUP BY
-                            IDDongSP
-                    ),
-                    CTE_RN AS (
-                        SELECT
-                            CTS.IDImel,
-                            CTS.IDNSX,
-                            CTS.IDDongSP,
-                            CTS.IDMauSac,
-                            CTS.IDPin,
-                            CTS.IDManHinh,
-                            CTS.IDRam,
-                            CTS.IDBoNho,
-                            CTS.IDCPU,
-                            CTS.IDCamSau,
-                            CTS.IDCamTruoc,
-                            Imel.Imel,
-                            DS.TenDSP,
-                            NSX.TenNsx,
-                            Pin.DungLuongPin,
-                            ManHinh.LoaiManHinh,
-                            CPU.CPU,
-                            Ram.DungLuongRam,
-                            BoNho.DungLuongBoNho,
-                            MauSac.TenMau,
-                            CTS.GiaBan,
-                            CTS.GhiChu,
-                            DC.SoLuongDSP,
-                            CameraSau.SoMP AS CameraSau,
-                            CameraTruoc.SoMP AS CameraTruoc,
-                            CTS.ID,
-                            ROW_NUMBER() OVER(PARTITION BY CTS.IDDongSP ORDER BY CTS.ID DESC) AS RN
-                        FROM
-                            dbo.ChiTietSP AS CTS
-                        INNER JOIN 
-                            DSP_Count AS DC ON CTS.IDDongSP = DC.IDDongSP
-                        INNER JOIN 
-                            dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID
-                        INNER JOIN 
-                            dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
-                        INNER JOIN 
-                            dbo.Pin ON CTS.IDPin = Pin.ID
-                        INNER JOIN 
-                            dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
-                        INNER JOIN 
-                            dbo.CPU ON CTS.IDCPU = CPU.ID
-                        INNER JOIN 
-                            dbo.Ram ON CTS.IDRam = Ram.ID
-                        INNER JOIN 
-                            dbo.BoNho ON CTS.IDBoNho = BoNho.ID
-                        INNER JOIN 
-                            dbo.MauSac ON CTS.IDMauSac = MauSac.ID
-                        INNER JOIN 
-                            dbo.CameraSau ON CTS.IDCamSau = CameraSau.ID
-                        INNER JOIN 
-                            dbo.CameraTruoc ON CTS.IDCamTruoc = CameraTruoc.ID
-                        INNER JOIN 
-                            dbo.Imel ON CTS.IDImel = Imel.ID
-                        WHERE 
-                            CTS.Deleted = 1
-                    )
-                    SELECT 
-                        Imel,
-                        IDNSX,
-                        IDDongSP,
-                        IDMauSac,
-                        IDPin,
-                        IDManHinh,
-                        IDRam,
-                        IDBoNho,
-                        IDCPU,
-                        IDCamSau,
-                        IDCamTruoc,
-                        TenDsp,
-                        TenNsx,
-                        DungLuongPin,
-                        LoaiManHinh,
-                        CPU,
-                        DungLuongRam,
-                        DungLuongBoNho,
-                        TenMau,
-                        GiaBan,
-                        GhiChu,
-                        SoLuongDSP,
-                        CameraSau,
-                        CameraTruoc,
-                        ID    
-                    FROM 
-                        CTE_RN
-                    WHERE 
-                        RN = 1
-                    ORDER BY 
-                        ID DESC;
+                            RN = 1
+                        ORDER BY 
+                            ID DESC;
     """;
 
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
