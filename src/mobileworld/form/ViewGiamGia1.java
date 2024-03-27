@@ -351,6 +351,11 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
 
         txtSoTienGiamToiDa.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtSoTienGiamToiDa.setLabelText("Số Tiền Giảm Tối Đa");
+        txtSoTienGiamToiDa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSoTienGiamToiDaActionPerformed(evt);
+            }
+        });
         txtSoTienGiamToiDa.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtSoTienGiamToiDaKeyReleased(evt);
@@ -972,6 +977,10 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }//GEN-LAST:event_txtPhanTramGiamKeyReleased
+
+    private void txtSoTienGiamToiDaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSoTienGiamToiDaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSoTienGiamToiDaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

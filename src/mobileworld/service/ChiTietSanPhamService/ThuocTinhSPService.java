@@ -5,6 +5,7 @@ import mobileworld.model.BoNho;
 import mobileworld.model.CPU;
 import mobileworld.model.CameraSau;
 import mobileworld.model.CameraTruoc;
+import mobileworld.model.DongSP;
 import mobileworld.model.ManHinh;
 import mobileworld.model.MauSac;
 import mobileworld.model.Pin;
@@ -149,5 +150,17 @@ public class ThuocTinhSPService {
 
     public boolean updateCameraTruoc(CameraTruoc cam, String id) {
         return repo.updateCameraTruoc(cam, id);
+    }
+
+    public List<CPU> getTenCPU() {
+        return repo.getTenCPU();
+    }
+
+    public List<DongSP> getTenDsp() {
+        return repo.getTenDsp();
+    }
+
+    public List<MauSac> getTenMauSac() {
+        return repo.getTenMauSac();
     }
 }

@@ -1,14 +1,17 @@
 package mobileworld.dialog;
 
 import java.time.LocalDate;
+import java.util.List;
 import javax.swing.JOptionPane;
 import mobileworld.model.CPU;
 import mobileworld.event.DataChangeListener;
 import mobileworld.service.ChiTietSanPhamService.CpuService;
+import mobileworld.service.ChiTietSanPhamService.ThuocTinhSPService;
 
 public class CPUDialog extends javax.swing.JFrame {
 
     public CpuService service = new CpuService();
+    private final ThuocTinhSPService ttspService = new ThuocTinhSPService();
 
     public CPUDialog() {
         initComponents();
@@ -25,7 +28,6 @@ public class CPUDialog extends javax.swing.JFrame {
         this.changeListener = listener;
     }
 
-
     private CPU getFormData() {
         String tenCPU = txtCPU.getText();
         LocalDate dateTime = LocalDate.now();
@@ -38,6 +40,16 @@ public class CPUDialog extends javax.swing.JFrame {
         if (txtCPU.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(this, "CPU không được trống");
             return false;
+        }
+
+        List<CPU> tenCpu = ttspService.getTenCPU();
+
+        String getTenCpu = txtCPU.getText().trim();
+        for (CPU cpu : tenCpu) {
+            if (cpu.getCpu().equals(getTenCpu)) {
+                JOptionPane.showMessageDialog(this, "CPU đã tồn tại trong cơ sở dữ liệu!");
+                return false;
+            }
         }
         return true;
     }

@@ -1,14 +1,17 @@
 package mobileworld.dialog;
 
 import java.time.LocalDate;
+import java.util.List;
 import javax.swing.JOptionPane;
 import mobileworld.model.DongSP;
 import mobileworld.event.DataChangeListener;
 import mobileworld.service.ChiTietSanPhamService.DongSPService;
+import mobileworld.service.ChiTietSanPhamService.ThuocTinhSPService;
 
 public class SPDialog extends javax.swing.JFrame {
 
     public DongSPService service = new DongSPService();
+    private final ThuocTinhSPService ttspService = new ThuocTinhSPService();
 
     public SPDialog() {
         initComponents();
@@ -37,6 +40,16 @@ public class SPDialog extends javax.swing.JFrame {
         if (txtSp.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(this, "Sản phẩm không được trống");
             return false;
+        }
+
+        List<DongSP> tenDsp = ttspService.getTenDsp();
+
+        String getDsp = txtSp.getText().trim();
+        for (DongSP getTenDsp : tenDsp) {
+            if (getTenDsp.getTenDsp().equals(getDsp)) {
+                JOptionPane.showMessageDialog(this, "Sản Phẩm đã tồn tại trong cơ sở dữ liệu!");
+                return false;
+            }
         }
         return true;
     }

@@ -66,6 +66,10 @@ import java.util.logging.Logger;
 
 import com.itextpdf.text.DocumentException;
 import com.google.zxing.WriterException;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.FontFactory;
 
 import mobileworld.service.InvoiceGenerator;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -320,7 +324,6 @@ public class HoaDonRepository {
                                             INNER JOIN
                                                 dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
                                              WHERE dbo.PhuongThucThanhToan.TenKieuThanhToan = ?
-                                                   OR dbo.HoaDon.TrangThai = ?
                                              ORDER BY HoaDon.NgayThanhToan ASC
 
                      """;
@@ -440,7 +443,7 @@ public class HoaDonRepository {
         return list;
     }
 
-    public List<HoaDonModel> search(String ten) {
+    public List<HoaDonModel> search(String txt) {
         List<HoaDonModel> list = new ArrayList<>();
         String sql = """
                       SELECT 
@@ -465,27 +468,24 @@ public class HoaDonRepository {
                       OR HoaDon.SoDienThoaiKhachHang LIKE ? ESCAPE '!'
                       OR HoaDon.DiaChiKhachHang LIKE ? ESCAPE '!'
                       OR HoaDon.IDNhanVien LIKE ? ESCAPE '!'
-                      OR HoaDon.IDNhanVien LIKE ? ESCAPE '!'
                       OR CONVERT(VARCHAR, HoaDon.NgayThanhToan, 111) LIKE ? ESCAPE '!'
                       OR PhuongThucThanhToan.TenKieuThanhToan LIKE ? ESCAPE '!'
                       OR HoaDon.TongTien LIKE ? ESCAPE '!'
                       OR HoaDon.TrangThai LIKE ? ESCAPE '!'
                      ORDER BY HoaDon.NgayThanhToan ASC
-                      
                  """;
 
         try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
-            for (int i = 0; i < ten.length(); i++) {
-                ps.setString(1, "%" + ten + "%");
-                ps.setString(2, "%" + ten + "%");
-                ps.setString(3, "%" + ten + "%");
-                ps.setString(4, "%" + ten + "%");
-                ps.setString(5, "%" + ten + "%");
-                ps.setString(6, "%" + ten + "%");
-                ps.setString(7, "%" + ten + "%");
-                ps.setString(8, "%" + ten + "%");
-                ps.setString(9, "%" + ten + "%");
-                ps.setString(10, "%" + ten + "%");
+            for (int i = 0; i < txt.length(); i++) {
+                ps.setString(1, "%" + txt + "%");
+                ps.setString(2, "%" + txt + "%");
+                ps.setString(3, "%" + txt + "%");
+                ps.setString(4, "%" + txt + "%");
+                ps.setString(5, "%" + txt + "%");
+                ps.setString(6, "%" + txt + "%");
+                ps.setString(7, "%" + txt + "%");
+                ps.setString(8, "%" + txt + "%");
+                ps.setString(9, "%" + txt + "%");
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         HoaDonModel HDM = new HoaDonModel();
@@ -752,6 +752,306 @@ public class HoaDonRepository {
         }
         return false;
     }
+
+    public boolean inHD(String invoiceId) {
+        try (Connection connection = DBConnect.getConnection()) {
+            String sql = """
+                SELECT 
+                    HoaDon.ID, 
+                    HoaDon.IDNhanVien, 
+                    HoaDon.TenKhachHang, 
+                    HoaDon.SoDienThoaiKhachHang, 
+                    HoaDon.DiaChiKhachHang, 
+                    HoaDon.NgayThanhToan, 
+                    PhuongThucThanhToan.TenKieuThanhToan, 
+                    HoaDon.TongTien, 
+                    HoaDon.TrangThai
+                FROM   
+                    dbo.HoaDon 
+                INNER JOIN
+                    dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon 
+                INNER JOIN
+                    dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
+                WHERE HoaDon.ID = ?
+                ORDER BY HoaDon.NgayThanhToan ASC
+                """;
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, invoiceId);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        String invoiceID = resultSet.getString("ID");
+                        String employeeId = resultSet.getString("IDNhanVien");
+                        String customerName = resultSet.getString("TenKhachHang");
+                        String phoneNumber = resultSet.getString("SoDienThoaiKhachHang");
+                        String address = resultSet.getString("DiaChiKhachHang");
+                        Date paymentDate = resultSet.getDate("NgayThanhToan");
+                        String paymentMethodName = resultSet.getString("TenKieuThanhToan");
+                        double totalAmount = resultSet.getDouble("TongTien");
+
+                        // Tạo mã QR code
+                        String qrCodeContent = invoiceID;
+                        String qrCodeImagePath = "C:\\Users\\ADMIN\\Documents\\FINAL_DATN\\DATN\\QR/" + invoiceID + ".png";
+                        try {
+                            generateQRCodeImage(qrCodeContent, qrCodeImagePath);
+                        } catch (WriterException ex) {
+                            Logger.getLogger(HoaDonRepository.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        System.err.println("In Mã QR thành công" + qrCodeImagePath);
+
+                        // Tạo hóa đơn PDF
+                        String pdfFilePath = "C:\\Users\\ADMIN\\Documents\\FINAL_DATN\\DATN\\PDF/" + invoiceID + ".pdf";
+                        generateInvoicePDF(invoiceID, customerName, phoneNumber, address,
+                                employeeId, paymentDate,
+                                paymentMethodName, totalAmount,
+                                qrCodeImagePath, pdfFilePath);
+                        System.err.println("In Hóa đơn thành công" + pdfFilePath);
+
+                        return true;
+                    }
+                }
+            }
+        } catch (SQLException | IOException | DocumentException e) {
+            e.printStackTrace();
+            Logger.getLogger(InvoiceGenerator.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
+    private static void generateQRCodeImage(String qrCodeContent, String filePqrCodeImagePathath)
+            throws WriterException, IOException {
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(qrCodeContent, BarcodeFormat.QR_CODE, 200, 200);
+
+        // Tạo BufferedImage để viết mã QR
+        BufferedImage bufferedImage = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
+        for (int i = 0; i < 200; i++) {
+            for (int j = 0; j < 200; j++) {
+                int pixelColor = bitMatrix.get(i, j) ? 0xFF000000 : 0xFFFFFFFF;
+                bufferedImage.setRGB(i, j, pixelColor);
+            }
+        }
+
+        // Lưu hình ảnh mã QR bằng ImageIO
+        ImageIO.write(bufferedImage, "png", new File(filePqrCodeImagePathath));
+    }
+
+    private static void generateInvoicePDF(String invoiceId, String customerName, String phoneNumber,
+            String address, String employeeId, Date paymentDate,
+            String paymentMethodName,
+            double totalAmount, String qrCodeImagePath, String pdfFilePath)
+            throws DocumentException, IOException {
+        Document document = new Document();
+        PdfWriter.getInstance(document, new FileOutputStream(pdfFilePath));
+        document.open();
+
+        // Thiết lập font cho tiêu đề
+        com.itextpdf.text.Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 22, BaseColor.BLACK);
+        com.itextpdf.text.Font subtitleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, BaseColor.BLACK);
+        com.itextpdf.text.Font contentFont = FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.BLACK);
+        
+        // Thêm logo của công ty (nếu có)
+        com.itextpdf.text.Image logo = com.itextpdf.text.Image.getInstance("C:\\Users\\ADMIN\\Documents\\FINAL_DATN\\DATN\\src\\mobileworld\\icon\\Logomb.png");
+        logo.setAlignment(Element.ALIGN_CENTER);
+        document.add(logo);
+
+        // Thêm tiêu đề
+        Paragraph title = new Paragraph("Invoice", (com.itextpdf.text.Font) titleFont);
+        title.setAlignment(Element.ALIGN_CENTER);
+        document.add(title);
+
+        // Thêm thông tin hóa đơn
+        document.add(Chunk.NEWLINE); // Khoảng trống giữa tiêu đề và thông tin hóa đơn
+        document.add(new Paragraph("Invoice ID: " + invoiceId, (com.itextpdf.text.Font) contentFont));
+        document.add(new Paragraph("Customer: " + customerName, (com.itextpdf.text.Font) contentFont));
+        document.add(new Paragraph("Phone Number: " + phoneNumber, (com.itextpdf.text.Font) contentFont));
+        document.add(new Paragraph("Address: " + address, (com.itextpdf.text.Font) contentFont));
+        document.add(new Paragraph("Employee ID: " + employeeId, (com.itextpdf.text.Font) contentFont));
+        document.add(new Paragraph("Payment Date: " + new SimpleDateFormat("dd/MM/yyyy").format(paymentDate), (com.itextpdf.text.Font) contentFont));
+        document.add(new Paragraph("Payment Method: " + paymentMethodName, (com.itextpdf.text.Font) contentFont));
+
+        // Thêm danh sách các mặt hàng đã mua (nếu có)
+        // document.add(new Paragraph("Items Purchased:", subtitleFont));
+        // document.add(new Paragraph("Item 1: Description, Quantity, Price", contentFont));
+        // document.add(new Paragraph("Item 2: Description, Quantity, Price", contentFont));
+        // document.add(new Paragraph("Item 3: Description, Quantity, Price", contentFont));
+        // ...
+        // Thêm tổng số tiền
+        document.add(new Paragraph("Total Amount: " + DecimalFormat.getCurrencyInstance().format(totalAmount), (com.itextpdf.text.Font) subtitleFont));
+
+        // Thêm hình ảnh mã QR vào PDF
+        com.itextpdf.text.Image qrCodeImage = com.itextpdf.text.Image.getInstance(qrCodeImagePath);
+        qrCodeImage.setAlignment(Element.ALIGN_CENTER);
+        document.add(qrCodeImage);
+
+        document.close();
+    }
+
+//    private static void generateInvoicePDF(String invoiceId, String customerName, String phoneNumber,
+//            String address, String employeeId, Date paymentDate,
+//            String paymentMethodName,
+//            double totalAmount, String qrCodeImagePath, String pdfFilePath)
+//            throws DocumentException, IOException {
+//        Document document = new Document();
+//        PdfWriter.getInstance(document, new FileOutputStream(pdfFilePath));
+//        document.open();
+//
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+//
+//        // Thêm tiêu đề
+//        Paragraph title = new Paragraph("Invoice", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 22, BaseColor.BLACK));
+//        title.setAlignment(Element.ALIGN_CENTER);
+//        document.add(title);
+//        document.add(Chunk.NEWLINE); // Khoảng trống giữa tiêu đề và thông tin hóa đơn
+//
+//        // Thêm thông tin hóa đơn
+//        document.add(new Paragraph("Invoice ID: " + invoiceId));
+//        document.add(new Paragraph("Customer: " + customerName));
+//        document.add(new Paragraph("Phone Number: " + phoneNumber));
+//        document.add(new Paragraph("Address: " + address));
+//        document.add(new Paragraph("Employee ID: " + employeeId));
+//        document.add(new Paragraph("Payment Date: " + dateFormat.format(paymentDate)));
+//        document.add(new Paragraph("Payment Method: " + paymentMethodName));
+//        document.add(new Paragraph("Total Amount: " + decimalFormat.format(totalAmount)));
+//
+//        // Thêm hình ảnh mã QR vào PDF
+//        com.itextpdf.text.Image qrCodeImage = com.itextpdf.text.Image.getInstance(qrCodeImagePath);
+//        qrCodeImage.setAlignment(Element.ALIGN_CENTER);
+//        document.add(qrCodeImage);
+//
+//        document.close();
+//    }
+//    public boolean inHD(String invoiceId) {
+//
+//        Connection connection = null;
+//        PreparedStatement preparedStatement = null;
+//        ResultSet resultSet = null;
+//        try {
+//            // Sử dụng class DBConnect để kết nối đến cơ sở dữ liệu SQL Server
+//            connection = DBConnect.getConnection();
+//           String sql = """
+//                    SELECT 
+//                         HoaDon.ID, 
+//                         HoaDon.IDNhanVien, 
+//                         HoaDon.TenKhachHang, 
+//                         HoaDon.SoDienThoaiKhachHang, 
+//                         HoaDon.DiaChiKhachHang, 
+//                         HoaDon.NgayThanhToan, 
+//                         PhuongThucThanhToan.TenKieuThanhToan, 
+//                         HoaDon.TongTien, 
+//                         HoaDon.TrangThai
+//                     FROM   
+//                         dbo.HoaDon 
+//                     INNER JOIN
+//                         dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon 
+//                     INNER JOIN
+//                         dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
+//                            ORDER BY HoaDon.NgayThanhToan ASC
+//                    """;
+//
+//            preparedStatement = connection.prepareStatement(sql);
+//            preparedStatement.setString(1, invoiceId);
+//            resultSet = preparedStatement.executeQuery();
+//
+//            if (resultSet.next()) {
+//                String invoiceID = resultSet.getString("ID");
+//                String employeeId = resultSet.getString("IDNhanVien");
+//                String customerName = resultSet.getString("TenKhachHang");
+//                String phoneNumber = resultSet.getString("SoDienThoaiKhachHang");
+//                String address = resultSet.getString("DiaChiKhachHang");
+//                Date paymentDate = resultSet.getDate("NgayThanhToan");
+//                String paymentMethodName = resultSet.getString("TenKieuThanhToan");
+//                double totalAmount = resultSet.getDouble("TongTien");
+//
+//                // Tạo mã QR code
+//                String qrCodeContent = invoiceID;
+//
+//                String qrCodeImagePath = "C:\\Users\\ADMIN\\Documents\\mobileWorld3\\QR/" + invoiceID + ".png";
+//                generateQRCodeImage(qrCodeContent, qrCodeImagePath);
+//                System.err.println("In Mã QR thành công" + qrCodeImagePath);
+//                // Tạo hóa đơn PDF
+//                String pdfFilePath = "C:\\Users\\ADMIN\\Documents\\mobileWorld3\\PDF/" + invoiceID + ".pdf";
+//                generateInvoicePDF(invoiceID, customerName, phoneNumber, address,
+//                        employeeId, paymentDate,
+//                        paymentMethodName, totalAmount,
+//                        qrCodeImagePath, pdfFilePath);
+//                System.err.println("In Hóa đơn thành công" + pdfFilePath);
+//
+//                return true; // Trả về true nếu in thành công
+//            }
+//
+//        } catch (SQLException | IOException | WriterException | DocumentException e) {
+//            e.printStackTrace();
+//            Logger.getLogger(InvoiceGenerator.class.getName()).log(Level.SEVERE, null, e);
+//        } finally {
+//            // Đóng các kết nối và tài nguyên
+//            try {
+//                if (resultSet != null) {
+//                    resultSet.close();
+//                }
+//                if (preparedStatement != null) {
+//                    preparedStatement.close();
+//                }
+//                if (connection != null) {
+//                    connection.close();
+//                }
+//            } catch (SQLException ex) {
+//                ex.printStackTrace();
+//            }
+//        }
+//        return false;
+//    }
+//
+//    private static void generateQRCodeImage(String text, String filePath)
+//            throws WriterException, IOException {
+//        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+//        BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 200, 200);
+//
+//        // Tạo BufferedImage để viết mã QR
+//        BufferedImage bufferedImage = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
+//        for (int i = 0; i < 200; i++) {
+//            for (int j = 0; j < 200; j++) {
+//                int pixelColor = bitMatrix.get(i, j) ? 0xFF000000 : 0xFFFFFFFF;
+//                bufferedImage.setRGB(i, j, pixelColor);
+//            }
+//        }
+//
+//        // Lưu hình ảnh mã QR bằng ImageIO
+//        ImageIO.write(bufferedImage, "png", new File(filePath));
+//    }
+//
+//    private static void generateInvoicePDF(String invoiceId, String customerName, String phoneNumber,
+//            String address, String employeeId, Date paymentDate,
+//            String paymentMethodName,
+//            double totalAmount, String qrCodeImagePath, String pdfFilePath)
+//            throws DocumentException, IOException {
+//        Document document = new Document();
+//
+//        // Chỉ định đường dẫn chính xác để lưu các tập tin PDF
+//        PdfWriter.getInstance(document, new FileOutputStream(pdfFilePath));
+//
+//        document.open();
+//
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00"); // Định dạng số tiền
+//
+//        document.add(new Paragraph("Invoice ID: " + invoiceId));
+//        document.add(new Paragraph("Customer: " + customerName));
+//        document.add(new Paragraph("Phone Number: " + phoneNumber));
+//        document.add(new Paragraph("Address: " + address));
+//        document.add(new Paragraph("Employee ID: " + employeeId));
+//        document.add(new Paragraph("Payment Date: " + dateFormat.format(paymentDate)));
+//        document.add(new Paragraph("Payment Method: " + paymentMethodName));
+//        document.add(new Paragraph("Total Amount: " + decimalFormat.format(totalAmount))); // Định dạng số tiền
+//
+//        // Thêm hình ảnh mã QR vào PDF sử dụng đường dẫn chính xác
+//        com.itextpdf.text.Image qrCodeImage = com.itextpdf.text.Image.getInstance(qrCodeImagePath);
+//        document.add(qrCodeImage);
+//        document.close();
+//    }
+    //=========================================================================================================================
     // Phần code khác, như DBConnect, HoaDonCTRepository và HoaDonChiTietModel, bạn cần
     //    public boolean xuatHoaDon() {
     //        try (Connection connection = DBConnect.getConnection()) {
@@ -1068,131 +1368,6 @@ public class HoaDonRepository {
     //        }
     //        return false;
     //    }
-
-    public boolean inHD(String invoiceId) {
-
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            // Sử dụng class DBConnect để kết nối đến cơ sở dữ liệu SQL Server
-            connection = DBConnect.getConnection();
-            String sql = "SELECT "
-                    + "HoaDon.ID, "
-                    + "HoaDon.IDNhanVien, "
-                    + "HoaDon.TenKhachHang, "
-                    + "HoaDon.SoDienThoaiKhachHang, "
-                    + "HoaDon.DiaChiKhachHang, "
-                    + "HoaDon.NgayThanhToan, "
-                    + "PhuongThucThanhToan.TenKieuThanhToan, "
-                    + "HoaDon.TongTien "
-                    + "FROM "
-                    + "dbo.HoaDon "
-                    + "INNER JOIN dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon "
-                    + "INNER JOIN dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID "
-                    + "WHERE HoaDon.ID = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, invoiceId);
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                String invoiceID = resultSet.getString("ID");
-                String employeeId = resultSet.getString("IDNhanVien");
-                String customerName = resultSet.getString("TenKhachHang");
-                String phoneNumber = resultSet.getString("SoDienThoaiKhachHang");
-                String address = resultSet.getString("DiaChiKhachHang");
-                Date paymentDate = resultSet.getDate("NgayThanhToan");
-                String paymentMethodName = resultSet.getString("TenKieuThanhToan");
-                double totalAmount = resultSet.getDouble("TongTien");
-
-                // Tạo mã QR code
-                String qrCodeContent = invoiceID;
-
-                String qrCodeImagePath = "C:\\Users\\ADMIN\\Documents\\mobileWorld3\\QR/" + invoiceID + ".png";
-                generateQRCodeImage(qrCodeContent, qrCodeImagePath);
-                System.err.println("In Mã QR thành công" + qrCodeImagePath);
-                // Tạo hóa đơn PDF
-                String pdfFilePath = "C:\\Users\\ADMIN\\Documents\\mobileWorld3\\PDF/" + invoiceID + ".pdf";
-                generateInvoicePDF(invoiceID, customerName, phoneNumber, address,
-                        employeeId, paymentDate,
-                        paymentMethodName, totalAmount,
-                        qrCodeImagePath, pdfFilePath);
-                System.err.println("In Hóa đơn thành công" + pdfFilePath);
-
-                return true; // Trả về true nếu in thành công
-            }
-
-        } catch (SQLException | IOException | WriterException | DocumentException e) {
-            e.printStackTrace();
-            Logger.getLogger(InvoiceGenerator.class.getName()).log(Level.SEVERE, null, e);
-        } finally {
-            // Đóng các kết nối và tài nguyên
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        return false;
-    }
-
-    private static void generateQRCodeImage(String text, String filePath)
-            throws WriterException, IOException {
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 200, 200);
-
-        // Tạo BufferedImage để viết mã QR
-        BufferedImage bufferedImage = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
-        for (int i = 0; i < 200; i++) {
-            for (int j = 0; j < 200; j++) {
-                int pixelColor = bitMatrix.get(i, j) ? 0xFF000000 : 0xFFFFFFFF;
-                bufferedImage.setRGB(i, j, pixelColor);
-            }
-        }
-
-        // Lưu hình ảnh mã QR bằng ImageIO
-        ImageIO.write(bufferedImage, "png", new File(filePath));
-    }
-
-    private static void generateInvoicePDF(String invoiceId, String customerName, String phoneNumber,
-            String address, String employeeId, Date paymentDate,
-            String paymentMethodName,
-            double totalAmount, String qrCodeImagePath, String pdfFilePath)
-            throws DocumentException, IOException {
-        Document document = new Document();
-
-        // Chỉ định đường dẫn chính xác để lưu các tập tin PDF
-        PdfWriter.getInstance(document, new FileOutputStream(pdfFilePath));
-
-        document.open();
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00"); // Định dạng số tiền
-
-        document.add(new Paragraph("Invoice ID: " + invoiceId));
-        document.add(new Paragraph("Customer: " + customerName));
-        document.add(new Paragraph("Phone Number: " + phoneNumber));
-        document.add(new Paragraph("Address: " + address));
-        document.add(new Paragraph("Employee ID: " + employeeId));
-        document.add(new Paragraph("Payment Date: " + dateFormat.format(paymentDate)));
-        document.add(new Paragraph("Payment Method: " + paymentMethodName));
-        document.add(new Paragraph("Total Amount: " + decimalFormat.format(totalAmount))); // Định dạng số tiền
-
-        // Thêm hình ảnh mã QR vào PDF sử dụng đường dẫn chính xác
-        com.itextpdf.text.Image qrCodeImage = com.itextpdf.text.Image.getInstance(qrCodeImagePath);
-        document.add(qrCodeImage);
-        document.close();
-    }
-
     public static void main(String[] args) {
         List<HoaDonModel> list1 = new HoaDonRepository().getAllQR("HÐ00002");
         for (HoaDonModel hoaDonModel : list1) {

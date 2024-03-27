@@ -1,14 +1,17 @@
 package mobileworld.dialog;
 
 import java.time.LocalDate;
+import java.util.List;
 import javax.swing.JOptionPane;
 import mobileworld.model.MauSac;
 import mobileworld.event.DataChangeListener;
 import mobileworld.service.ChiTietSanPhamService.MauSacService;
+import mobileworld.service.ChiTietSanPhamService.ThuocTinhSPService;
 
 public class MauSacDialog extends javax.swing.JFrame {
 
     public MauSacService service = new MauSacService();
+    private final ThuocTinhSPService ttspService = new ThuocTinhSPService();
 
     public MauSacDialog() {
         initComponents();
@@ -38,6 +41,15 @@ public class MauSacDialog extends javax.swing.JFrame {
         if (txtMauSac.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(this, "Màu Sắc không được trống");
             return false;
+        }
+        List<MauSac> tenMauSac = ttspService.getTenMauSac();
+
+        String getMau = txtMauSac.getText().trim();
+        for (MauSac getTenMau : tenMauSac) {
+            if (getTenMau.getTenMau().equals(getMau)) {
+                JOptionPane.showMessageDialog(this, "Tên màu đã tồn tại trong cơ sở dữ liệu!");
+                return false;
+            }
         }
         return true;
     }

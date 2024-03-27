@@ -4,6 +4,7 @@ import java.awt.event.ItemEvent;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,18 +82,26 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
 
     @Override
     public void onQRCodeScanned(String result) {
+
         List<HoaDonModel> list = sr.getAllQR(result);
         showDataTable(list);
+        if (!list.isEmpty()) {
+            tableModel2 = (DefaultTableModel) tblHienThi2.getModel();
+            List<HoaDonChiTietModel> list22 = srCT.getAll(result);
+            showDataTable2(list22);
 
-        tableModel2 = (DefaultTableModel) tblHienThi2.getModel();
-        List<HoaDonChiTietModel> list22 = srCT.getAll(result);
-        showDataTable2(list22);
+            tableModel3 = (DefaultTableModel) tblHienThi3.getModel();
+            List<LichSuHDModel> listLS2 = srLSHD.getAll(result);
+            showDataTable3(listLS2);
 
-        tableModel3 = (DefaultTableModel) tblHienThi3.getModel();
-        List<LichSuHDModel> listLS2 = srLSHD.getAll(result);
-        showDataTable3(listLS2);
+            System.out.println("Nhận giá trị" + result);
 
-        System.out.println("Nhận giá trị" + result);
+        } else {
+            // Nếu danh sách rỗng, hiển thị thông báo yêu cầu người dùng thử lại hoặc chọn QR khác
+            JOptionPane.showMessageDialog(null, "Quét không thành công. Vui lòng thử lại hoặc chọn QR khác.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
     }
 
 //    @Override
@@ -231,6 +240,7 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
 //    }
 //==============================================================================================================
     public void show() {
+
         int index = tblHienThi1.getSelectedRow();
         HoaDonModel hdm = list.get(index);
 
@@ -244,35 +254,31 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
     }
 
     private void inHoaDon(String invoiceId) {
-        int check = JOptionPane.showConfirmDialog(this, "Bạn có muốn in hóa đơn không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-        if (check == JOptionPane.YES_OPTION) {
-            if (sr.inHD(invoiceId)) {
-                JOptionPane.showMessageDialog(this, "In hóa đơn thành công");
-            } else {
-                JOptionPane.showMessageDialog(this, "Có lỗi xảy ra khi in hóa đơn", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
+        if (sr.inHD(invoiceId)) {
+            JOptionPane.showMessageDialog(this, "In hóa đơn thành công");
+        } else {
+            JOptionPane.showMessageDialog(this, "Có lỗi xảy ra khi in hóa đơn", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    public void searchGia() {
-        String giaKhoangText = txtGiaKhoang.getText().trim();
-        String denGiaText = txtDenGia.getText().trim();
-
-        if (giaKhoangText.isEmpty() || denGiaText.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá khoảng và đến giá.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        BigDecimal giaKhoang = new BigDecimal(giaKhoangText);
-        BigDecimal denGia = new BigDecimal(denGiaText);
-
-        showDataTable(sr.searchGia(giaKhoang, denGia));
-        if (tblHienThi1.getRowCount() == 1) {
-            JOptionPane.showMessageDialog(this, "Lọc thành công");
-        }
-
-    }
-
+//    public void searchGia() {
+//        String giaKhoangText = txtGiaKhoang.getText().trim();
+//        String denGiaText = txtDenGia.getText().trim();
+//
+//        if (giaKhoangText.isEmpty() || denGiaText.isEmpty()) {
+//            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá khoảng và đến giá.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
+//
+//        BigDecimal giaKhoang = new BigDecimal(giaKhoangText);
+//        BigDecimal denGia = new BigDecimal(denGiaText);
+//
+//        showDataTable(sr.searchGia(giaKhoang, denGia));
+//        if (tblHienThi1.getRowCount() == 1) {
+//            JOptionPane.showMessageDialog(this, "Lọc thành công");
+//        }
+//
+//    }
     private void filterData() {
         String ht = (String) cboHTTT.getSelectedItem();
         String tt = (String) cboTrangThaiHD.getSelectedItem();
@@ -309,10 +315,9 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
         cboHTTT = new mobileworld.swing.Combobox();
         jLabel2 = new javax.swing.JLabel();
         txtGiaKhoang = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        txtDenGia = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblHienThi1 = new mobileworld.swing.Table();
+        reset = new mobileworld.swing.ButtonCustom();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblHienThi2 = new mobileworld.swing.Table();
@@ -333,11 +338,6 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
         txtSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSearchActionPerformed(evt);
-            }
-        });
-        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtSearchKeyReleased(evt);
             }
         });
 
@@ -385,38 +385,9 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
         jLabel2.setForeground(new java.awt.Color(153, 153, 153));
         jLabel2.setText("Giá Khoảng Từ");
 
-        txtGiaKhoang.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtGiaKhoangFocusLost(evt);
-            }
-        });
         txtGiaKhoang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtGiaKhoangActionPerformed(evt);
-            }
-        });
-        txtGiaKhoang.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtGiaKhoangKeyPressed(evt);
-            }
-        });
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setText("Đến");
-
-        txtDenGia.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtDenGiaFocusLost(evt);
-            }
-        });
-        txtDenGia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDenGiaActionPerformed(evt);
-            }
-        });
-        txtDenGia.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtDenGiaKeyReleased(evt);
             }
         });
 
@@ -456,6 +427,15 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
             tblHienThi1.getColumnModel().getColumn(2).setMaxWidth(55);
         }
 
+        reset.setForeground(new java.awt.Color(255, 255, 255));
+        reset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-refresh-24.png"))); // NOI18N
+        reset.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        reset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -473,12 +453,10 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtGiaKhoang, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtDenGia, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 219, Short.MAX_VALUE)
+                                .addComponent(txtGiaKhoang, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(reset, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(buttonCustom1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnTaoHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -490,25 +468,19 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(0, 8, Short.MAX_VALUE)
+                .addGap(0, 12, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtGiaKhoang, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(reset, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonCustom1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTaoHoaDon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnTaoHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(buttonCustom1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(49, 49, 49))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtGiaKhoang, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel3)
-                                .addComponent(txtDenGia, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(cboTrangThaiHD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cboHTTT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(cboTrangThaiHD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboHTTT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(9, 9, 9))
@@ -549,7 +521,7 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
         );
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -651,7 +623,7 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
 
     private void btnTaoHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoHoaDonActionPerformed
         // TODO add your handling code here:
-        int check = JOptionPane.showConfirmDialog(this, "Bán có muốn thêm Hóa Đơn không?", "?", JOptionPane.YES_NO_CANCEL_OPTION);
+        int check = JOptionPane.showConfirmDialog(this, "Bán có muốn thêm Hóa Đơn không?", "Confirm", JOptionPane.YES_NO_CANCEL_OPTION);
         if (check == JOptionPane.YES_OPTION) {
             if (menu != null) {
                 main.showForm(new ViewBanHang());
@@ -671,7 +643,7 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
 
     private void btnXuatHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatHoaDonActionPerformed
         // TODO add your handling code here:
-        int check = JOptionPane.showConfirmDialog(this, "Bạn có muốn xuất danh sách Hóa Đơn không?", "?", JOptionPane.YES_NO_CANCEL_OPTION);
+        int check = JOptionPane.showConfirmDialog(this, "Bạn có muốn xuất danh sách Hóa Đơn không?", "Confirm", JOptionPane.YES_NO_CANCEL_OPTION);
         if (check == JOptionPane.YES_OPTION) {
             sr.xuatHoaDon();
             JOptionPane.showMessageDialog(this, "Xuất hóa đơn thành công.");
@@ -687,15 +659,20 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
     }//GEN-LAST:event_btnXuatHoaDonActionPerformed
 
     private void buttonCustom4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom4ActionPerformed
-//        // TODO add your handling code here:
+
         int index = tblHienThi1.getSelectedRow();
         if (index != -1) { // Đảm bảo rằng đã chọn một dòng trong bảng
-            HoaDonModel hdm = list.get(index);
-            inHoaDon(hdm.getIdHD());
+            int check = JOptionPane.showConfirmDialog(this, "Bạn có muốn in Hoa Đơn đã chọn không?", "Confirm", JOptionPane.YES_NO_CANCEL_OPTION);
+            if (check == JOptionPane.YES_OPTION) {
+                // Nếu người dùng chọn Yes, thực hiện in Hoa Đơn
+                HoaDonModel hdm = list.get(index);
+                inHoaDon(hdm.getIdHD());
+            }
         } else {
+            // Nếu không có hàng nào được chọn, hiển thị thông báo lỗi
             JOptionPane.showMessageDialog(this, "Vui lòng chọn hóa đơn cần in!");
-            return;
         }
+
     }//GEN-LAST:event_buttonCustom4ActionPerformed
 
     private void tblHienThi1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHienThi1MouseClicked
@@ -713,21 +690,6 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
     }//GEN-LAST:event_tblHienThi1MouseClicked
 
     private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
-//        if (txtSearch.getText().trim().length() == 0) {
-//            JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin cần tìm kiếm.", "ERROR", JOptionPane.QUESTION_MESSAGE);
-//            txtSearch.setText("");
-//            return;
-//        }
-//        search = sr.search(txtSearch.getText());
-//        showDataTable(search);
-//        int index = tblHienThi1.getRowCount();
-//        if (index > 1) {
-//            JOptionPane.showMessageDialog(this, "Search thành công.");
-//            return;
-//        } else {
-//            JOptionPane.showMessageDialog(this, "Không tìm thấy dữ liệu.");
-//            return;
-//        }
         if (txtSearch.getText().trim().length() == 0) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin cần tìm kiếm.", "ERROR", JOptionPane.QUESTION_MESSAGE);
             txtSearch.setText("");
@@ -736,7 +698,7 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
         list = sr.search(txtSearch.getText()); // Cập nhật danh sách sau khi tìm kiếm
         showDataTable(list);
         int index = tblHienThi1.getRowCount();
-        if (index > 1) {
+        if (index >= 1) {
             JOptionPane.showMessageDialog(this, "Search thành công.");
             return;
         } else {
@@ -747,158 +709,75 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
 
     private void buttonCustom1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom1ActionPerformed
         // TODO add your handling code here:
-        qrcode qr = new qrcode();
-        qr.setQRCodeListener(this);
-        qr.setVisible(true);
+        int check = JOptionPane.showConfirmDialog(this, "Bạn có muốn quét QR không?", "Confirm", JOptionPane.YES_NO_CANCEL_OPTION);
+        if (check == JOptionPane.YES_OPTION) {
+            qrcode qr = new qrcode();
+            qr.setQRCodeListener(this);
+            qr.setVisible(true);
+        }
+        if (check == JOptionPane.NO_OPTION) {
+            JOptionPane.showMessageDialog(this, "Bạn đã chọn NO.");
+            return;
+        } else {
+            JOptionPane.showMessageDialog(this, "Banj đã chọn CANCEL.");
+            return;
+        }
 
     }//GEN-LAST:event_buttonCustom1ActionPerformed
-
-    private void txtGiaKhoangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGiaKhoangActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtGiaKhoangActionPerformed
     private BigDecimal convertStringToBigDecimal(String input) {
         // Loại bỏ tất cả các ký tự không phải là số từ chuỗi
         String cleanInput = input.replaceAll("[^0-9]", "");
         // Chuyển đổi chuỗi đã làm sạch thành BigDecimal
         return new BigDecimal(cleanInput);
     }
-    private void txtDenGiaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDenGiaKeyReleased
-        // TODO add your handling code here:
-//        String giaKhoangText = txtGiaKhoang.getText().trim();
-//        String denGiaText = txtDenGia.getText().trim();
-//
-//        if (giaKhoangText.isEmpty() || denGiaText.isEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá khoảng và đến giá.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-//
-//        BigDecimal giaKhoang = new BigDecimal(giaKhoangText);
-//        BigDecimal denGia = new BigDecimal(denGiaText);
-//
-//        showDataTable(sr.searchGia(giaKhoang, denGia));
-//        if (tblHienThi1.getRowCount() == 1) {
-//            JOptionPane.showMessageDialog(this, "Lọc thành công");
-//        }
-//        String giaKhoangText = txtGiaKhoang.getText().trim();
-//        String denGiaText = txtDenGia.getText().trim();
-//
-//        if (giaKhoangText.isEmpty() || denGiaText.isEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá khoảng và đến giá.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-//
-//        BigDecimal giaKhoang = convertStringToBigDecimal(giaKhoangText);
-//        BigDecimal denGia = convertStringToBigDecimal(denGiaText);
-//
-//        showDataTable(sr.searchGia(giaKhoang, denGia));
-//        if (tblHienThi1.getRowCount() == 1) {
-//            JOptionPane.showMessageDialog(this, "Lọc thành công");
-//        }
-    }//GEN-LAST:event_txtDenGiaKeyReleased
-
-    private void txtGiaKhoangKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGiaKhoangKeyPressed
-        // TODO add your handling code here:
-//        String giaKhoangText = txtGiaKhoang.getText().trim();
-//        String denGiaText = txtDenGia.getText().trim();
-//
-//        if (giaKhoangText.isEmpty() || denGiaText.isEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá khoảng và đến giá.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-//
-//        BigDecimal giaKhoang = new BigDecimal(giaKhoangText);
-//        BigDecimal denGia = new BigDecimal(denGiaText);
-//
-//        showDataTable(sr.searchGia(giaKhoang, denGia));
-//        if (tblHienThi1.getRowCount() == 1) {
-//            JOptionPane.showMessageDialog(this, "Lọc thành công");
-//        }
-//        String giaKhoangText = txtGiaKhoang.getText().trim();
-//        String denGiaText = txtDenGia.getText().trim();
-//
-//        if (giaKhoangText.isEmpty() || denGiaText.isEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá khoảng và đến giá.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-//
-//        BigDecimal giaKhoang = convertStringToBigDecimal(giaKhoangText);
-//        BigDecimal denGia = convertStringToBigDecimal(denGiaText);
-//
-//        showDataTable(sr.searchGia(giaKhoang, denGia));
-//        if (tblHienThi1.getRowCount() == 1) {
-//            JOptionPane.showMessageDialog(this, "Lọc thành công");
-//        }
-
-    }//GEN-LAST:event_txtGiaKhoangKeyPressed
-
-    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtSearchKeyReleased
-
     private void cboHTTTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboHTTTActionPerformed
         // TODO add your handling code here:
-//        list = sr.hinhThucHoaDon((String) cboHTTT.getSelectedItem());
-//        showDataTable(list);
-        filterData();
+        list = sr.hinhThucHoaDon((String) cboHTTT.getSelectedItem());
+        showDataTable(list);
+//        filterData();
     }//GEN-LAST:event_cboHTTTActionPerformed
 
     private void cboTrangThaiHDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTrangThaiHDActionPerformed
         // TODO add your handling code here:
-//        String tt = (String) cboTrangThaiHD.getSelectedItem();
-//        int trangThai;
-//        if (tt.equals("Chờ thanh toán")) {
-//            trangThai = 0;
-//        } else {
-//            trangThai = 1;
-//        }
-//        list = sr.trangThaiHoaDon(trangThai);
-//        showDataTable(list);
-        filterData();
+        String tt = (String) cboTrangThaiHD.getSelectedItem();
+        int trangThai;
+        if (tt.equals("Chờ thanh toán")) {
+            trangThai = 0;
+        } else {
+            trangThai = 1;
+        }
+        list = sr.trangThaiHoaDon(trangThai);
+        showDataTable(list);
+//        filterData();
 
     }//GEN-LAST:event_cboTrangThaiHDActionPerformed
 
-    private void txtDenGiaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDenGiaFocusLost
+    private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
         // TODO add your handling code here:
-        String giaKhoangText = txtGiaKhoang.getText().trim();
-        String denGiaText = txtDenGia.getText().trim();
+        list = sr.getAllHD();
+        showDataTable(list);
 
-        if (giaKhoangText.isEmpty() || denGiaText.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá khoảng và đến giá.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+    }//GEN-LAST:event_resetActionPerformed
 
-        BigDecimal giaKhoang = convertStringToBigDecimal(giaKhoangText);
-        BigDecimal denGia = convertStringToBigDecimal(denGiaText);
-
-        showDataTable(sr.searchGia(giaKhoang, denGia));
-        if (tblHienThi1.getRowCount() == 1) {
-            JOptionPane.showMessageDialog(this, "Lọc thành công");
-        }
-    }//GEN-LAST:event_txtDenGiaFocusLost
-
-    private void txtGiaKhoangFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGiaKhoangFocusLost
+    private void txtGiaKhoangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGiaKhoangActionPerformed
         // TODO add your handling code here:
-        String giaKhoangText = txtGiaKhoang.getText().trim();
-        String denGiaText = txtDenGia.getText().trim();
+////        // Lấy giá trị từ trường văn bản
+        String giaKhoang = txtGiaKhoang.getText();
+        // Tách giá trị từ và đến
+        String[] giaKhoangArr = giaKhoang.split("-");
+        if (giaKhoangArr.length == 2) {
+            // Lấy giá trị từ và đến
+            BigDecimal giaTu = new BigDecimal(giaKhoangArr[0].trim());
+            BigDecimal giaDen = new BigDecimal(giaKhoangArr[1].trim());
 
-        if (giaKhoangText.isEmpty() || denGiaText.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá khoảng và đến giá.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
+            // Thực hiện tìm kiếm từ khoảng đến và hiển thị dữ liệu
+            showDataTable(sr.searchGia(giaTu, giaDen));
+        } else {
+            // Hiển thị thông báo lỗi nếu định dạng không chính xác
+            JOptionPane.showMessageDialog(this, "Định dạng không hợp lệ. Vui lòng nhập lại theo định dạng 'GiaTu - GiaDen'.");
         }
 
-        BigDecimal giaKhoang = convertStringToBigDecimal(giaKhoangText);
-        BigDecimal denGia = convertStringToBigDecimal(denGiaText);
-
-        showDataTable(sr.searchGia(giaKhoang, denGia));
-        if (tblHienThi1.getRowCount() == 1) {
-            JOptionPane.showMessageDialog(this, "Lọc thành công");
-        }
-        txtDenGiaFocusLost(evt);
-    }//GEN-LAST:event_txtGiaKhoangFocusLost
-
-    private void txtDenGiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDenGiaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDenGiaActionPerformed
+    }//GEN-LAST:event_txtGiaKhoangActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -910,17 +789,16 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
     private mobileworld.swing.Combobox cboTrangThaiHD;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private mobileworld.swing.ButtonCustom reset;
     private mobileworld.swing.Table tblHienThi1;
     private mobileworld.swing.Table tblHienThi2;
     private mobileworld.swing.Table tblHienThi3;
-    private javax.swing.JTextField txtDenGia;
     private javax.swing.JTextField txtGiaKhoang;
     private mobileworld.swing.TextField txtSearch;
     // End of variables declaration//GEN-END:variables

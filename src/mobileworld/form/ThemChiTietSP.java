@@ -2,12 +2,14 @@ package mobileworld.form;
 
 import java.awt.BorderLayout;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableModel;
 import mobileworld.dialog.CPUDialog;
 import mobileworld.dialog.CameraSauDialog;
 import mobileworld.dialog.CameraTruocDialog;
@@ -52,6 +54,7 @@ import mobileworld.service.ChiTietSanPhamService.CameraSauService;
 import mobileworld.service.ChiTietSanPhamService.CameraTruocService;
 import mobileworld.service.ChiTietSanPhamService.ChiTietSPService;
 import mobileworld.service.ChiTietSanPhamService.ImelService;
+import mobileworld.service.ChiTietSanPhamService.ThuocTinhSPService;
 import mobileworld.viewModel.DongSPViewModel;
 
 public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListener,
@@ -96,6 +99,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
     private final NhaSanXuatService NsxService = new NhaSanXuatService();
     private final ImelService imelService = new ImelService();
     private final ChiTietSPService chiTietSPService = new ChiTietSPService();
+
 
     public ThemChiTietSP() {
         initComponents();
@@ -437,7 +441,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
             return false;
         }
 
-        String giaText = txtGia.getText().trim();
+        String giaText = txtGia.getText().trim().replace(",", "");
         if (giaText.equals("")) {
             JOptionPane.showMessageDialog(this, "Hãy Nhập Giá Bán!");
             return false;
@@ -944,6 +948,11 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         txtGia.setForeground(new java.awt.Color(102, 102, 102));
         txtGia.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         txtGia.setLabelText("Giá");
+        txtGia.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtGiaKeyReleased(evt);
+            }
+        });
         jPanel2.add(txtGia);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
@@ -1065,6 +1074,26 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
     private void btnCameraSauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCameraSauActionPerformed
         cameraSauDialog.setVisible(true);
     }//GEN-LAST:event_btnCameraSauActionPerformed
+
+    private void txtGiaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGiaKeyReleased
+        if (!txtGia.getText().trim().isEmpty()) {
+            String text = txtGia.getText();
+            text = text.replaceAll("[^\\d]", "");
+
+            if (!text.isEmpty()) {
+                try {
+                    long number = Long.parseLong(text);
+
+                    // Định dạng số và hiển thị trong JTextField
+                    DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+                    txtGia.setText(decimalFormat.format(number));
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập giá đúng định dạng số");
+                    return;
+                }
+            }
+        }
+    }//GEN-LAST:event_txtGiaKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -10,6 +10,7 @@ import mobileworld.model.BoNho;
 import mobileworld.model.CPU;
 import mobileworld.model.CameraSau;
 import mobileworld.model.CameraTruoc;
+import mobileworld.model.DongSP;
 import mobileworld.model.ManHinh;
 import mobileworld.model.MauSac;
 import mobileworld.model.Pin;
@@ -136,6 +137,26 @@ public class ThuocTinhSPRepository {
                 CPU cpu = new CPU();
                 cpu.setId(rs.getString(1));
                 cpu.setCpu(rs.getString(2));
+                listCpu.add(cpu);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listCpu;
+    }
+
+    public List<CPU> getTenCPU() {
+        List<CPU> listCpu = new ArrayList<>();
+
+        String sql = """
+            select CPU from CPU WHERE Deleted = 1 ORDER BY ID DESC
+        """;
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                CPU cpu = new CPU();
+                cpu.setCpu(rs.getString(1));
                 listCpu.add(cpu);
             }
         } catch (Exception e) {
@@ -308,6 +329,26 @@ public class ThuocTinhSPRepository {
                 MauSac ms = new MauSac();
                 ms.setId(rs.getString(1));
                 ms.setTenMau(rs.getString(2));
+                listMS.add(ms);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listMS;
+    }
+    
+    public List<MauSac> getTenMauSac() {
+        List<MauSac> listMS = new ArrayList<>();
+
+        String sql = """
+            select TenMau from MauSac WHERE Deleted = 1 ORDER BY ID DESC
+        """;
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                MauSac ms = new MauSac();
+                ms.setTenMau(rs.getString(1));
                 listMS.add(ms);
             }
         } catch (Exception e) {
@@ -743,5 +784,25 @@ public class ThuocTinhSPRepository {
             e.printStackTrace();
         }
         return check > 0;
+    }
+
+    public List<DongSP> getTenDsp() {
+        List<DongSP> listDsp = new ArrayList<>();
+
+        String sql = """
+                SELECT TenDsp FROM DongSP WHERE Deleted = 1
+        """;
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                DongSP dsp = new DongSP();
+                dsp.setTenDsp(rs.getString(1));
+                listDsp.add(dsp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listDsp;
     }
 }

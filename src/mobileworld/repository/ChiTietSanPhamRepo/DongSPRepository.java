@@ -121,7 +121,6 @@ public class DongSPRepository {
                             ,[Deleted]
                         ,[CreatedAt]
                         ,[CreatedBy])
-                            )
                       VALUES
                             (?,?,?,?)
                  """;
@@ -163,7 +162,7 @@ public class DongSPRepository {
                     SET [TenDsp] = ?
                        ,[Deleted] = ?
                        ,[UpdatedAt] = ?
-                                              ,[UpdatedBy] = ?
+                       ,[UpdatedBy] = ?
                   WHERE ID = ?
                  """;
 

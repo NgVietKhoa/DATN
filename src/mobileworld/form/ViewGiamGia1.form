@@ -229,6 +229,7 @@
                 <Property name="labelText" type="java.lang.String" value="S&#x1ed1; Ti&#x1ec1;n Gi&#x1ea3;m T&#x1ed1;i &#x110;a"/>
               </Properties>
               <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtSoTienGiamToiDaActionPerformed"/>
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSoTienGiamToiDaKeyReleased"/>
               </Events>
             </Component>
