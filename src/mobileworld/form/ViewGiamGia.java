@@ -39,13 +39,15 @@ import mobileworld.tablecutoms.TableActionEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import mobileworld.form.ViewInputPhieuGiamGia;
 import mobileworld.main.SessionStorage;
+import mobileworld.service.PhieuGiamGiaService.PhieuGiamGiaService;
 
 /**
  *
  * @author Admin
  */
-public class ViewGiamGia1 extends javax.swing.JPanel {
+public class ViewGiamGia extends javax.swing.JPanel {
 
     private ViewInputPhieuGiamGia jpanelHien;
 
@@ -63,7 +65,7 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
     /**
      * Creates new form GiamGia1
      */
-    public ViewGiamGia1() {
+    public ViewGiamGia() {
         initComponents();
         ds = sr.getAll();
         jpanelHien = new ViewInputPhieuGiamGia();
@@ -254,7 +256,7 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
 
     public PhieuGiamGia getFormData() {
         String ten = txtTen.getText().trim();
-      int soLan = Integer.valueOf(Integer.parseInt(txtSoLan.getText().trim().replace(",", "")));
+        int soLan = Integer.valueOf(Integer.parseInt(txtSoLan.getText().trim().replace(",", "")));
         float phanTram = Float.valueOf(Float.parseFloat(txtPhanTramGiam.getText().trim().replace("%", "")));
         String hoaDonFormat = txtHoaDonToiThieu.getText().replace(",", "");
         String soTienFormat = txtSoTienGiamToiDa.getText().replace(",", "");
@@ -279,7 +281,8 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
             tt = 2;
         }
 
-        PhieuGiamGia pgg = new PhieuGiamGia(ten, soLan, phanTram, soTiemGiamMax, hoaDonMin, ngayBD, ngayKT, tt, ten, 1, ngayThucTe, "", ngayThucTe, maNV);
+        boolean kieuPGG = rdoCK.isSelected();
+        PhieuGiamGia pgg = new PhieuGiamGia(ten, soLan, phanTram, soTiemGiamMax, hoaDonMin, ngayBD, ngayKT, tt, ten, 1, ngayThucTe, "", ngayThucTe, maNV, kieuPGG);
         return pgg;
 
     }
@@ -293,6 +296,7 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        grp1 = new javax.swing.ButtonGroup();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -306,13 +310,16 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
         cboNgayKT = new com.toedter.calendar.JDateChooser();
         txtSoLan = new mobileworld.swing.TextField();
         txtPhanTramGiam = new mobileworld.swing.TextField();
-        btnUpdate = new mobileworld.swing.ButtonCustom();
+        jLabel6 = new javax.swing.JLabel();
+        rdoCK = new javax.swing.JRadioButton();
+        rdoNCK = new javax.swing.JRadioButton();
         btnCallAdd = new mobileworld.swing.ButtonCustom();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBang = new mobileworld.swing.Table();
         txtSearchAll = new mobileworld.swing.TextField();
         cboTrangThai = new mobileworld.swing.Combobox();
         btnRefesh = new mobileworld.swing.ButtonCustom();
+        btnUpdate = new mobileworld.swing.ButtonCustom();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -351,11 +358,6 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
 
         txtSoTienGiamToiDa.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtSoTienGiamToiDa.setLabelText("Số Tiền Giảm Tối Đa");
-        txtSoTienGiamToiDa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSoTienGiamToiDaActionPerformed(evt);
-            }
-        });
         txtSoTienGiamToiDa.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtSoTienGiamToiDaKeyReleased(evt);
@@ -397,12 +399,25 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
             }
         });
 
-        btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
-        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-update-30.png"))); // NOI18N
-        btnUpdate.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel6.setText("Kiểu");
+
+        grp1.add(rdoCK);
+        rdoCK.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        rdoCK.setText("Công khai");
+        rdoCK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateActionPerformed(evt);
+                rdoCKActionPerformed(evt);
+            }
+        });
+
+        grp1.add(rdoNCK);
+        rdoNCK.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        rdoNCK.setText("Không công khai");
+        rdoNCK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoNCKActionPerformed(evt);
             }
         });
 
@@ -428,7 +443,11 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtSoLan, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPhanTramGiam, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel6)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(rdoCK)
+                        .addGap(18, 18, 18)
+                        .addComponent(rdoNCK)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -444,16 +463,18 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
                     .addComponent(txtSoTienGiamToiDa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPhanTramGiam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(42, 42, 42)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4))
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cboNgayBatDau, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cboNgayKT, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5)
+                        .addComponent(jLabel6))
+                    .addComponent(jLabel4))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cboNgayBatDau, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboNgayKT, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(rdoCK)
+                        .addComponent(rdoNCK)))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -511,6 +532,15 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
             }
         });
 
+        btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
+        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-update-30.png"))); // NOI18N
+        btnUpdate.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -528,7 +558,9 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
                                 .addComponent(cboTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnRefesh, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 387, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 299, Short.MAX_VALUE)
                                 .addComponent(btnCallAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())))
             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -550,7 +582,8 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnCallAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnRefesh, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnRefesh, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(37, Short.MAX_VALUE))
@@ -584,6 +617,7 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
         txtSoLan.setText("");
         txtPhanTramGiam.setText("");
         txtSearchAll.setText("");
+        grp1.clearSelection();
     }
 
 
@@ -671,6 +705,11 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
                 cboNgayBatDau.setDate(ngayBD);
                 Date ngayKT = Date.from(gg.getNgayKetThuc().atZone(ZoneId.systemDefault()).toInstant());
                 cboNgayKT.setDate(ngayKT);
+                if (gg.isKieuPGG() == true) {
+                    rdoCK.setSelected(true);
+                } else {
+                    rdoNCK.setSelected(true);
+                }
             } catch (Exception e) {
                 System.out.println("" + e.getMessage());
             }
@@ -759,7 +798,7 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
         }
 
         if (getNgayKT == null) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày kết thúc");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày sử dụng cuối cùng");
             return;
         }
 
@@ -774,7 +813,12 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn lại ngày bắt đầu");
             return;
         } else if (ngayKTLocalDate.isBefore(ngayBDLocalDate)) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn lại ngày kết thúc");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn lại ngày sử dụng cuối cùng");
+            return;
+        }
+
+        if (!rdoCK.isSelected() && !rdoNCK.isSelected()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọ kiểu phiếu giảm giá");
             return;
         }
 
@@ -822,34 +866,44 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
 
     private void txtSoLanKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSoLanKeyReleased
         // TODO add your handling code here:
-        if (!txtSoLan.getText().trim().isBlank()) {
-            Document document = txtSoLan.getDocument();
-            try {
-                String text = document.getText(0, document.getLength());
-                text = text.replaceAll("[^\\d]", "");
-                long number = Long.parseLong(text);
-
-                DecimalFormat decimalFormat = new DecimalFormat("#,##0");
-                String formattedNumber = decimalFormat.format(number);
-                txtSoLan.setText(formattedNumber);
-
-            } catch (BadLocationException | NumberFormatException ex) {
-                ex.printStackTrace();
-            }
-        }
-        int index = tblBang.getSelectedRow();
-        if (index == -1) {
-            if (!txtSoLan.getText().isEmpty()) {
-                try {
-                    int soLan = Integer.valueOf(Integer.parseInt(txtSoLan.getText().trim().replace(",", "")));
-                    dsTK = sr.timKiemSoLan(soLan);
-                    fillTable(dsTK);
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số");
+        try {
+            if (!txtSoLan.getText().trim().isBlank()) {
+                if (txtSoLan.getText().trim().matches("0-9")) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng sử dụng là số");
                     return;
                 }
+                Document document = txtSoLan.getDocument();
+                try {
+                    String text = document.getText(0, document.getLength());
+                    text = text.replaceAll("[^\\d]", "");
+                    long number = Long.parseLong(text);
 
+                    DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+                    String formattedNumber = decimalFormat.format(number);
+                    txtSoLan.setText(formattedNumber);
+
+                } catch (BadLocationException | NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng sử dụng là số");
+                    return;
+                }
             }
+            int index = tblBang.getSelectedRow();
+            if (index == -1) {
+                if (!txtSoLan.getText().isEmpty()) {
+                    try {
+                        int soLan = Integer.valueOf(Integer.parseInt(txtSoLan.getText().trim().replace(",", "")));
+                        dsTK = sr.timKiemSoLan(soLan);
+                        fillTable(dsTK);
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số");
+                        return;
+                    }
+
+                }
+            }
+        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng sử dụng là số");
+//            return;
         }
     }//GEN-LAST:event_txtSoLanKeyReleased
 
@@ -978,9 +1032,23 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_txtPhanTramGiamKeyReleased
 
-    private void txtSoTienGiamToiDaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSoTienGiamToiDaActionPerformed
+    private void rdoCKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoCKActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtSoTienGiamToiDaActionPerformed
+        int index = tblBang.getSelectedRow();
+        if (index == -1) {
+            dsTK = sr.timKiemKieu(1);
+            fillTable(dsTK);
+        }
+    }//GEN-LAST:event_rdoCKActionPerformed
+
+    private void rdoNCKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoNCKActionPerformed
+        // TODO add your handling code here:
+        int index = tblBang.getSelectedRow();
+        if (index == -1) {
+            dsTK = sr.timKiemKieu(0);
+            fillTable(dsTK);
+        }
+    }//GEN-LAST:event_rdoNCKActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -990,12 +1058,16 @@ public class ViewGiamGia1 extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser cboNgayBatDau;
     private com.toedter.calendar.JDateChooser cboNgayKT;
     private mobileworld.swing.Combobox cboTrangThai;
+    private javax.swing.ButtonGroup grp1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JRadioButton rdoCK;
+    private javax.swing.JRadioButton rdoNCK;
     private mobileworld.swing.Table tblBang;
     private mobileworld.swing.TextField txtHoaDonToiThieu;
     private mobileworld.swing.TextField txtID;

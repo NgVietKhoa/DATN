@@ -15,17 +15,18 @@ public class KhachHang {
     private String updatedat;
     private String updatedby;
     private String id;
+    private String email;
 
     public KhachHang() {
     }
 
-      public KhachHang(String ten, String sdt, boolean gioiTinh, String diaChi, int deleted) {
+    public KhachHang(String ten, String sdt, boolean gioiTinh, String diaChi, int deleted) {
         this.ten = ten;
         this.sdt = sdt;
         this.gioiTinh = gioiTinh;
         this.diaChi = diaChi;
         this.deleted = deleted;
-       
+
     }
 
     public String getTen() {
@@ -116,7 +117,12 @@ public class KhachHang {
         this.id = id;
     }
 
-   
-    
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
 }

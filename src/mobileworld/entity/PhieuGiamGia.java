@@ -27,11 +27,12 @@ public class PhieuGiamGia {
     private String createdBy;
     private LocalDateTime updatedAt;
     private String updatedBy;
+    private boolean kieuPGG;
 
     public PhieuGiamGia() {
     }
 
-    public PhieuGiamGia(String tenGiamGia, int soLuongDung, float phanTramGiam, float soTiemGiamToiDa, float HoatDonToiThieu, LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc, int trangThai, String moTa, int deleted, LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy) {
+     public PhieuGiamGia(String tenGiamGia, int soLuongDung, float phanTramGiam, float soTiemGiamToiDa, float HoatDonToiThieu, LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc, int trangThai, String moTa, int deleted, LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy, boolean kieuPGG) {
         this.tenGiamGia = tenGiamGia;
         this.soLuongDung = soLuongDung;
         this.phanTramGiam = phanTramGiam;
@@ -46,6 +47,7 @@ public class PhieuGiamGia {
         this.createdBy = createdBy;
         this.updatedAt = updatedAt;
         this.updatedBy = updatedBy;
+        this.kieuPGG = kieuPGG;
     }
 
     public String getID() {
@@ -168,6 +170,15 @@ public class PhieuGiamGia {
         this.updatedBy = updatedBy;
     }
 
+    public boolean isKieuPGG() {
+        return kieuPGG;
+    }
+
+    public void setKieuPGG(boolean kieuPGG) {
+        this.kieuPGG = kieuPGG;
+    }
+    
+    
     
     
 }

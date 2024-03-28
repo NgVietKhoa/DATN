@@ -46,7 +46,6 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
         String ten = txtHoten.getText();
         String sdt = txtSđt.getText();
         boolean gioiTinh = rbtNam.isSelected();
-
         String diaChi = txtDiaChi.getText();
         String ma = txtMaKH.getText();
         KhachHang khachHang = new KhachHang(ten, sdt, gioiTinh, diaChi, 1);

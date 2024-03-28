@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import mobileworld.entity.PhieuGiamGia;
+import mobileworld.model.KhachHang;
 import mobileworld.repository.PhieuGiamGiaRepo.PhieuGiamGiaRepository;
 
 /**
@@ -30,9 +31,9 @@ public class PhieuGiamGiaService {
         return repo.update(gg, ID);
     }
 
-  public boolean deleteData(String id, int tt,String maNV, LocalDateTime ngayCN) {
-       return repo.deleteData(id, tt, maNV, ngayCN);
-   }
+    public boolean deleteData(String id, int tt, String maNV, LocalDateTime ngayCN) {
+        return repo.deleteData(id, tt, maNV, ngayCN);
+    }
 
     public List<PhieuGiamGia> timTrangThai(int trangThai) {
         return repo.timTrangThai(trangThai);
@@ -70,8 +71,19 @@ public class PhieuGiamGiaService {
         return repo.timKiemPhanTram(phanTram);
     }
 
-   public boolean updateTTThread(String ID, int trangThai, float Deleted, LocalDate ngayHT) {
-      return repo.updateTTThread(ID, trangThai, Deleted, ngayHT);
+    public boolean updateTTThread(String ID, int trangThai, float Deleted, LocalDate ngayHT) {
+        return repo.updateTTThread(ID, trangThai, Deleted, ngayHT);
     }
 
+    public List<PhieuGiamGia> timKiemKieu(int Kieu) {
+        return repo.timKiemKieu(Kieu);
+    }
+
+    public List<KhachHang> getAllKH() {
+        return repo.getAllKH();
+    }
+
+    public void sendEmail(List<String> EmailKH, List<String> tenNN, String noiDung, String ngayBD, String ngayKT) {
+        repo.sendEmail(EmailKH, tenNN, noiDung, ngayBD, ngayKT);
+    }
 }

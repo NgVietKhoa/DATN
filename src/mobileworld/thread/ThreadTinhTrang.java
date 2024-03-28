@@ -10,7 +10,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import mobileworld.entity.PhieuGiamGia;
-import mobileworld.form.ViewGiamGia1;
+import mobileworld.form.ViewGiamGia;
 import mobileworld.service.PhieuGiamGiaService.PhieuGiamGiaService;
 import mobileworld.service.PhieuGiamGiaService.PhieuGiamGiaService;
 

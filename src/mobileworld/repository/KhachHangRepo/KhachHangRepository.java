@@ -168,7 +168,6 @@ public class KhachHangRepository {
             ps.setObject(8, kh.getCreatedby());
             ps.setObject(9, kh.getUpdatedat());
             ps.setObject(10, kh.getUpdatedby());
-
             ps.setObject(11, id);
             check = ps.executeUpdate();
         } catch (Exception e) {
