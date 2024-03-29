@@ -24,6 +24,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import mobileworld.config.DBConnect;
 import mobileworld.model.KhachHang;
+import mobileworld.entity.NhanVienEntity;
 
 /**
  *
@@ -31,7 +32,7 @@ import mobileworld.model.KhachHang;
  */
 public class PhieuGiamGiaRepository {
 
-      public List<PhieuGiamGia> getAll() {
+    public List<PhieuGiamGia> getAll() {
         List<PhieuGiamGia> ds = new ArrayList<>();
         String sql = """
     SELECT [TenGiamGia]
@@ -80,7 +81,7 @@ public class PhieuGiamGiaRepository {
         return ds;
     }
 
-      public boolean addData(PhieuGiamGia gg) {
+    public boolean addData(PhieuGiamGia gg) {
         int check = 0;
         String sql = """
                    INSERT INTO [dbo].[PhieuGiamGia]
@@ -756,8 +757,8 @@ public class PhieuGiamGiaRepository {
     }
 
     public void sendEmail(List<String> EmailKH, List<String> tenNN, String noiDung, String ngayBD, String ngayKT) {
-        final String from = "ducminh2212345@gmail.com";
-        final String password = "lmuh xcoe ogcu slsb";
+        final String from = "mobileworlddatn2024@gmail.com";
+        final String password = "iaip oetw bsyf cfrl";
 
         // Properties: khai báo các thuộc tính
         Properties props = new Properties();
