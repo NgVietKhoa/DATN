@@ -22,6 +22,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.swing.JOptionPane;
 import mobileworld.config.DBConnect;
 import mobileworld.model.KhachHang;
 import mobileworld.entity.NhanVienEntity;
@@ -223,6 +224,7 @@ public class PhieuGiamGiaRepository {
                          ,[UpdatedAt]
                          ,[UpdatedBy]
                          ,[ID]
+                      ,[KieuPGG]
                      FROM [dbo].[PhieuGiamGia]where TrangThai = ?  
                                           order by [CreatedAt] DESC			
                    """;
@@ -246,6 +248,7 @@ public class PhieuGiamGiaRepository {
                 gg.setUpdatedAt(rs.getTimestamp(13).toLocalDateTime());
                 gg.setUpdatedBy(rs.getString(14));
                 gg.setID(rs.getNString(15));
+                gg.setKieuPGG(rs.getBoolean(16));
                 ds.add(gg);
             }
         } catch (Exception e) {
@@ -272,10 +275,12 @@ public class PhieuGiamGiaRepository {
                                                          ,[UpdatedAt]
                                                          ,[UpdatedBy]
                      ,[ID]
+                     ,[KieuPGG]
                      FROM [dbo].[PhieuGiamGia]  
                      where TenGiamGia like '%'+?+'%' Or SoLuongDung like '%'+?+'%'  OR PhanTramGiam like ?
                      or SoTienGiamToiDa like '%'+?+'%' or HoaDonToiThieu like '%'+?+'%' or NgayBatDau like '%' + ?+ '%'
                      or NgayKetThuc like '%' + ?+ '%' or Id like '%'+?+'%'
+                     order by [CreatedAt] DESC
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, All);
@@ -304,6 +309,7 @@ public class PhieuGiamGiaRepository {
                 gg.setUpdatedAt(rs.getTimestamp(13).toLocalDateTime());
                 gg.setUpdatedBy(rs.getString(14));
                 gg.setID(rs.getNString(15));
+                gg.setKieuPGG(rs.getBoolean(16));
                 ds.add(gg);
             }
         } catch (Exception e) {
@@ -330,8 +336,10 @@ public class PhieuGiamGiaRepository {
                                                                               ,[UpdatedAt]
                                                                               ,[UpdatedBy]
                      ,[ID]
+                      ,[KieuPGG]
                      FROM [dbo].[PhieuGiamGia]  
                      where ID like '%'+?+'%' 
+                     order by [CreatedAt] DESC
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, tkID);
@@ -353,6 +361,7 @@ public class PhieuGiamGiaRepository {
                 gg.setUpdatedAt(rs.getTimestamp(13).toLocalDateTime());
                 gg.setUpdatedBy(rs.getString(14));
                 gg.setID(rs.getNString(15));
+                gg.setKieuPGG(rs.getBoolean(16));
                 ds.add(gg);
             }
         } catch (Exception e) {
@@ -379,8 +388,10 @@ public class PhieuGiamGiaRepository {
                      ,[UpdatedAt]
                      ,[UpdatedBy]
                      ,[ID]
+                     ,[KieuPGG]
                      FROM [dbo].[PhieuGiamGia]  
                      where ?<=HoaDonToiThieu
+                     order by [CreatedAt] DESC
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, tkHD);
@@ -428,8 +439,10 @@ public class PhieuGiamGiaRepository {
                                         ,[UpdatedAt]
                                         ,[UpdatedBy]                   
                      ,[ID]
+                      ,[KieuPGG]
                      FROM [dbo].[PhieuGiamGia]  
                      where TenGiamGia like '%'+?+'%' 
+                     order by [CreatedAt] DESC
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, tkTen);
@@ -451,6 +464,7 @@ public class PhieuGiamGiaRepository {
                 gg.setUpdatedAt(rs.getTimestamp(13).toLocalDateTime());
                 gg.setUpdatedBy(rs.getString(14));
                 gg.setID(rs.getNString(15));
+                gg.setKieuPGG(rs.getBoolean(16));
                 ds.add(gg);
             }
         } catch (Exception e) {
@@ -477,8 +491,10 @@ public class PhieuGiamGiaRepository {
                                                                ,[UpdatedAt]
                                                                ,[UpdatedBy]
                      ,[ID]
+                      ,[KieuPGG]
                      FROM [dbo].[PhieuGiamGia]  
                      where SoTienGiamToiDa = ? 
+                     order by [CreatedAt] DESC
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, tkTM);
@@ -500,6 +516,7 @@ public class PhieuGiamGiaRepository {
                 gg.setUpdatedAt(rs.getTimestamp(13).toLocalDateTime());
                 gg.setUpdatedBy(rs.getString(14));
                 gg.setID(rs.getNString(15));
+                gg.setKieuPGG(rs.getBoolean(16));
                 ds.add(gg);
             }
         } catch (Exception e) {
@@ -526,9 +543,11 @@ public class PhieuGiamGiaRepository {
                                           ,[UpdatedAt]
                                           ,[UpdatedBy]
                      ,[ID]
+                      ,[KieuPGG]
                       FROM [dbo].[PhieuGiamGia]  
                       where NgayBatDau between ? And ?
-                      and NgayKetThuc between  ? And ?                                          					 
+                      and NgayKetThuc between  ? And ?      
+                     order by [CreatedAt] DESC                 					 
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, ngayBD);
@@ -553,6 +572,7 @@ public class PhieuGiamGiaRepository {
                 gg.setUpdatedAt(rs.getTimestamp(13).toLocalDateTime());
                 gg.setUpdatedBy(rs.getString(14));
                 gg.setID(rs.getNString(15));
+                gg.setKieuPGG(rs.getBoolean(16));
                 ds.add(gg);
             }
         } catch (Exception e) {
@@ -579,8 +599,10 @@ public class PhieuGiamGiaRepository {
                                           ,[UpdatedAt]
                                           ,[UpdatedBy]
                      ,[ID]
+                      ,[KieuPGG]
                       FROM [dbo].[PhieuGiamGia]  
-                      where SoLuongDung = ?                                    					 
+                      where SoLuongDung = ?     
+                     order by [CreatedAt] DESC            					 
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, soLan);
@@ -602,6 +624,7 @@ public class PhieuGiamGiaRepository {
                 gg.setUpdatedAt(rs.getTimestamp(13).toLocalDateTime());
                 gg.setUpdatedBy(rs.getString(14));
                 gg.setID(rs.getNString(15));
+                gg.setKieuPGG(rs.getBoolean(16));
                 ds.add(gg);
             }
         } catch (Exception e) {
@@ -628,8 +651,10 @@ public class PhieuGiamGiaRepository {
                                           ,[UpdatedAt]
                                           ,[UpdatedBy]
                      ,[ID]
+                      ,[KieuPGG]
                       FROM [dbo].[PhieuGiamGia]  
-                      where PhanTramGiam = ?                                    					 
+                      where PhanTramGiam = ?    
+                     order by [CreatedAt] DESC             					 
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, phanTram);
@@ -651,6 +676,7 @@ public class PhieuGiamGiaRepository {
                 gg.setUpdatedAt(rs.getTimestamp(13).toLocalDateTime());
                 gg.setUpdatedBy(rs.getString(14));
                 gg.setID(rs.getNString(15));
+                gg.setKieuPGG(rs.getBoolean(16));
                 ds.add(gg);
             }
         } catch (Exception e) {
@@ -700,7 +726,8 @@ public class PhieuGiamGiaRepository {
                      ,[ID]
                       ,[KieuPGG]
                       FROM [dbo].[PhieuGiamGia]  
-                      where KieuPGG = ?                                    					 
+                      where KieuPGG = ?           
+                     order by [CreatedAt] DESC      					 
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, Kieu);
@@ -758,7 +785,7 @@ public class PhieuGiamGiaRepository {
 
     public void sendEmail(List<String> EmailKH, List<String> tenNN, String noiDung, String ngayBD, String ngayKT) {
         final String from = "mobileworlddatn2024@gmail.com";
-        final String password = "iaip oetw bsyf cfrl";
+        final String password = "svcu ysci lnxt kfui";
 
         // Properties: khai báo các thuộc tính
         Properties props = new Properties();
@@ -787,8 +814,12 @@ public class PhieuGiamGiaRepository {
                 MimeMessage msg = new MimeMessage(session);
                 msg.addHeader("Content-type", "text/HTML; charset=UTF-8"); //kiểu nội dung
                 msg.setFrom(from); // người gửi
+                if (tenNguoiNhan.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Vui lòng chọn ít nhất 1 khách hàng để gửi mail");
+                    return;
+                }
                 msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false)); // người nhận
-                msg.setSubject("Phần mềm bán điện thoại thông minh Mobile World" + " " + System.currentTimeMillis()); // tiêu đề Email
+                msg.setSubject("Thông báo từ phần mềm bán điện thoại thông minh Mobile World" + " " + System.currentTimeMillis()); // tiêu đề Email
                 msg.setSentDate(new java.util.Date()); // quy định ngày gửi
                 msg.setReplyTo(null);
 
@@ -797,18 +828,17 @@ public class PhieuGiamGiaRepository {
                         + "<tr></tr>"
                         + "<tr><td>Xin chào: " + tenNguoiNhan + "</td></tr>"
                         + "<tr><td>Bạn đã nhận được quyền sử dụng phiếu giảm giá: " + noiDung + "</td></tr>"
-                        + "<tr><td>Phiếu giảm giá này có thời hạn từ " + ngayBD + " đến ngày " + ngayKT + "</td></tr>"
-                        + "<tr><td>Hãy nhanh tay sử dụng phiếu giảm giá" + "</td></tr>"
+                        + "<tr><td>Phiếu giảm giá này có thời hạn từ ngày " + ngayBD + " đến ngày " + ngayKT + "</td></tr>"
+                        + "<tr><td>Hãy sử dụng phiếu giảm giá trước khi hết hạn " + "</td></tr>"
                         + "</html>";
                 msg.setContent(emailContent, "text/html; charset=UTF-8");
                 // gui email
                 Transport.send(msg);
-                System.out.println("Đã gửi đến: " + to);
+                System.out.println("Đã gửi Email đến: " + to);
             }
 
         } catch (Exception e) {
             System.out.println("" + e.getMessage());
-            e.printStackTrace();
             System.out.println("Lỗi rồi");
         }
     }
