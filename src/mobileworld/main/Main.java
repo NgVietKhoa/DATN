@@ -33,7 +33,7 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         init();
         SessionStorage.getInstance().getUsername();
-        jPanel1.setBackground(decode("#11998e"));
+        jPanel1.setBackground(decode("#FBA834"));
         ImageIcon icon = new ImageIcon("E:\\mobileWorld\\src\\mobileworld\\icon\\Logomb.png");
         setIconImage(icon.getImage());
     }

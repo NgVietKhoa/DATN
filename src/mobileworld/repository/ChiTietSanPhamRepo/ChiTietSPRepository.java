@@ -886,7 +886,7 @@ public class ChiTietSPRepository {
     public boolean update(ChiTietSP ctsp, String id) {
         String sql = """
                  UPDATE dbo.ChiTietSP
-                                  SET IDDongSP = (SELECT ID FROM dbo.DongSP WHERE TenDsp = ?),
+                                  SET IDDongSP = (SELECT TOP 1 ID FROM dbo.DongSP WHERE TenDsp = ?),
                                       IDMauSac = (SELECT TOP 1 ID FROM dbo.MauSac WHERE TenMau = ?),
                                       IDPin = (SELECT TOP 1 ID FROM dbo.Pin WHERE DungLuongPin = ?),
                                       IDManHinh = (SELECT TOP 1 ID FROM dbo.ManHinh WHERE LoaiManHinh = ?),

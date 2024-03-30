@@ -187,7 +187,7 @@
                   <Font name="Segoe UI" size="18" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="8e" green="99" red="11" type="rgb"/>
+                  <Color blue="66" green="66" red="66" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="text" type="java.lang.String" value="Danh S&#xe1;ch S&#x1ea3;n Ph&#x1ea9;m"/>
@@ -195,9 +195,6 @@
             </Component>
             <Component class="mobileworld.swing.TextField" name="txtTimKiemSP">
               <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="8e" green="99" red="11" type="rgb"/>
-                </Property>
                 <Property name="labelText" type="java.lang.String" value="T&#xec;m Ki&#x1ebf;m"/>
                 <Property name="name" type="java.lang.String" value="" noResource="true"/>
               </Properties>
@@ -251,9 +248,6 @@
               <SubComponents>
                 <Component class="mobileworld.swing.TextField" name="txtTenSP">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="8e" green="99" red="11" type="rgb"/>
-                    </Property>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Segoe UI" size="12" style="1"/>
                     </Property>
@@ -319,7 +313,7 @@
                   <Font name="Segoe UI" size="16" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="8e" green="99" red="11" type="rgb"/>
+                  <Color blue="57" green="2d" red="c" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Tr&#x1ea1;ng Th&#xe1;i"/>
               </Properties>
@@ -333,7 +327,7 @@
                   <Font name="Segoe UI" size="12" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="8e" green="99" red="11" type="rgb"/>
+                  <Color blue="57" green="2d" red="c" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="T&#x1ea5;t C&#x1ea3;"/>
               </Properties>
@@ -350,7 +344,7 @@
                   <Font name="Segoe UI" size="12" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="8e" green="99" red="11" type="rgb"/>
+                  <Color blue="57" green="2d" red="c" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="H&#x1ebf;t H&#xe0;ng"/>
               </Properties>
@@ -367,7 +361,7 @@
                   <Font name="Segoe UI" size="12" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="8e" green="99" red="11" type="rgb"/>
+                  <Color blue="57" green="2d" red="c" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="C&#xf2;n H&#xe0;ng"/>
               </Properties>
@@ -396,15 +390,13 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel1" max="32767" attributes="0"/>
                           <Component id="jScrollPane1" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
+                          <Component id="jPanel1" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
                               <Component id="txtTimKiem" min="-2" pref="240" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="rbnTatCaImel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="rbnImel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="428" max="32767" attributes="0"/>
+                              <Component id="jCheckBox1" min="-2" pref="50" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="buttonCustom10" min="-2" pref="110" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Component id="btnTaiQR" min="-2" max="-2" attributes="0"/>
@@ -416,7 +408,7 @@
                               <Component id="btnClear" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -429,28 +421,22 @@
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="txtTimKiem" alignment="0" pref="50" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jCheckBox1" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                                      <Component id="btnQuetQR" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
                                       <Component id="buttonCustom16" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
                                       <Component id="btnClear" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
                                   </Group>
+                                  <Component id="btnQuetQR" alignment="1" min="-2" pref="46" max="-2" attributes="0"/>
                                   <Group type="103" alignment="1" groupAlignment="3" attributes="0">
                                       <Component id="btnTaiQR" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
                                       <Component id="buttonCustom10" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace min="0" pref="4" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="rbnTatCaImel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="rbnImel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Component id="txtTimKiem" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" pref="380" max="-2" attributes="0"/>
@@ -512,7 +498,8 @@
                       <Table columnCount="14" rowCount="0">
                         <Column editable="true" title="STT" type="java.lang.Object"/>
                         <Column editable="true" title="T&#xea;n SP" type="java.lang.Object"/>
-                        <Column editable="true" title="Nh&#xe0; S&#x1ea3;n Xu&#x1ea5;t" type="java.lang.Object"/>
+                        <Column editable="true" title="Imel" type="java.lang.Object"/>
+                        <Column editable="true" title="NSX" type="java.lang.Object"/>
                         <Column editable="true" title="Pin" type="java.lang.Object"/>
                         <Column editable="true" title="M&#xe0;n H&#xec;nh" type="java.lang.Object"/>
                         <Column editable="true" title="CPU" type="java.lang.Object"/>
@@ -520,7 +507,6 @@
                         <Column editable="true" title="ROM" type="java.lang.Object"/>
                         <Column editable="true" title="M&#xe0;u" type="java.lang.Object"/>
                         <Column editable="true" title="Gi&#xe1;" type="java.lang.Object"/>
-                        <Column editable="true" title="S&#x1ed1; L&#x1b0;&#x1ee3;ng" type="java.lang.Object"/>
                         <Column editable="true" title="Camera Sau" type="java.lang.Object"/>
                         <Column editable="true" title="Camera Tr&#x1b0;&#x1edb;c" type="java.lang.Object"/>
                         <Column editable="true" title="Ch&#x1ecd;n" type="java.lang.Boolean"/>
@@ -528,7 +514,47 @@
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                       <TableColumnModel selectionModel="0">
+                        <Column maxWidth="40" minWidth="20" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="200" minWidth="150" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="200" minWidth="150" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="60" minWidth="30" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="80" minWidth="50" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
                         <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="150" minWidth="120" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="50" minWidth="30" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="50" minWidth="30" prefWidth="-1" resizable="true">
                           <Title/>
                           <Editor/>
                           <Renderer/>
@@ -553,47 +579,7 @@
                           <Editor/>
                           <Renderer/>
                         </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                        <Column maxWidth="40" minWidth="20" prefWidth="-1" resizable="true">
                           <Title/>
                           <Editor/>
                           <Renderer/>
@@ -673,45 +659,11 @@
                   <Font name="Segoe UI" size="18" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="8e" green="99" red="11" type="rgb"/>
+                  <Color blue="66" green="66" red="66" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="text" type="java.lang.String" value="Th&#xf4;ng Tin s&#x1ea3;n Ph&#x1ea9;m Chi Ti&#x1ebf;t"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JRadioButton" name="rbnTatCaImel">
-              <Properties>
-                <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-                  <ComponentRef name="buttonGroup3"/>
-                </Property>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Segoe UI" size="12" style="1"/>
-                </Property>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="8e" green="99" red="11" type="rgb"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="T&#x1ea5;t C&#x1ea3;"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbnTatCaImelActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JRadioButton" name="rbnImel">
-              <Properties>
-                <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-                  <ComponentRef name="buttonGroup3"/>
-                </Property>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Segoe UI" size="12" style="1"/>
-                </Property>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="8e" green="99" red="11" type="rgb"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Imel"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbnImelActionPerformed"/>
-              </Events>
             </Component>
             <Container class="javax.swing.JPanel" name="jPanel1">
               <Properties>
@@ -722,7 +674,7 @@
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                     <TitledBorder title="B&#x1ed9; L&#x1ecd;c">
                       <Font PropertyName="font" name="Segoe UI" size="12" style="1"/>
-                      <Color PropertyName="color" blue="8e" green="99" red="11" type="rgb"/>
+                      <Color PropertyName="color" blue="57" green="2d" red="c" type="rgb"/>
                     </TitledBorder>
                   </Border>
                 </Property>
@@ -732,9 +684,9 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="220" max="32767" attributes="0"/>
                           <Component id="jPanel2" min="-2" pref="929" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="220" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -812,6 +764,20 @@
                 </Container>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JCheckBox" name="jCheckBox1">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="12" style="1"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="57" green="2d" red="c" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="All"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBox1ActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="panelThuocTinhSP">
@@ -914,7 +880,7 @@
                   <Font name="Segoe UI" size="16" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="8e" green="99" red="11" type="rgb"/>
+                  <Color blue="57" green="2d" red="c" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Danh S&#xe1;ch Thu&#x1ed9;c T&#xed;nh"/>
               </Properties>
@@ -925,7 +891,7 @@
                   <Font name="Segoe UI" size="18" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="8e" green="99" red="11" type="rgb"/>
+                  <Color blue="66" green="66" red="66" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="text" type="java.lang.String" value="Thu&#x1ed9;c T&#xed;nh S&#x1ea3;n Ph&#x1ea9;m"/>
@@ -1014,7 +980,7 @@
                           <Font name="Segoe UI" size="13" style="1"/>
                         </Property>
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="8e" green="99" red="11" type="rgb"/>
+                          <Color blue="57" green="2d" red="c" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="Pin"/>
                       </Properties>
@@ -1031,7 +997,7 @@
                           <Font name="Segoe UI" size="13" style="1"/>
                         </Property>
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="8e" green="99" red="11" type="rgb"/>
+                          <Color blue="57" green="2d" red="c" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="M&#xe0;u S&#x1eaf;c"/>
                       </Properties>
@@ -1048,7 +1014,7 @@
                           <Font name="Segoe UI" size="13" style="1"/>
                         </Property>
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="8e" green="99" red="11" type="rgb"/>
+                          <Color blue="57" green="2d" red="c" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="M&#xe0;n H&#xec;nh"/>
                       </Properties>
@@ -1065,7 +1031,7 @@
                           <Font name="Segoe UI" size="13" style="1"/>
                         </Property>
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="8e" green="99" red="11" type="rgb"/>
+                          <Color blue="57" green="2d" red="c" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="CPU"/>
                       </Properties>
@@ -1082,7 +1048,7 @@
                           <Font name="Segoe UI" size="13" style="1"/>
                         </Property>
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="8e" green="99" red="11" type="rgb"/>
+                          <Color blue="57" green="2d" red="c" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="Ram"/>
                       </Properties>
@@ -1099,7 +1065,7 @@
                           <Font name="Segoe UI" size="13" style="1"/>
                         </Property>
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="8e" green="99" red="11" type="rgb"/>
+                          <Color blue="57" green="2d" red="c" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="Rom"/>
                       </Properties>
@@ -1116,7 +1082,7 @@
                           <Font name="Segoe UI" size="13" style="1"/>
                         </Property>
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="8e" green="99" red="11" type="rgb"/>
+                          <Color blue="57" green="2d" red="c" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="Camera Tr&#x1b0;&#x1edb;c"/>
                       </Properties>
@@ -1133,7 +1099,7 @@
                           <Font name="Segoe UI" size="13" style="1"/>
                         </Property>
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="8e" green="99" red="11" type="rgb"/>
+                          <Color blue="57" green="2d" red="c" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="Camera Sau"/>
                       </Properties>

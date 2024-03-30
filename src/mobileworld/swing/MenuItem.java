@@ -36,11 +36,11 @@ public class MenuItem extends javax.swing.JPanel {
     private int index;
     private boolean selected;
     private boolean mouseOver;
-    Color color1 = Color.decode("#11998e");
-    Color color2 = Color.decode("#93f9b9");
+    Color color1 = Color.decode("#0C2D57");
+    Color color2 = Color.decode("#3652AD");
 
     int weight1 = 1;
-    int weight2 = 3;
+    int weight2 = 1;
 
     int combinedRed = (color1.getRed() * weight1 + color2.getRed() * weight2) / (weight1 + weight2);
     int combinedGreen = (color1.getGreen() * weight1 + color2.getGreen() * weight2) / (weight1 + weight2);

@@ -20,6 +20,9 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 public class TextField1 extends JTextField {
 
+    Color color1 = Color.decode("#0C2D57");
+    Color color2 = Color.decode("#1B1A55");
+
     public String getLabelText() {
         return labelText;
     }
@@ -42,7 +45,7 @@ public class TextField1 extends JTextField {
     private boolean show;
     private boolean mouseOver = false;
     private String labelText = "lable";
-    private Color lineColor = new Color(255, 255, 255);
+    private Color lineColor = color1;
 
     public TextField1() {
         setBorder(new EmptyBorder(20, 3, 10, 3));

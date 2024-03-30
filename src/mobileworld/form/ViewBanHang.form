@@ -611,7 +611,7 @@
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="Th&#xf4;ng Tin Kh&#xe1;ch H&#xe0;ng">
                   <Font PropertyName="font" name="Segoe UI" size="12" style="1"/>
-                  <Color PropertyName="color" blue="66" green="66" red="0" type="rgb"/>
+                  <Color PropertyName="color" blue="57" green="2d" red="c" type="rgb"/>
                 </TitledBorder>
               </Border>
             </Property>
@@ -721,7 +721,7 @@
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="Th&#xf4;ng Tin H&#xf3;a &#x110;&#x1a1;n">
                   <Font PropertyName="font" name="Segoe UI" size="12" style="1"/>
-                  <Color PropertyName="color" blue="66" green="66" red="0" type="rgb"/>
+                  <Color PropertyName="color" blue="57" green="2d" red="c" type="rgb"/>
                 </TitledBorder>
               </Border>
             </Property>

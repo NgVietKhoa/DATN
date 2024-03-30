@@ -3,13 +3,18 @@ package mobileworld.service.NhanVienService;
 import java.util.List;
 import mobileworld.model.NhanVien;
 import mobileworld.repository.NhanVienRepo.NhanVienRepository;
+import mobileworld.viewModel.NhanVienViewModel;
 
 public class NhanVienService {
 
     NhanVienRepository repo = new NhanVienRepository();
 
-    public List<NhanVien> getAll() {
+    public List<NhanVienViewModel> getAll() {
         return repo.getAll();
+    }
+
+    public List<NhanVienViewModel> getAllNvDaNghi() {
+        return repo.getAllNvDaNghi();
     }
 
     public boolean checkLogin(String maNhanVien, char[] password) {
@@ -32,7 +37,7 @@ public class NhanVienService {
         return repo.add(nv);
     }
 
-    public List<NhanVien> search(String search) {
+    public List<NhanVienViewModel> search(String search) {
         return repo.search(search);
     }
 }

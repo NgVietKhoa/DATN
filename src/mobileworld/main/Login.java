@@ -41,33 +41,33 @@ public class Login extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        imageAvatar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/3094352.jpg"))); // NOI18N
+        imageAvatar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/Login-amico.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(imageAvatar1, javax.swing.GroupLayout.PREFERRED_SIZE, 445, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(imageAvatar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imageAvatar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(imageAvatar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jPanel2.setBackground(new java.awt.Color(0, 102, 102));
+        jPanel2.setBackground(new java.awt.Color(12, 45, 87));
+        jPanel2.setForeground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("ĐĂNG NHẬP");
 
-        txtID.setBackground(new java.awt.Color(0, 102, 102));
-        txtID.setForeground(new java.awt.Color(242, 242, 242));
+        txtID.setBackground(new java.awt.Color(12, 45, 87));
+        txtID.setForeground(new java.awt.Color(255, 255, 255));
         txtID.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         txtID.setLabelText("Tài Khoản");
+        txtID.setLineColor(new java.awt.Color(255, 255, 255));
+        txtID.setSelectionColor(new java.awt.Color(255, 255, 255));
 
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText(" Forgot password?");
@@ -97,8 +97,8 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        txtPass.setBackground(new java.awt.Color(0, 102, 102));
-        txtPass.setForeground(new java.awt.Color(242, 242, 242));
+        txtPass.setBackground(new java.awt.Color(12, 45, 87));
+        txtPass.setForeground(new java.awt.Color(255, 255, 255));
         txtPass.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         txtPass.setLabelText("Mật Khẩu");
         txtPass.setLineColor(new java.awt.Color(255, 255, 255));
@@ -231,6 +231,9 @@ public class Login extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

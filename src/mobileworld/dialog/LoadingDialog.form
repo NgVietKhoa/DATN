@@ -48,7 +48,7 @@
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
             <LineBorder thickness="2">
-              <Color PropertyName="color" blue="8e" green="99" red="11" type="rgb"/>
+              <Color PropertyName="color" blue="57" green="2d" red="c" type="rgb"/>
             </LineBorder>
           </Border>
         </Property>
@@ -64,7 +64,7 @@
               <Font name="Segoe UI" size="36" style="1"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="8e" green="99" red="11" type="rgb"/>
+              <Color blue="57" green="2d" red="c" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="LOADING"/>
@@ -79,7 +79,7 @@
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/mobileworld/icon/Ellipsis-1s-200px.gif"/>
+              <Image iconType="3" name="/mobileworld/icon/Ellipsis-1s-200px (1).gif"/>
             </Property>
           </Properties>
           <Constraints>

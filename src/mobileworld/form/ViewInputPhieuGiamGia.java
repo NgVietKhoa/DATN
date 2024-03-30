@@ -184,10 +184,12 @@ public class ViewInputPhieuGiamGia extends javax.swing.JPanel {
 
         grp1.add(rdoCK);
         rdoCK.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        rdoCK.setForeground(new java.awt.Color(12, 45, 87));
         rdoCK.setText("Công khai");
 
         grp1.add(rdoNCK);
         rdoNCK.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        rdoNCK.setForeground(new java.awt.Color(12, 45, 87));
         rdoNCK.setText("Không công khai");
 
         tblBang.setModel(new javax.swing.table.DefaultTableModel(

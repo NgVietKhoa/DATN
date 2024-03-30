@@ -9,7 +9,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeEvent; 
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.metal.MetalTabbedPaneUI;
 import org.jdesktop.animation.timing.Animator;
@@ -18,8 +18,8 @@ import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
 public class MaterialTabbed extends JTabbedPane {
     
-    Color color1 = Color.decode("#11998e");
-    Color color2 = Color.decode("#93f9b9");
+    Color color1 = Color.decode("#0C2D57");
+    Color color2 = Color.decode("#1B1A55");
 
     int weight1 = 1;
     int weight2 = 1;

@@ -91,14 +91,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         thongTinChiTietSP = new ThongTinChiTietSP(idChiTietSP, CameraSau, CameraTruoc, Cpu, Imel, ManHinh, MauSac, NSX, Pin, Ram, Rom, TenDsp, gia, MoTa);
         thongTinChiTietSP.changeListener.addDataChangeListener(this);
         thongTinChiTietSP.changeListener.setEventDataChangeListener(this);
-        // chi tiet san pham
-        tblModel = (DefaultTableModel) tblCTSP.getModel();
-        tblCTSP.setDefaultEditor(Object.class, null);
-        showDataTableCTSP(ctspService.getAllCTSP());
-        //san pham chi tiet
-        tblModelSP = (DefaultTableModel) tblSP.getModel();
-        tblSP.setDefaultEditor(Object.class, null);
-        showDataTableSP(dspService.getAll());
+
         //setcombobox
         cbbNsx = (DefaultComboBoxModel) cboNsx.getModel();
         cbbPin = (DefaultComboBoxModel) cboPin.getModel();
@@ -116,8 +109,6 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 int index = tblSP.getSelectedRow();
                 if (index >= 0 && evt.getClickCount() == 2) {
                     getSelectedProductListImel();
-                    getSelectedProductList();
-                    rbnTatCaImel.setSelected(true);
                 }
             }
         });
@@ -127,19 +118,16 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
             public void mouseClicked(MouseEvent evt) {
                 int index = tblCTSP.getSelectedRow();
                 if (index >= 0 && evt.getClickCount() == 2) {
-                    ArrayList<ChiTietSanPhamViewModel> productListImel = getSelectedProductListImel();
+                    ArrayList<ChiTietSanPhamViewModel> productListImel = (ArrayList<ChiTietSanPhamViewModel>) getSelectedProductListImel();
                     if (productListImel.isEmpty()) {
-                        if (rbnImel.isSelected()) {
-                            if (searchResults != null && !searchResults.isEmpty()) {
-                                displayProductDetails(searchResults.get(index));
-                            } else if (BoLocCtsp != null && !BoLocCtsp.isEmpty()) {
-                                displayProductDetails(BoLocCtsp.get(index));
-                            } else {
-                                displayProductDetails(ctspService.getAll().get(index));
-                            }
-                        } else if (rbnTatCaImel.isSelected()) {
-                            JOptionPane.showMessageDialog(null, "Vui lòng chọn xem IMEL để xem chi tiết sản phẩm!");
+                        if (searchResults != null && !searchResults.isEmpty()) {
+                            displayProductDetails(searchResults.get(index));
+                        } else if (BoLocCtsp != null && !BoLocCtsp.isEmpty()) {
+                            displayProductDetails(BoLocCtsp.get(index));
+                        } else {
+                            displayProductDetails(ctspService.getAll().get(index));
                         }
+
                     } else {
                         if (searchResults != null && !searchResults.isEmpty()) {
                             ChiTietSanPhamViewModel product = searchResults.get(index);
@@ -149,11 +137,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                             displayProductDetails(BoLocproduct);
                         } else {
                             int productListImelIndex = productListImel.indexOf(productListImel.get(index));
-                            if (rbnImel.isSelected()) {
-                                displayProductDetails(productListImel.get(productListImelIndex));
-                            } else if (rbnTatCaImel.isSelected()) {
-                                JOptionPane.showMessageDialog(null, "Vui lòng chọn xem IMEL để xem chi tiết sản phẩm!");
-                            }
+                            displayProductDetails(productListImel.get(productListImelIndex));
                         }
                     }
                 }
@@ -179,7 +163,6 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 chiTietSP.setVisible(true);
             }
         });
-
         //thuoc tinh san pham
         tblModelTTSP = (DefaultTableModel) tblThuocTinhSP.getModel();
         tblSP.setDefaultEditor(Object.class, null);
@@ -242,8 +225,15 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         });
         rbnTatCa.setSelected(true);
         rbnPin.setSelected(true);
-        rbnTatCaImel.setSelected(true);
         showDataTablePin(pinService.getAll());
+        // chi tiet san pham
+        tblModel = (DefaultTableModel) tblCTSP.getModel();
+        tblCTSP.setDefaultEditor(Object.class, null);
+        showDataTableCTSP(ctspService.getAll());
+        //san pham chi tiet
+        tblModelSP = (DefaultTableModel) tblSP.getModel();
+        tblSP.setDefaultEditor(Object.class, null);
+        showDataTableSP(dspService.getAll());
     }
 
     public JPanel getPanelSPCT() {
@@ -272,8 +262,8 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         return false;
     }
 
-    public ArrayList<ChiTietSanPhamViewModel> getSelectedProductListImel() {
-        ArrayList<ChiTietSanPhamViewModel> productList = new ArrayList<>();
+    public List<ChiTietSanPhamViewModel> getSelectedProductListImel() {
+        List<ChiTietSanPhamViewModel> productList = new ArrayList<>();
         int index = tblSP.getSelectedRow();
         if (index >= 0) {
             String idDSP = (String) tblSP.getValueAt(index, 1);
@@ -281,7 +271,16 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
             materialTabbed1.setSelectedIndex(1);
 
             // Gọi hàm getSP với iddsp đã lấy
-            productList = (ArrayList<ChiTietSanPhamViewModel>) ctspService.getSPImel(idDSP);
+            Object result = ctspService.getSPImel(idDSP);
+
+            // Check if the result is of the correct type before casting
+            if (result instanceof List) {
+                for (Object obj : (List<?>) result) {
+                    if (obj instanceof ChiTietSanPhamViewModel) {
+                        productList.add((ChiTietSanPhamViewModel) obj);
+                    }
+                }
+            }
 
             // Hiển thị danh sách sản phẩm
             showDataTableCTSPImel(productList);
@@ -290,31 +289,34 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     }
 
     //chi tiet san pham
-    public void showDataTableCTSPImel(List<ChiTietSanPhamViewModel> showSP) {
+    private void showDataTableCTSPImel(List<ChiTietSanPhamViewModel> showSP) {
+        tblModel.setRowCount(0);
+        int stt = 0;
+        boolean check = false;
+        for (ChiTietSanPhamViewModel spvm : showSP) {
+            String giaBan = decimalFormat.format(spvm.getGiaBan());
+            stt++;
+            tblModel.addRow(new Object[]{
+                stt, spvm.getTenDsp(), spvm.getImel(), spvm.getTenNsx(), spvm.getDungLuongPin(), spvm.getLoaiManHinh(), spvm.getCpu(), spvm.getDungLuongRam(), spvm.getDungLuongBoNho(), spvm.getTenMau(), giaBan, spvm.getCameraSau(), spvm.getCameraTruoc()
+            });
+        }
+    }
+
+    private void showDataTableCTSP(List<ChiTietSanPhamViewModel> showSP) {
         tblModel.setRowCount(0);
         int stt = 0;
         for (ChiTietSanPhamViewModel spvm : showSP) {
             String giaBan = decimalFormat.format(spvm.getGiaBan());
             stt++;
             tblModel.addRow(new Object[]{
-                stt, spvm.getTenDsp(), spvm.getTenNsx(), spvm.getDungLuongPin(), spvm.getLoaiManHinh(), spvm.getCpu(), spvm.getDungLuongRam(), spvm.getDungLuongBoNho(), spvm.getTenMau(), giaBan, spvm.getSoLuong(), spvm.getCameraSau(), spvm.getCameraTruoc()
+                stt, spvm.getTenDsp(), spvm.getImel(), spvm.getTenNsx(), spvm.getDungLuongPin(), spvm.getLoaiManHinh(), spvm.getCpu(), spvm.getDungLuongRam(), spvm.getDungLuongBoNho(), spvm.getTenMau(), giaBan, spvm.getCameraSau(), spvm.getCameraTruoc()
+
             });
         }
+
     }
 
-    public void showDataTableCTSP(List<ChiTietSanPhamViewModel> showSP) {
-        tblModel.setRowCount(0);
-        int stt = 0;
-        for (ChiTietSanPhamViewModel spvm : showSP) {
-            String giaBan = decimalFormat.format(spvm.getGiaBan());
-            stt++;
-            tblModel.addRow(new Object[]{
-                stt, spvm.getTenDsp(), spvm.getTenNsx(), spvm.getDungLuongPin(), spvm.getLoaiManHinh(), spvm.getCpu(), spvm.getDungLuongRam(), spvm.getDungLuongBoNho(), spvm.getTenMau(), giaBan, spvm.getSoLuong(), spvm.getCameraSau(), spvm.getCameraTruoc()
-            });
-        }
-    }
-
-    public void showDataTableSP(List<DongSPViewModel> dongSP) {
+    private void showDataTableSP(List<DongSPViewModel> dongSP) {
         tblModelSP.setRowCount(0);
         int stt = 0;
         String trangThai = "";
@@ -348,10 +350,8 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         if (cboNsx.getSelectedItem() != null) {
             cboNsx.setSelectedItem(null);
         }
-        rbnTatCaImel.setSelected(true);
-        showDataTableCTSPImel(ctspService.getAll());
-        showDataTableSP(dspService.getAll());
-        showDataTableCTSP(ctspService.getAllCTSP());
+        jCheckBox1.setSelected(false);
+        showDataTableCTSP(ctspService.getAll());
     }
 
     //san pham
@@ -671,8 +671,6 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         btnTaiQR = new mobileworld.swing.ButtonCustom();
         btnQuetQR = new mobileworld.swing.ButtonCustom();
         jLabel3 = new javax.swing.JLabel();
-        rbnTatCaImel = new javax.swing.JRadioButton();
-        rbnImel = new javax.swing.JRadioButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         cboNsx = new mobileworld.swing.Combobox();
@@ -680,6 +678,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         cboManHinh = new mobileworld.swing.Combobox();
         cboCPU = new mobileworld.swing.Combobox();
         cboGia = new mobileworld.swing.Combobox();
+        jCheckBox1 = new javax.swing.JCheckBox();
         panelThuocTinhSP = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblThuocTinhSP = new mobileworld.swing.Table();
@@ -732,11 +731,10 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         }
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(17, 153, 142));
+        jLabel1.setForeground(new java.awt.Color(102, 102, 102));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Danh Sách Sản Phẩm");
 
-        txtTimKiemSP.setForeground(new java.awt.Color(17, 153, 142));
         txtTimKiemSP.setLabelText("Tìm Kiếm");
         txtTimKiemSP.setName(""); // NOI18N
         txtTimKiemSP.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -748,7 +746,6 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        txtTenSP.setForeground(new java.awt.Color(17, 153, 142));
         txtTenSP.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         txtTenSP.setLabelText("Tên Sản Phẩm");
 
@@ -810,12 +807,12 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         );
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(17, 153, 142));
+        jLabel4.setForeground(new java.awt.Color(12, 45, 87));
         jLabel4.setText("Trạng Thái");
 
         buttonGroup2.add(rbnTatCa);
         rbnTatCa.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        rbnTatCa.setForeground(new java.awt.Color(17, 153, 142));
+        rbnTatCa.setForeground(new java.awt.Color(12, 45, 87));
         rbnTatCa.setText("Tất Cả");
         rbnTatCa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -825,7 +822,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
         buttonGroup2.add(rbnHetHang);
         rbnHetHang.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        rbnHetHang.setForeground(new java.awt.Color(17, 153, 142));
+        rbnHetHang.setForeground(new java.awt.Color(12, 45, 87));
         rbnHetHang.setText("Hết Hàng");
         rbnHetHang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -835,7 +832,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
         buttonGroup2.add(rbnConHang);
         rbnConHang.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        rbnConHang.setForeground(new java.awt.Color(17, 153, 142));
+        rbnConHang.setForeground(new java.awt.Color(12, 45, 87));
         rbnConHang.setText("Còn Hàng");
         rbnConHang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -916,7 +913,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
             },
             new String [] {
-                "STT", "Tên SP", "Nhà Sản Xuất", "Pin", "Màn Hình", "CPU", "RAM", "ROM", "Màu", "Giá", "Số Lượng", "Camera Sau", "Camera Trước", "Chọn"
+                "STT", "Tên SP", "Imel", "NSX", "Pin", "Màn Hình", "CPU", "RAM", "ROM", "Màu", "Giá", "Camera Sau", "Camera Trước", "Chọn"
             }
         ) {
             Class[] types = new Class [] {
@@ -928,6 +925,26 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
             }
         });
         jScrollPane1.setViewportView(tblCTSP);
+        if (tblCTSP.getColumnModel().getColumnCount() > 0) {
+            tblCTSP.getColumnModel().getColumn(0).setMinWidth(20);
+            tblCTSP.getColumnModel().getColumn(0).setMaxWidth(40);
+            tblCTSP.getColumnModel().getColumn(1).setMinWidth(150);
+            tblCTSP.getColumnModel().getColumn(1).setMaxWidth(200);
+            tblCTSP.getColumnModel().getColumn(2).setMinWidth(150);
+            tblCTSP.getColumnModel().getColumn(2).setMaxWidth(200);
+            tblCTSP.getColumnModel().getColumn(3).setMinWidth(30);
+            tblCTSP.getColumnModel().getColumn(3).setMaxWidth(60);
+            tblCTSP.getColumnModel().getColumn(4).setMinWidth(50);
+            tblCTSP.getColumnModel().getColumn(4).setMaxWidth(80);
+            tblCTSP.getColumnModel().getColumn(6).setMinWidth(120);
+            tblCTSP.getColumnModel().getColumn(6).setMaxWidth(150);
+            tblCTSP.getColumnModel().getColumn(7).setMinWidth(30);
+            tblCTSP.getColumnModel().getColumn(7).setMaxWidth(50);
+            tblCTSP.getColumnModel().getColumn(8).setMinWidth(30);
+            tblCTSP.getColumnModel().getColumn(8).setMaxWidth(50);
+            tblCTSP.getColumnModel().getColumn(13).setMinWidth(20);
+            tblCTSP.getColumnModel().getColumn(13).setMaxWidth(40);
+        }
 
         txtTimKiem.setLabelText("Tìm Kiếm");
         txtTimKiem.addActionListener(new java.awt.event.ActionListener() {
@@ -972,32 +989,12 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(17, 153, 142));
+        jLabel3.setForeground(new java.awt.Color(102, 102, 102));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Thông Tin sản Phẩm Chi Tiết");
 
-        buttonGroup3.add(rbnTatCaImel);
-        rbnTatCaImel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        rbnTatCaImel.setForeground(new java.awt.Color(17, 153, 142));
-        rbnTatCaImel.setText("Tất Cả");
-        rbnTatCaImel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbnTatCaImelActionPerformed(evt);
-            }
-        });
-
-        buttonGroup3.add(rbnImel);
-        rbnImel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        rbnImel.setForeground(new java.awt.Color(17, 153, 142));
-        rbnImel.setText("Imel");
-        rbnImel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbnImelActionPerformed(evt);
-            }
-        });
-
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Bộ Lọc", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(17, 153, 142))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Bộ Lọc", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(12, 45, 87))); // NOI18N
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -1048,9 +1045,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(220, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 929, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(220, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1060,6 +1057,15 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 .addContainerGap(37, Short.MAX_VALUE))
         );
 
+        jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jCheckBox1.setForeground(new java.awt.Color(12, 45, 87));
+        jCheckBox1.setText("All");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelSanPhamCTLayout = new javax.swing.GroupLayout(panelSanPhamCT);
         panelSanPhamCT.setLayout(panelSanPhamCTLayout);
         panelSanPhamCTLayout.setHorizontalGroup(
@@ -1068,15 +1074,13 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
             .addGroup(panelSanPhamCTLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelSanPhamCTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelSanPhamCTLayout.createSequentialGroup()
                         .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rbnTatCaImel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(rbnImel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 428, Short.MAX_VALUE)
+                        .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(buttonCustom10, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(btnTaiQR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1086,7 +1090,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                         .addComponent(buttonCustom16, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panelSanPhamCTLayout.setVerticalGroup(
             panelSanPhamCTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1097,22 +1101,18 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelSanPhamCTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelSanPhamCTLayout.createSequentialGroup()
-                        .addGroup(panelSanPhamCTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panelSanPhamCTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(btnQuetQR, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTimKiem, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSanPhamCTLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(panelSanPhamCTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSanPhamCTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(buttonCustom16, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelSanPhamCTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnQuetQR, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSanPhamCTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btnTaiQR, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(buttonCustom10, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 4, Short.MAX_VALUE))
-                    .addGroup(panelSanPhamCTLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(panelSanPhamCTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(rbnTatCaImel)
-                            .addComponent(rbnImel)))
-                    .addComponent(txtTimKiem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(buttonCustom10, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36))
@@ -1142,11 +1142,11 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         }
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(17, 153, 142));
+        jLabel2.setForeground(new java.awt.Color(12, 45, 87));
         jLabel2.setText("Danh Sách Thuộc Tính");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(17, 153, 142));
+        jLabel5.setForeground(new java.awt.Color(102, 102, 102));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Thuộc Tính Sản Phẩm");
 
@@ -1162,7 +1162,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
         buttonGroup1.add(rbnPin);
         rbnPin.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        rbnPin.setForeground(new java.awt.Color(17, 153, 142));
+        rbnPin.setForeground(new java.awt.Color(12, 45, 87));
         rbnPin.setText("Pin");
         rbnPin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1173,7 +1173,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
         buttonGroup1.add(rbnMauSac);
         rbnMauSac.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        rbnMauSac.setForeground(new java.awt.Color(17, 153, 142));
+        rbnMauSac.setForeground(new java.awt.Color(12, 45, 87));
         rbnMauSac.setText("Màu Sắc");
         rbnMauSac.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1184,7 +1184,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
         buttonGroup1.add(rbnManHinh);
         rbnManHinh.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        rbnManHinh.setForeground(new java.awt.Color(17, 153, 142));
+        rbnManHinh.setForeground(new java.awt.Color(12, 45, 87));
         rbnManHinh.setText("Màn Hình");
         rbnManHinh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1195,7 +1195,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
         buttonGroup1.add(rbnCpu);
         rbnCpu.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        rbnCpu.setForeground(new java.awt.Color(17, 153, 142));
+        rbnCpu.setForeground(new java.awt.Color(12, 45, 87));
         rbnCpu.setText("CPU");
         rbnCpu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1206,7 +1206,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
         buttonGroup1.add(rbnRam);
         rbnRam.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        rbnRam.setForeground(new java.awt.Color(17, 153, 142));
+        rbnRam.setForeground(new java.awt.Color(12, 45, 87));
         rbnRam.setText("Ram");
         rbnRam.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1217,7 +1217,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
         buttonGroup1.add(rbnRom);
         rbnRom.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        rbnRom.setForeground(new java.awt.Color(17, 153, 142));
+        rbnRom.setForeground(new java.awt.Color(12, 45, 87));
         rbnRom.setText("Rom");
         rbnRom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1228,7 +1228,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
         buttonGroup1.add(rbnCamTruoc);
         rbnCamTruoc.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        rbnCamTruoc.setForeground(new java.awt.Color(17, 153, 142));
+        rbnCamTruoc.setForeground(new java.awt.Color(12, 45, 87));
         rbnCamTruoc.setText("Camera Trước");
         rbnCamTruoc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1239,7 +1239,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
         buttonGroup1.add(rbnCamSau);
         rbnCamSau.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        rbnCamSau.setForeground(new java.awt.Color(17, 153, 142));
+        rbnCamSau.setForeground(new java.awt.Color(12, 45, 87));
         rbnCamSau.setText("Camera Sau");
         rbnCamSau.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1644,31 +1644,19 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                     showDataTablePin(ttspService.getAllPin());
                     setDataCboPin(pinService.getAll());
                     clearThuocTinhSP();
-                    if (rbnTatCaImel.isSelected()) {
-                        showDataTableCTSP(ctspService.getAllCTSP());
-                    } else if (rbnImel.isSelected()) {
-                        showDataTableCTSP(ctspService.getAll());
-                    }
+                    showDataTableCTSP(ctspService.getAllCTSP());
                 } else if (rbnCpu.isSelected()) {
                     addSuccess = ttspService.addCPU(getFormDataCPU());
                     showDataTableCPU(ttspService.getAllCPU());
                     setDataCboCpu(cpuService.getAll());
                     clearThuocTinhSP();
-                    if (rbnTatCaImel.isSelected()) {
-                        showDataTableCTSP(ctspService.getAllCTSP());
-                    } else if (rbnImel.isSelected()) {
-                        showDataTableCTSP(ctspService.getAll());
-                    }
+                    showDataTableCTSP(ctspService.getAllCTSP());
                 } else if (rbnManHinh.isSelected()) {
                     addSuccess = ttspService.addManHinh(getFormDataManHinh());
                     showDataTableManHinh(ttspService.getAllManHinh());
                     setDataCboManHinh(mhService.getAll());
                     clearThuocTinhSP();
-                    if (rbnTatCaImel.isSelected()) {
-                        showDataTableCTSP(ctspService.getAllCTSP());
-                    } else if (rbnImel.isSelected()) {
-                        showDataTableCTSP(ctspService.getAll());
-                    }
+                    showDataTableCTSP(ctspService.getAllCTSP());
                 } else if (rbnMauSac.isSelected()) {
                     addSuccess = ttspService.addMauSac(getFormDataMauSac());
                     showDataTableMauSac(ttspService.getAllMauSac());
@@ -1716,33 +1704,21 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 showDataTablePin(ttspService.getAllPin());
                 setDataCboPin(pinService.getAll());
                 clearThuocTinhSP();
-                if (rbnTatCaImel.isSelected()) {
-                    showDataTableCTSP(ctspService.getAllCTSP());
-                } else if (rbnImel.isSelected()) {
-                    showDataTableCTSP(ctspService.getAll());
-                }
+                showDataTableCTSP(ctspService.getAllCTSP());
             } else if (rbnCpu.isSelected()) {
                 CPU selectedCPU = ttspService.getAllCPU().get(selectedRow);
                 updateSuccess = ttspService.updateCPU(getFormDataCPU(), selectedCPU.getId());
                 showDataTableCPU(ttspService.getAllCPU());
                 setDataCboCpu(cpuService.getAll());
                 clearThuocTinhSP();
-                if (rbnTatCaImel.isSelected()) {
-                    showDataTableCTSP(ctspService.getAllCTSP());
-                } else if (rbnImel.isSelected()) {
-                    showDataTableCTSP(ctspService.getAll());
-                }
+                showDataTableCTSP(ctspService.getAllCTSP());
             } else if (rbnManHinh.isSelected()) {
                 ManHinh selectedManHinh = ttspService.getAllManHinh().get(selectedRow);
                 updateSuccess = ttspService.updateManHinh(getFormDataManHinh(), selectedManHinh.getId());
                 showDataTableManHinh(ttspService.getAllManHinh());
                 setDataCboManHinh(mhService.getAll());
                 clearThuocTinhSP();
-                if (rbnTatCaImel.isSelected()) {
-                    showDataTableCTSP(ctspService.getAllCTSP());
-                } else if (rbnImel.isSelected()) {
-                    showDataTableCTSP(ctspService.getAll());
-                }
+                showDataTableCTSP(ctspService.getAllCTSP());
             } else if (rbnMauSac.isSelected()) {
                 MauSac selectedMauSac = ttspService.getAllMauSac().get(selectedRow);
                 updateSuccess = ttspService.updateMauSac(getFormDataMauSac(), selectedMauSac.getId());
@@ -1794,33 +1770,21 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 showDataTablePin(ttspService.getAllPin());
                 setDataCboPin(pinService.getAll());
                 clearThuocTinhSP();
-                if (rbnTatCaImel.isSelected()) {
-                    showDataTableCTSP(ctspService.getAllCTSP());
-                } else if (rbnImel.isSelected()) {
-                    showDataTableCTSP(ctspService.getAll());
-                }
+                showDataTableCTSP(ctspService.getAllCTSP());
             } else if (rbnCpu.isSelected()) {
                 CPU removeCPU = ttspService.getAllCPU().get(selectedRow);
                 removeSuccess = ttspService.removeCPU(removeCPU.getId());
                 showDataTableCPU(ttspService.getAllCPU());
                 setDataCboCpu(cpuService.getAll());
                 clearThuocTinhSP();
-                if (rbnTatCaImel.isSelected()) {
-                    showDataTableCTSP(ctspService.getAllCTSP());
-                } else if (rbnImel.isSelected()) {
-                    showDataTableCTSP(ctspService.getAll());
-                }
+                showDataTableCTSP(ctspService.getAllCTSP());
             } else if (rbnManHinh.isSelected()) {
                 ManHinh removeManHinh = ttspService.getAllManHinh().get(selectedRow);
                 removeSuccess = ttspService.removeManHinh(removeManHinh.getId());
                 showDataTableManHinh(ttspService.getAllManHinh());
                 setDataCboManHinh(mhService.getAll());
                 clearThuocTinhSP();
-                if (rbnTatCaImel.isSelected()) {
-                    showDataTableCTSP(ctspService.getAllCTSP());
-                } else if (rbnImel.isSelected()) {
-                    showDataTableCTSP(ctspService.getAll());
-                }
+                showDataTableCTSP(ctspService.getAllCTSP());
             } else if (rbnMauSac.isSelected()) {
                 MauSac removeMauSac = ttspService.getAllMauSac().get(selectedRow);
                 removeSuccess = ttspService.removeMauSac(removeMauSac.getId());
@@ -1875,50 +1839,20 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     }//GEN-LAST:event_rbnTatCaActionPerformed
 
     private void cboNsxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboNsxActionPerformed
-        if (rbnImel.isSelected()) {
-            filterCTSP();
-        } else if (rbnTatCaImel.isSelected()) {
-            filterSP();
-        }
+        filterCTSP();
     }//GEN-LAST:event_cboNsxActionPerformed
 
     private void cboPinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboPinActionPerformed
-        if (rbnImel.isSelected()) {
-            filterCTSP();
-        } else if (rbnTatCaImel.isSelected()) {
-            filterSP();
-        }
+        filterCTSP();
     }//GEN-LAST:event_cboPinActionPerformed
 
     private void cboManHinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboManHinhActionPerformed
-        if (rbnImel.isSelected()) {
-            filterCTSP();
-        } else if (rbnTatCaImel.isSelected()) {
-            filterSP();
-        }
+        filterCTSP();
     }//GEN-LAST:event_cboManHinhActionPerformed
 
     private void cboCPUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboCPUActionPerformed
-        if (rbnImel.isSelected()) {
-            filterCTSP();
-        } else if (rbnTatCaImel.isSelected()) {
-            filterSP();
-        }
+        filterCTSP();
     }//GEN-LAST:event_cboCPUActionPerformed
-
-    private void rbnTatCaImelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbnTatCaImelActionPerformed
-        if (!getSelectedProductList()) {
-            showDataTableCTSP(ctspService.getAllCTSP());
-        }
-        getSelectedProductList();
-    }//GEN-LAST:event_rbnTatCaImelActionPerformed
-
-    private void rbnImelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbnImelActionPerformed
-        if (getSelectedProductListImel().isEmpty()) {
-            showDataTableCTSP(ctspService.getAll());
-        }
-        getSelectedProductListImel();
-    }//GEN-LAST:event_rbnImelActionPerformed
 
     private void rbnCamTruocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbnCamTruocActionPerformed
         showDataTableCameraTruoc(ttspService.getAllCameraTruoc());
@@ -1932,12 +1866,18 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
 
     private void cboGiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboGiaActionPerformed
-        if (rbnImel.isSelected()) {
-            filterCTSP();
-        } else if (rbnTatCaImel.isSelected()) {
-            filterSP();
-        }
+        filterCTSP();
     }//GEN-LAST:event_cboGiaActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        boolean isChecked = jCheckBox1.isSelected();
+        if (isChecked) {
+            int rowCount = tblModel.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                tblModel.setValueAt(true, i, 13);
+            }
+        }
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1961,6 +1901,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     private mobileworld.swing.Combobox cboManHinh;
     private mobileworld.swing.Combobox cboNsx;
     private mobileworld.swing.Combobox cboPin;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
@@ -1985,14 +1926,12 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     private javax.swing.JRadioButton rbnConHang;
     private javax.swing.JRadioButton rbnCpu;
     private javax.swing.JRadioButton rbnHetHang;
-    private javax.swing.JRadioButton rbnImel;
     private javax.swing.JRadioButton rbnManHinh;
     private javax.swing.JRadioButton rbnMauSac;
     private javax.swing.JRadioButton rbnPin;
     private javax.swing.JRadioButton rbnRam;
     private javax.swing.JRadioButton rbnRom;
     private javax.swing.JRadioButton rbnTatCa;
-    private javax.swing.JRadioButton rbnTatCaImel;
     private mobileworld.swing.Table tblCTSP;
     private mobileworld.swing.Table tblSP;
     private mobileworld.swing.Table tblThuocTinhSP;

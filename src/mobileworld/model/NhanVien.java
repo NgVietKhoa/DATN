@@ -1,21 +1,22 @@
 package mobileworld.model;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 public class NhanVien {
 
     private int stt;
     private String tenNhanVien;
-    private Date ngaySinh;
+    private LocalDate ngaySinh;
     private String diaChi;
     private String sdt;
     private String email;
     private String idChucVu;
     private String password;
     private float deleted;
-    private Date createdAt;
+    private LocalDate createdAt;
     private String createdBy;
-    private Date updatedAt;
+    private LocalDate updatedAt;
     private String updateBy;
     private String id;
     private String cccd;
@@ -23,20 +24,20 @@ public class NhanVien {
     public NhanVien() {
     }
 
-    public NhanVien(String tenNhanVien, Date ngaySinh, String diaChi, String sdt, String email, String idChucVu, String password, float deleted, Date createdAt, String createdBy, Date updatedAt, String updateBy) {
+    public NhanVien(String tenNhanVien, LocalDate ngaySinh, String diaChi, String sdt, String email, String idChucVu, float deleted, LocalDate createdAt, String createdBy, String cccd) {
         this.tenNhanVien = tenNhanVien;
         this.ngaySinh = ngaySinh;
         this.diaChi = diaChi;
         this.sdt = sdt;
         this.email = email;
         this.idChucVu = idChucVu;
-        this.password = password;
         this.deleted = deleted;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
-        this.updatedAt = updatedAt;
-        this.updateBy = updateBy;
+        this.cccd = cccd;
     }
+
+    
 
 
     public int getStt() {
@@ -55,11 +56,11 @@ public class NhanVien {
         this.tenNhanVien = tenNhanVien;
     }
 
-    public Date getNgaySinh() {
+    public LocalDate getNgaySinh() {
         return ngaySinh;
     }
 
-    public void setNgaySinh(Date ngaySinh) {
+    public void setNgaySinh(LocalDate ngaySinh) {
         this.ngaySinh = ngaySinh;
     }
 
@@ -111,11 +112,11 @@ public class NhanVien {
         this.deleted = deleted;
     }
 
-    public Date getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -127,11 +128,11 @@ public class NhanVien {
         this.createdBy = createdBy;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDate getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDate updatedAt) {
         this.updatedAt = updatedAt;
     }
 

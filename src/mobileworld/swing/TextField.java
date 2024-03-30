@@ -20,8 +20,8 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 public class TextField extends JTextField {
 
-    Color color1 = Color.decode("#11998e");
-    Color color2 = Color.decode("#93f9b9");
+    Color color1 = Color.decode("#0C2D57");
+    Color color2 = Color.decode("#1B1A55");
 
     int weight1 = 1;
     int weight2 = 1;

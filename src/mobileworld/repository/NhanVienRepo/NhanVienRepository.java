@@ -7,44 +7,56 @@ import java.util.ArrayList;
 import java.util.List;
 import mobileworld.config.DBConnect;
 import mobileworld.model.NhanVien;
+import mobileworld.viewModel.NhanVienViewModel;
 
 public class NhanVienRepository {
 
-     public List<NhanVien> getAll() {
-        List<NhanVien> listnhanvien = new ArrayList<>();
+    public List<NhanVienViewModel> getAll() {
+        List<NhanVienViewModel> listnhanvien = new ArrayList<>();
         String sql = """
-                     SELECT [TenNV]
-                             ,[NgaySinh]
-                             ,[DiaChi]
-                             ,[SDT]
-                             ,[Email]
-                             ,[IDChucVu]
-                             ,[Password]
-                             ,[Deleted]
-                             ,[CreatedAt]
-                             ,[CreatedBy]
-                             ,[UpdatedAt]
-                             ,[UpdatedBy]
-                             ,[ID]
-                         FROM [dbo].[NhanVien]
+                     SELECT dbo.NhanVien.ID, dbo.NhanVien.TenNV, dbo.NhanVien.NgaySinh, dbo.NhanVien.DiaChi, dbo.NhanVien.SDT, dbo.NhanVien.Email, dbo.NhanVien.CCCD, dbo.ChucVu.TenChucVu
+                                                            FROM     dbo.ChucVu INNER JOIN
+                                                                              dbo.NhanVien ON dbo.ChucVu.ID = dbo.NhanVien.IDChucVu WHERE NhanVien.Deleted = 1
                      """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                NhanVien nv = new NhanVien();
-                nv.setTenNhanVien(rs.getString(1));
-                nv.setNgaySinh(rs.getDate(2));
-                nv.setDiaChi(rs.getString(3));
-                nv.setSdt(rs.getString(4));
-                nv.setEmail(rs.getString(5));
-                nv.setIdChucVu(rs.getString(6));
-                nv.setPassword(rs.getString(7));
-                nv.setDeleted(rs.getInt(8));
-                nv.setCreatedAt(rs.getDate(9));
-                nv.setCreatedBy(rs.getString(10));
-                nv.setUpdatedAt(rs.getDate(11));
-                nv.setUpdateBy(rs.getString(12));
-                nv.setId(rs.getString(13));
+                NhanVienViewModel nv = new NhanVienViewModel();
+                nv.setId(rs.getString(1));
+                nv.setTenNhanVien(rs.getString(2));
+                nv.setNgaySinh(rs.getDate(3).toLocalDate());
+                nv.setDiaChi(rs.getString(4));
+                nv.setSdt(rs.getString(5));
+                nv.setEmail(rs.getString(6));
+                nv.setCccd(rs.getString(7));
+                nv.setChucVu(rs.getString(8));
+                listnhanvien.add(nv);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listnhanvien;
+    }
+
+    public List<NhanVienViewModel> getAllNvDaNghi() {
+        List<NhanVienViewModel> listnhanvien = new ArrayList<>();
+        String sql = """
+                     SELECT dbo.NhanVien.ID, dbo.NhanVien.TenNV, dbo.NhanVien.NgaySinh, dbo.NhanVien.DiaChi, dbo.NhanVien.SDT, dbo.NhanVien.Email, dbo.NhanVien.CCCD, dbo.ChucVu.TenChucVu
+                                                            FROM     dbo.ChucVu INNER JOIN
+                                                                              dbo.NhanVien ON dbo.ChucVu.ID = dbo.NhanVien.IDChucVu WHERE NhanVien.Deleted = 0
+                     """;
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                NhanVienViewModel nv = new NhanVienViewModel();
+                nv.setId(rs.getString(1));
+                nv.setTenNhanVien(rs.getString(2));
+                nv.setNgaySinh(rs.getDate(3).toLocalDate());
+                nv.setDiaChi(rs.getString(4));
+                nv.setSdt(rs.getString(5));
+                nv.setEmail(rs.getString(6));
+                nv.setCccd(rs.getString(7));
+                nv.setChucVu(rs.getString(8));
                 listnhanvien.add(nv);
             }
         } catch (Exception e) {
@@ -58,7 +70,7 @@ public class NhanVienRepository {
 
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, maNhanVien);
-            ps.setString(2, String.valueOf(password)); 
+            ps.setString(2, String.valueOf(password));
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 int count = rs.getInt(1);
@@ -85,13 +97,14 @@ public class NhanVienRepository {
         }
         return tenChucVu;
     }
-    
-    
-     public boolean delete(String id) {
+
+    public boolean delete(String id) {
         int check = 0;
         String sql = """
-                     DELETE FROM [dbo].[NhanVien]
-                                 WHERE ID = ?
+                     UPDATE [dbo].[NhanVien]
+                                    SET 
+                                       Deleted = 0
+                                  WHERE ID = ?
                      """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, id);
@@ -111,11 +124,9 @@ public class NhanVienRepository {
                            ,[DiaChi] = ?
                            ,[SDT] = ?
                            ,[Email] = ?
-                           ,[IDChucVu] = ?
+                           ,[IDChucVu] = (SELECT TOP 1 ID FROM ChucVu WHERE TenChucVu = ?)
+                           ,[CCCD] = ?
                            ,[Password] = ?
-                           ,[Deleted] = ?
-                           ,[CreatedAt] = ?
-                           ,[CreatedBy] = ?
                            ,[UpdatedAt] = ?
                            ,[UpdatedBy] = ?
                       WHERE ID = ?
@@ -127,13 +138,11 @@ public class NhanVienRepository {
             ps.setObject(4, nv.getSdt());
             ps.setObject(5, nv.getEmail());
             ps.setObject(6, nv.getIdChucVu());
+            ps.setObject(8, nv.getCccd());
             ps.setObject(7, nv.getPassword());
-            ps.setObject(8, nv.getDeleted());
-            ps.setObject(9, nv.getCreatedAt());
-            ps.setObject(10, nv.getCreatedBy());
-            ps.setObject(11, nv.getUpdatedAt());
-            ps.setObject(12, nv.getUpdateBy());
-            ps.setObject(13, oldID);
+            ps.setObject(9, nv.getUpdatedAt());
+            ps.setObject(10, nv.getUpdateBy());
+            ps.setObject(11, oldID);
             check = ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,20 +154,18 @@ public class NhanVienRepository {
         int check = 0;
         String sql = """
                      INSERT INTO [dbo].[NhanVien]
-                                ([TenNV]
-                                ,[NgaySinh]
-                                ,[DiaChi]
-                                ,[SDT]
-                                ,[Email]
-                                ,[IDChucVu]
-                                ,[Password]
-                                ,[Deleted]
-                                      ,[CreatedAt]
-                                      ,[CreatedBy]
-                                      ,[UpdatedAt]
-                                      ,[UpdatedBy]
-                                )
-                          VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
+                                     ([TenNV]
+                                     ,[NgaySinh]
+                                     ,[DiaChi]
+                                     ,[SDT]
+                                     ,[Email]
+                                     ,[IDChucVu]
+                                     ,[Deleted]
+                                     ,[CreatedAt]
+                                     ,[CreatedBy]
+                                     ,[CCCD])
+                               VALUES
+                                     (?,?,?,?,?,(SELECT TOP 1 ID FROM ChucVu WHERE TenChucVu = ?), ?,?,?,?)
                      """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, nv.getTenNhanVien());
@@ -167,68 +174,48 @@ public class NhanVienRepository {
             ps.setObject(4, nv.getSdt());
             ps.setObject(5, nv.getEmail());
             ps.setObject(6, nv.getIdChucVu());
-            ps.setObject(7, nv.getPassword());
-            ps.setObject(8, nv.getDeleted());
-            ps.setObject(9, nv.getCreatedAt());
-            ps.setObject(10, nv.getCreatedBy());
-            ps.setObject(11, nv.getUpdatedAt());
-            ps.setObject(12, nv.getUpdateBy());
+            ps.setObject(7, nv.getDeleted());
+            ps.setObject(8, nv.getCreatedAt());
+            ps.setObject(9, nv.getCreatedBy());
+            ps.setObject(10, nv.getCccd());
             check = ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return check > 0;
     }
-    
-     public List<NhanVien> search(String search) {
-        List<NhanVien> listnhanvien = new ArrayList<>();
+
+    public List<NhanVienViewModel> search(String search) {
+        List<NhanVienViewModel> searchResults = new ArrayList<>();
         String sql = """
-                     SELECT [TenNV]
-                             ,[NgaySinh]
-                             ,[DiaChi]
-                             ,[SDT]
-                             ,[Email]
-                             ,[IDChucVu]
-                             ,[Password]
-                             ,[Deleted]
-                             ,[CreatedAt]
-                             ,[CreatedBy]
-                             ,[UpdatedAt]
-                             ,[UpdatedBy]
-                             ,[ID]
-                         FROM [dbo].[NhanVien]
-                      Where ID like ? ESCAPE '!'
-                       or [TenNV] like ? ESCAPE '!';
-                     """;
+                 SELECT dbo.NhanVien.ID, dbo.NhanVien.TenNV, dbo.NhanVien.NgaySinh, dbo.NhanVien.DiaChi, dbo.NhanVien.SDT, dbo.NhanVien.Email, dbo.NhanVien.CCCD, dbo.ChucVu.TenChucVu
+                 FROM dbo.ChucVu 
+                 INNER JOIN dbo.NhanVien ON dbo.ChucVu.ID = dbo.NhanVien.IDChucVu 
+                 WHERE NhanVien.Deleted = 1
+                 AND (dbo.NhanVien.TenNV LIKE ? OR dbo.NhanVien.DiaChi LIKE ? OR dbo.NhanVien.SDT LIKE ? OR dbo.NhanVien.Email LIKE ? OR dbo.NhanVien.CCCD LIKE ? OR dbo.ChucVu.TenChucVu LIKE ?)
+                 """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-             for (int i = 0; i < search.length(); i++) {
-                ps.setString(1, "%" + search + "%");
-                ps.setString(2, "%" + search + "%");
-            
+            // Set parameters
+            String keywordPattern = "%" + search + "%";
+            for (int i = 1; i <= 6; i++) {
+                ps.setString(i, keywordPattern);
+            }
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                NhanVien nv = new NhanVien();
-                nv.setTenNhanVien(rs.getString(1));
-                nv.setNgaySinh(rs.getDate(2));
-                nv.setDiaChi(rs.getString(3));
-                nv.setSdt(rs.getString(4));
-                nv.setEmail(rs.getString(5));
-                nv.setIdChucVu(rs.getString(6));
-                nv.setPassword(rs.getString(7));
-                nv.setDeleted(rs.getInt(8));
-                nv.setCreatedAt(rs.getDate(9));
-                nv.setCreatedBy(rs.getString(10));
-                nv.setUpdatedAt(rs.getDate(11));
-                nv.setUpdateBy(rs.getString(12));
-                nv.setId(rs.getString(13));
-                listnhanvien.add(nv);
+                NhanVienViewModel nv = new NhanVienViewModel();
+                nv.setId(rs.getString(1));
+                nv.setTenNhanVien(rs.getString(2));
+                nv.setNgaySinh(rs.getDate(3).toLocalDate());
+                nv.setDiaChi(rs.getString(4));
+                nv.setSdt(rs.getString(5));
+                nv.setEmail(rs.getString(6));
+                nv.setCccd(rs.getString(7));
+                nv.setChucVu(rs.getString(8));
+                searchResults.add(nv);
             }
-            break;
-        }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return listnhanvien;
+        return searchResults;
     }
-    
 }

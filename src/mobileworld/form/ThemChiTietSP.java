@@ -9,7 +9,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.table.DefaultTableModel;
 import mobileworld.dialog.CPUDialog;
 import mobileworld.dialog.CameraSauDialog;
 import mobileworld.dialog.CameraTruocDialog;
@@ -54,7 +53,6 @@ import mobileworld.service.ChiTietSanPhamService.CameraSauService;
 import mobileworld.service.ChiTietSanPhamService.CameraTruocService;
 import mobileworld.service.ChiTietSanPhamService.ChiTietSPService;
 import mobileworld.service.ChiTietSanPhamService.ImelService;
-import mobileworld.service.ChiTietSanPhamService.ThuocTinhSPService;
 import mobileworld.viewModel.DongSPViewModel;
 
 public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListener,
@@ -956,7 +954,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         jPanel2.add(txtGia);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(17, 153, 142));
+        jLabel1.setForeground(new java.awt.Color(102, 102, 102));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Thêm Sản Phẩm Chi Tiết");
 

@@ -11,8 +11,8 @@ import javax.swing.JButton;
 
 public class ButtonCustom extends JButton {
 
-    Color color1 = Color.decode("#11998e");
-    Color color2 = Color.decode("#93f9b9");
+    Color color1 = Color.decode("#0C2D57");
+    Color color2 = Color.decode("#1B1A55");
 
     int weight1 = 2;
     int weight2 = 1;

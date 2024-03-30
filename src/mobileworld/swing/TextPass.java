@@ -20,8 +20,8 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 public class TextPass extends JPasswordField {
 
-    Color color1 = Color.decode("#11998e");
-    Color color2 = Color.decode("#93f9b9");
+    Color color1 = Color.decode("#0C2D57");
+    Color color2 = Color.decode("#1B1A55");
 
     int weight1 = 1;
     int weight2 = 1;
@@ -54,7 +54,7 @@ public class TextPass extends JPasswordField {
     private boolean show;
     private boolean mouseOver = false;
     private String labelText = "lable";
-    private Color lineColor = combinedColor;
+    private Color lineColor = color1;
 
     public TextPass() {
         setBorder(new EmptyBorder(20, 3, 10, 3));
@@ -123,9 +123,9 @@ public class TextPass extends JPasswordField {
         int width = getWidth();
         int height = getHeight();
         if (mouseOver) {
-            g2.setColor(new Color(255, 255, 255));
+            g2.setColor(lineColor);
         } else {
-            g2.setColor(new Color(255, 255, 255));
+            g2.setColor(lineColor);
         }
         g2.fillRect(2, height - 1, width - 4, 1);
         createHintText(g2);
@@ -135,7 +135,7 @@ public class TextPass extends JPasswordField {
 
     private void createHintText(Graphics2D g2) {
         Insets in = getInsets();
-        g2.setColor(new Color(255, 255, 255));
+        g2.setColor(lineColor);
         g2.setFont(new Font(g2.getFont().getName(), Font.BOLD, 14));
         FontMetrics ft = g2.getFontMetrics();
         Rectangle2D r2 = ft.getStringBounds(labelText, g2);
@@ -158,7 +158,7 @@ public class TextPass extends JPasswordField {
         if (isFocusOwner()) {
             double width = getWidth() - 4;
             int height = getHeight();
-            g2.setColor(new Color(255, 255, 255));
+            g2.setColor(lineColor);
             double thicknessMultiplier = 2;
             double size;
             if (show) {
