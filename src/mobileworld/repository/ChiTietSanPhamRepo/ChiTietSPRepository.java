@@ -1,5 +1,6 @@
 package mobileworld.repository.ChiTietSanPhamRepo;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import mobileworld.config.DBConnect;
@@ -7,12 +8,14 @@ import mobileworld.model.ChiTietSP;
 import mobileworld.viewModel.ChiTietSanPhamViewModel;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -136,7 +139,7 @@ public class ChiTietSPRepository {
         }
         return listSP;
     }
-    
+
     public List<ChiTietSanPhamViewModel> getAllQR(String imel) {
         List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
 
@@ -1187,143 +1190,169 @@ public class ChiTietSPRepository {
         return listSP;
     }
 
-    public boolean xuatSanPham() {
+    public boolean xuatSanPham(List<String> imels) {
+        // Check if the list of IMEI values is null or empty
+        if (imels == null || imels.isEmpty()) {
+            System.out.println("List of IMEI values is null or empty. Cannot execute query.");
+            return false;
+        }
+
         try ( Connection connection = DBConnect.getConnection()) {
+            // Construct the SQL query using a placeholder for multiple IMEI values
             String query = """
             SELECT
-                                CTS.IDImel,
-                                CTS.IDNSX,
-                                CTS.IDDongSP,
-                                CTS.IDMauSac,
-                                CTS.IDPin,
-                                CTS.IDManHinh,
-                                CTS.IDRam,
-                                CTS.IDBoNho,
-                                CTS.IDCPU,
-                		Imel.Imel,
-                                CTS.IDCamSau,
-                		CTS.IDCamTruoc,
-                                DS.TenDSP,
-                                NSX.TenNsx,
-                                Pin.DungLuongPin,
-                                ManHinh.LoaiManHinh,
-                                CPU.CPU,
-                                Ram.DungLuongRam,
-                                BoNho.DungLuongBoNho,
-                                MauSac.TenMau,
-                                CTS.GiaBan,
-                                CTS.GhiChu,
-                                CameraSau.SoMP,
-                		CameraTruoc.SoMP,
-                                CTS.ID
-                            FROM
-                                dbo.ChiTietSP AS CTS
-                                INNER JOIN dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID
-                                INNER JOIN dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
-                                INNER JOIN dbo.Pin ON CTS.IDPin = Pin.ID
-                                INNER JOIN dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
-                                INNER JOIN dbo.CPU ON CTS.IDCPU = CPU.ID
-                                INNER JOIN dbo.Ram ON CTS.IDRam = Ram.ID
-                                INNER JOIN dbo.BoNho ON CTS.IDBoNho = BoNho.ID
-                                INNER JOIN dbo.MauSac ON CTS.IDMauSac = MauSac.ID
-                		INNER JOIN dbo.CameraSau ON CTS.IDCamSau = CameraSau.ID
-                		INNER JOIN dbo.CameraTruoc ON CTS.IDCamTruoc = CameraTruoc.ID
-                		INNER JOIN dbo.Imel ON CTS.IDImel = Imel.ID
-                            WHERE
-                                CTS.Deleted = 1
-                            GROUP BY
-                                CTS.IDImel,
-                                CTS.IDNSX,
-                                CTS.IDDongSP,
-                                CTS.IDMauSac,
-                                CTS.IDPin,
-                                CTS.IDManHinh,
-                                CTS.IDRam,
-                                CTS.IDBoNho,
-                                CTS.IDCPU,
-                		Imel.Imel,
-                                CTS.IDCamSau,
-                		CTS.IDCamTruoc,
-                                DS.TenDSP,
-                                NSX.TenNsx,
-                                Pin.DungLuongPin,
-                                ManHinh.LoaiManHinh,
-                                CPU.CPU,
-                                Ram.DungLuongRam,
-                                BoNho.DungLuongBoNho,
-                                MauSac.TenMau,
-                                CTS.GiaBan,
-                                CTS.GhiChu,
-                                CameraSau.SoMP,
-                		CameraTruoc.SoMP,
-                                CTS.ID
-                            ORDER BY
-                                CTS.ID DESC
-            """;
+                CTS.IDImel,
+                CTS.IDNSX,
+                CTS.IDDongSP,
+                CTS.IDMauSac,
+                CTS.IDPin,
+                CTS.IDManHinh,
+                CTS.IDRam,
+                CTS.IDBoNho,
+                CTS.IDCPU,
+                Imel.Imel,
+                CTS.IDCamSau,
+                CTS.IDCamTruoc,
+                DS.TenDSP,
+                NSX.TenNsx,
+                Pin.DungLuongPin,
+                ManHinh.LoaiManHinh,
+                CPU.CPU,
+                Ram.DungLuongRam,
+                BoNho.DungLuongBoNho,
+                MauSac.TenMau,
+                CTS.GiaBan,
+                CTS.GhiChu,
+                CameraSau.SoMP,
+                CameraTruoc.SoMP,
+                CTS.ID
+            FROM
+                dbo.ChiTietSP AS CTS
+                INNER JOIN dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID
+                INNER JOIN dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
+                INNER JOIN dbo.Pin ON CTS.IDPin = Pin.ID
+                INNER JOIN dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
+                INNER JOIN dbo.CPU ON CTS.IDCPU = CPU.ID
+                INNER JOIN dbo.Ram ON CTS.IDRam = Ram.ID
+                INNER JOIN dbo.BoNho ON CTS.IDBoNho = BoNho.ID
+                INNER JOIN dbo.MauSac ON CTS.IDMauSac = MauSac.ID
+                INNER JOIN dbo.CameraSau ON CTS.IDCamSau = CameraSau.ID
+                INNER JOIN dbo.CameraTruoc ON CTS.IDCamTruoc = CameraTruoc.ID
+                INNER JOIN dbo.Imel ON CTS.IDImel = Imel.ID
+            WHERE
+                CTS.Deleted = 1 AND Imel.Imel IN (%s)
+            GROUP BY
+                CTS.IDImel,
+                CTS.IDNSX,
+                CTS.IDDongSP,
+                CTS.IDMauSac,
+                CTS.IDPin,
+                CTS.IDManHinh,
+                CTS.IDRam,
+                CTS.IDBoNho,
+                CTS.IDCPU,
+                Imel.Imel,
+                CTS.IDCamSau,
+                CTS.IDCamTruoc,
+                DS.TenDSP,
+                NSX.TenNsx,
+                Pin.DungLuongPin,
+                ManHinh.LoaiManHinh,
+                CPU.CPU,
+                Ram.DungLuongRam,
+                BoNho.DungLuongBoNho,
+                MauSac.TenMau,
+                CTS.GiaBan,
+                CTS.GhiChu,
+                CameraSau.SoMP,
+                CameraTruoc.SoMP,
+                CTS.ID
+            ORDER BY
+                CTS.ID DESC
+        """;
 
-            try ( PreparedStatement statement = connection.prepareStatement(query);  ResultSet resultSet = statement.executeQuery()) {
+            // Construct the placeholder string for multiple IMEI values
+            String imelPlaceholders = String.join(",", Collections.nCopies(imels.size(), "?"));
 
-                Workbook workbook = new XSSFWorkbook();
-                Sheet sheet = workbook.createSheet("Danh sách sản phẩm");
+            // Replace the placeholder in the query with the actual IMEI values
+            query = String.format(query, imelPlaceholders);
 
-                // Tạo phông in đậm
-                Font font = workbook.createFont();
-                font.setBold(true);
-                CellStyle style = workbook.createCellStyle();
-                style.setFont(font);
-
-                ResultSetMetaData metaData = resultSet.getMetaData();
-                int columnCount = metaData.getColumnCount();
-                Row headerRow = sheet.createRow(0);
-
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnName = metaData.getColumnName(i);
-                    Cell cell = headerRow.createCell(i - 1);
-                    cell.setCellValue(columnName);
-                    cell.setCellStyle(style);
+            try ( PreparedStatement statement = connection.prepareStatement(query)) {
+                // Set the IMEI values as parameters
+                for (int i = 0; i < imels.size(); i++) {
+                    statement.setString(i + 1, imels.get(i));
                 }
 
-                int rowIndex = 1;
-                while (resultSet.next()) {
-                    Row row = sheet.createRow(rowIndex++);
+                try ( ResultSet resultSet = statement.executeQuery()) {
+                    Workbook workbook = new XSSFWorkbook();
+                    Sheet sheet = workbook.createSheet("Danh sách sản phẩm");
 
-                    row.createCell(0).setCellValue(resultSet.getString("IDImel"));
-                    row.createCell(1).setCellValue(resultSet.getString("IDNSX"));
-                    row.createCell(2).setCellValue(resultSet.getString("IDDongSP"));
-                    row.createCell(3).setCellValue(resultSet.getString("IDMauSac"));
-                    row.createCell(4).setCellValue(resultSet.getString("IDPin"));
-                    row.createCell(5).setCellValue(resultSet.getString("IDManHinh"));
-                    row.createCell(6).setCellValue(resultSet.getString("IDRam"));
-                    row.createCell(7).setCellValue(resultSet.getString("IDBoNho"));
-                    row.createCell(8).setCellValue(resultSet.getString("IDCPU"));
-                    row.createCell(9).setCellValue(resultSet.getString("Imel"));
-                    row.createCell(10).setCellValue(resultSet.getString("IDCamSau"));
-                    row.createCell(11).setCellValue(resultSet.getString("IDCamTruoc"));
-                    row.createCell(12).setCellValue(resultSet.getString("TenDsp"));
-                    row.createCell(13).setCellValue(resultSet.getString("TenNSX"));
-                    row.createCell(14).setCellValue(resultSet.getString("DungLuongPin"));
-                    row.createCell(15).setCellValue(resultSet.getString("LoaiManHinh"));
-                    row.createCell(16).setCellValue(resultSet.getString("CPU"));
-                    row.createCell(17).setCellValue(resultSet.getString("DungLuongRam"));
-                    row.createCell(18).setCellValue(resultSet.getString("DungLuongBoNho"));
-                    row.createCell(19).setCellValue(resultSet.getString("TenMau"));
-                    row.createCell(20).setCellValue(resultSet.getDouble("GiaBan"));
-                    row.createCell(21).setCellValue(resultSet.getString("GhiChu"));
-                    row.createCell(22).setCellValue(resultSet.getString("SoMP"));
-                    row.createCell(23).setCellValue(resultSet.getString("SoMP"));
-                    row.createCell(24).setCellValue(resultSet.getString("ID"));
-                }
+                    // Create cell style for headers
+                    Font font = workbook.createFont();
+                    font.setBold(true);
+                    CellStyle style = workbook.createCellStyle();
+                    style.setFont(font);
 
-                String fileName = "DanhSachSanPham_" + System.currentTimeMillis() + ".xlsx";
-                try ( FileOutputStream fileOut = new FileOutputStream(fileName)) {
-                    workbook.write(fileOut);
+                    // Populate headers
+                    ResultSetMetaData metaData = resultSet.getMetaData();
+                    int columnCount = metaData.getColumnCount();
+                    Row headerRow = sheet.createRow(0);
+                    for (int i = 1; i <= columnCount; i++) {
+                        String columnName = metaData.getColumnName(i);
+                        Cell cell = headerRow.createCell(i - 1);
+                        cell.setCellValue(columnName);
+                        cell.setCellStyle(style);
+                    }
+
+                    // Populate data rows
+                    int rowIndex = 1;
+                    while (resultSet.next()) {
+                        Row row = sheet.createRow(rowIndex++);
+
+                        row.createCell(0).setCellValue(resultSet.getString("IDImel"));
+                        row.createCell(1).setCellValue(resultSet.getString("IDNSX"));
+                        row.createCell(2).setCellValue(resultSet.getString("IDDongSP"));
+                        row.createCell(3).setCellValue(resultSet.getString("IDMauSac"));
+                        row.createCell(4).setCellValue(resultSet.getString("IDPin"));
+                        row.createCell(5).setCellValue(resultSet.getString("IDManHinh"));
+                        row.createCell(6).setCellValue(resultSet.getString("IDRam"));
+                        row.createCell(7).setCellValue(resultSet.getString("IDBoNho"));
+                        row.createCell(8).setCellValue(resultSet.getString("IDCPU"));
+                        row.createCell(9).setCellValue(resultSet.getString("Imel"));
+                        row.createCell(10).setCellValue(resultSet.getString("IDCamSau"));
+                        row.createCell(11).setCellValue(resultSet.getString("IDCamTruoc"));
+                        row.createCell(12).setCellValue(resultSet.getString("TenDsp"));
+                        row.createCell(13).setCellValue(resultSet.getString("TenNSX"));
+                        row.createCell(14).setCellValue(resultSet.getString("DungLuongPin"));
+                        row.createCell(15).setCellValue(resultSet.getString("LoaiManHinh"));
+                        row.createCell(16).setCellValue(resultSet.getString("CPU"));
+                        row.createCell(17).setCellValue(resultSet.getString("DungLuongRam"));
+                        row.createCell(18).setCellValue(resultSet.getString("DungLuongBoNho"));
+                        row.createCell(19).setCellValue(resultSet.getString("TenMau"));
+                        row.createCell(20).setCellValue(resultSet.getDouble("GiaBan"));
+                        row.createCell(21).setCellValue(resultSet.getString("GhiChu"));
+                        row.createCell(22).setCellValue(resultSet.getString("SoMP"));
+                        row.createCell(23).setCellValue(resultSet.getString("SoMP"));
+                        row.createCell(24).setCellValue(resultSet.getString("ID"));
+                    }
+
+                    // Save workbook to file
+                    String fileName = "DanhSachSanPham_" + System.currentTimeMillis() + ".xlsx";
+                    try ( FileOutputStream fileOut = new FileOutputStream(fileName)) {
+                        workbook.write(fileOut);
+                        System.out.println("Đã xuất file Excel: " + fileName);
+                        return true;
+                    } catch (FileNotFoundException ex) {
+                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ChiTietSPRepository.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-                System.out.println("Đã xuất file Excel: " + fileName);
-                return true;
             }
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
+
 }

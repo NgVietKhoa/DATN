@@ -1,6 +1,5 @@
 package mobileworld.service.ChiTietSanPhamService;
 
-import java.math.BigDecimal;
 import java.util.List;
 import mobileworld.model.ChiTietSP;
 import mobileworld.repository.ChiTietSanPhamRepo.ChiTietSPRepository;
@@ -38,8 +37,8 @@ public class ChiTietSPService {
         return repo.getAllCTSP();
     }
 
-    public boolean xuatSanPham() {
-        return repo.xuatSanPham();
+    public boolean xuatSanPham(List<String> imels) {
+        return repo.xuatSanPham(imels);
     }
 
     public List<ChiTietSanPhamViewModel> search(String keyword) {

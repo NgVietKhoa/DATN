@@ -627,19 +627,6 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         showDataTableCTSP(BoLocCtsp);
     }
 
-    private void filterSP() {
-        String nsx = (String) cboNsx.getSelectedItem();
-        String pin = (String) cboPin.getSelectedItem();
-        String manHinh = (String) cboManHinh.getSelectedItem();
-        String cpu = (String) cboCPU.getSelectedItem();
-
-        // Kiểm tra xem giá trị được chọn từ combobox có null không
-        boolean sapXepGiaTangDan = "Giá Tăng Dần".equals(cboGia.getSelectedItem());
-
-        List<ChiTietSanPhamViewModel> filteredProducts = ctspService.LocSP(nsx, pin, manHinh, cpu, sapXepGiaTangDan);
-        showDataTableCTSP(filteredProducts);
-    }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1425,11 +1412,43 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     private void buttonCustom16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom16ActionPerformed
         int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn xuất danh sách sản phẩm không", "Thông Báo", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            ctspService.xuatSanPham();
-            JOptionPane.showMessageDialog(this, "Xuất Thành Công!");
-            return;
+            try {
+                // Create a list to store selected IMEI values
+                List<String> selectedImels = new ArrayList<>();
+
+                // Iterate through the table rows
+                DefaultTableModel model = (DefaultTableModel) tblCTSP.getModel();
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    // Get the value of the checkbox (column 13)
+                    Boolean column13Value = (Boolean) model.getValueAt(i, 13);
+
+                    // Check if the checkbox is ticked
+                    if (column13Value != null && column13Value) {
+                        // Get the IMEI from column 2 (assuming column index is 1)
+                        String imel = (String) model.getValueAt(i, 2);
+                        selectedImels.add(imel);
+                    }
+                }
+
+                // Check if any products were selected
+                if (selectedImels.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Không có sản phẩm nào được chọn.");
+                    return;
+                }
+
+                // Call the service method to export all selected products
+                boolean result = ctspService.xuatSanPham(selectedImels);
+                if (result) {
+                    JOptionPane.showMessageDialog(this, "Xuất Thành Công!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Xuất Thất Bại!");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Xuất Thất Bại!");
+            }
         }
-        JOptionPane.showMessageDialog(this, "Xuất Thất Bại!");
     }//GEN-LAST:event_buttonCustom16ActionPerformed
 
     private void tblSPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSPMouseClicked
