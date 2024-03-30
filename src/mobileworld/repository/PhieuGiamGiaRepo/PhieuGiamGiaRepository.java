@@ -144,7 +144,7 @@ public class PhieuGiamGiaRepository {
                                          ,[UpdatedAt] = ?
                                          ,[UpdatedBy] = ?
                                           ,[KieuPGG] = ?
-                                    WHERE ID=?
+                                    WHERE ID=? 
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, gg.getTenGiamGia());

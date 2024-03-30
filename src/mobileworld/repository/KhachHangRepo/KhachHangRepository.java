@@ -10,6 +10,8 @@ import mobileworld.model.KhachHang;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import mobileworld.config.DBConnect;
 
 /**
@@ -26,13 +28,11 @@ public class KhachHangRepository {
                                ,[GioiTinh]
                                ,[NgaySinh]
                                ,[DiaChi]
-                               ,[Deleted]
-                               ,[CreatedAt]
-                               ,[CreatedBy]
-                               ,[UpdatedAt]
-                               ,[UpdatedBy]
+                               ,[Deleted]                               
                                ,[ID]
+                               ,[Email]
                            FROM [dbo].[KhachHang]
+                           where deleted =1
                      """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareCall(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -43,12 +43,9 @@ public class KhachHangRepository {
                 kh.setGioiTinh(rs.getBoolean(3));
                 kh.setNgaySinh(rs.getDate(4));
                 kh.setDiaChi(rs.getString(5));
-                kh.setDeleted(rs.getInt(6));
-                kh.setCreatedat(rs.getString(7));
-                kh.setCreatedby(rs.getString(8));
-                kh.setUpdatedat(rs.getString(9));
-                kh.setUpdatedby(rs.getString(10));
-                kh.setId(rs.getString(11));
+                kh.setDeleted(rs.getInt(6));               
+                kh.setId(rs.getString(7));
+                kh.setEmail(rs.getString(8));
                 khachHang.add(kh);
             }
         } catch (Exception e) {
@@ -65,20 +62,21 @@ public class KhachHangRepository {
                                ,[GioiTinh]
                                ,[NgaySinh]
                                ,[DiaChi]
-                               ,[Deleted]
-                               ,[CreatedAt]
-                               ,[CreatedBy]
-                               ,[UpdatedAt]
-                               ,[UpdatedBy]
+                               ,[Deleted]                               
                                ,[ID]
+                               ,[Email]
                            FROM [dbo].[KhachHang]
-                     Where ID like ? ESCAPE '!'
-                     or Ten like ? ESCAPE '!';
+                     WHERE Deleted = 1
+                             AND (ID LIKE ? ESCAPE '!'
+                             OR Ten LIKE ? ESCAPE '!'
+                             OR Email LIKE ? ESCAPE '!')
+                     
                      """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareCall(sql)) {
             for (int i = 0; i < search.length(); i++) {
                 ps.setString(1, "%" + search + "%");
                 ps.setString(2, "%" + search + "%");
+                ps.setString(3, "%" + search + "%");
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     KhachHang kh = new KhachHang();
@@ -87,12 +85,9 @@ public class KhachHangRepository {
                     kh.setGioiTinh(rs.getBoolean(3));
                     kh.setNgaySinh(rs.getDate(4));
                     kh.setDiaChi(rs.getString(5));
-                    kh.setDeleted(rs.getInt(6));
-                    kh.setCreatedat(rs.getString(7));
-                    kh.setCreatedby(rs.getString(8));
-                    kh.setUpdatedat(rs.getString(9));
-                    kh.setUpdatedby(rs.getString(10));
-                    kh.setId(rs.getString(11));
+                    kh.setDeleted(rs.getInt(6));                   
+                    kh.setId(rs.getString(7));
+                    kh.setEmail(rs.getString(8));
                     khachHang.add(kh);
                 }
                 break;
@@ -117,9 +112,10 @@ public class KhachHangRepository {
                                             ,[CreatedBy]
                                             ,[UpdatedAt]
                                             ,[UpdatedBy]
+                                            ,[Email]
                                             )
                                       VALUES
-                                            (?,?,?,?,?,?,?,?,?,?)
+                                            (?,?,?,?,?,?,?,?,?,?,?)
                       """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareCall(sql)) {
             ps.setObject(1, kh.getTen());
@@ -132,7 +128,7 @@ public class KhachHangRepository {
             ps.setObject(8, kh.getCreatedby());
             ps.setObject(9, kh.getUpdatedat());
             ps.setObject(10, kh.getUpdatedby());
-
+            ps.setObject(11, kh.getEmail());
             check = ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -149,12 +145,10 @@ public class KhachHangRepository {
                                          ,[GioiTinh] = ?
                                          ,[NgaySinh] = ?
                                          ,[DiaChi] = ?
-                                         ,[Deleted] = ?
-                                         ,[CreatedAt] = ? 
-                                         ,[CreatedBy] = ?
+                                         ,[Deleted] = ?                                        
                                          ,[UpdatedAt] = ?
                                          ,[UpdatedBy] = ?
-                                        
+                                         ,[Email]=?
                                     WHERE ID = ?
                       """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareCall(sql)) {
@@ -164,11 +158,10 @@ public class KhachHangRepository {
             ps.setObject(4, kh.getNgaySinh());
             ps.setObject(5, kh.getDiaChi());
             ps.setObject(6, kh.getDeleted());
-            ps.setObject(7, kh.getCreatedat());
-            ps.setObject(8, kh.getCreatedby());
-            ps.setObject(9, kh.getUpdatedat());
-            ps.setObject(10, kh.getUpdatedby());
-            ps.setObject(11, id);
+            ps.setObject(7, kh.getUpdatedat());
+            ps.setObject(8, kh.getUpdatedby());
+            ps.setObject(9, kh.getEmail());
+            ps.setObject(10, id);
             check = ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -176,15 +169,20 @@ public class KhachHangRepository {
         return check > 0;
     }
 
-    public boolean delete(String id) {
+    public boolean delete(String id,LocalDateTime ngayTT,String maNV) {
         int check = 0;
         String sql = """
-                   DELETE FROM [dbo].[KhachHang]
+                   Update [dbo].[KhachHang] SET Deleted=0
                                       WHERE ID = ?
+                       UPDATE [dbo].[KhachHang] SET [UpdatedAt] = ?
+                                                    ,[UpdatedBy] = ?
+                      WHERE ID = ?
                     """;
         try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
-
             ps.setObject(1, id);
+            ps.setObject(2, ngayTT);
+            ps.setObject(3, maNV);
+            ps.setObject(4, id);
             check = ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

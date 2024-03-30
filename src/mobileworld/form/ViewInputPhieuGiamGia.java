@@ -56,8 +56,10 @@ public class ViewInputPhieuGiamGia extends javax.swing.JPanel {
 
     private void fillTable(List<KhachHang> KHList) {
         dtm.setRowCount(0);
+        int i=0;
         for (KhachHang kh : KHList) {
-            dtm.addRow(new Object[]{kh.getTen(), kh.getSdt(), kh.getEmail()});
+            i++;
+            dtm.addRow(new Object[]{i,kh.getTen(), kh.getSdt(), kh.getEmail()});
         }
     }
 
@@ -194,17 +196,17 @@ public class ViewInputPhieuGiamGia extends javax.swing.JPanel {
 
         tblBang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Tên", "Số điện thoại ", "Email", "Chọn"
+                "STT", "Tên", "Số điện thoại ", "Email", "Chọn"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -343,7 +345,7 @@ public class ViewInputPhieuGiamGia extends javax.swing.JPanel {
 
         boolean anyRowSelected = false; // Check xem có hàng được chọn không
         for (int i = 0; i < tblBang.getRowCount(); i++) {
-            Boolean value = (Boolean) tblBang.getValueAt(i, 3);
+            Boolean value = (Boolean) tblBang.getValueAt(i, 4);
             if (value != null && value) {
                 anyRowSelected = true;
                 KhachHang kh = null;
@@ -447,7 +449,7 @@ public class ViewInputPhieuGiamGia extends javax.swing.JPanel {
             int selectedRow = tblBang.getSelectedRow();
             boolean anyRowSelected = false; // Biến để kiểm tra xem có hàng nào được chọn không
             for (int i = 0; i < tblBang.getRowCount(); i++) {
-                Boolean value = (Boolean) tblBang.getValueAt(i, 3);
+                Boolean value = (Boolean) tblBang.getValueAt(i, 4);
                 if (value != null && value) {
                     anyRowSelected = true; // Đã có ít nhất một hàng được chọn
                     break;

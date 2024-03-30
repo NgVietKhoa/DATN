@@ -4,6 +4,7 @@
  */
 package mobileworld.service.KhachHangService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import mobileworld.model.KhachHang;
 import mobileworld.repository.KhachHangRepo.KhachHangRepository;
@@ -28,8 +29,8 @@ public class KhachHangService {
         return repo.update(kh, ma);
     }
 
-    public boolean delete(String ma) {
-        return repo.delete(ma);
+    public boolean delete(String id,LocalDateTime ngayTT,String maNV) {
+        return repo.delete(id, ngayTT, maNV);
     }
 
     public List<KhachHang> search(String search) {
