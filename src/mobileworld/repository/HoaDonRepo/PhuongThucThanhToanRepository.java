@@ -7,7 +7,7 @@ package mobileworld.repository.HoaDonRepo;
 
 import java.util.ArrayList;
 import java.util.List;
-import mobileworld.entity.PhuongThucThanhToan;
+import mobileworld.model.PhuongThucThanhToan;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

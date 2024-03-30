@@ -5,7 +5,7 @@
 package mobileworld.service.HoaDonService;
 
 import java.util.List;
-import mobileworld.entity.PhuongThucThanhToan;
+import mobileworld.model.PhuongThucThanhToan;
 import mobileworld.repository.HoaDonRepo.PhuongThucThanhToanRepository;
 
 /**

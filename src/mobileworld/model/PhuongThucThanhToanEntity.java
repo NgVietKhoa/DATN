@@ -1,23 +1,22 @@
-package mobileworld.entity;
+package mobileworld.model;
 
-import java.time.LocalDate;
 import java.util.Date;
 
-public class ManHinhEntity {
+public class PhuongThucThanhToanEntity {
 
-    private String loaiManHinh;
+    private String tenKieuThanhToan;
     private float deleted;
-    private LocalDate createdAt;
+    private Date createdAt;
     private String createdBy;
-    private LocalDate updatedAt;
+    private Date updatedAt;
     private String updateBy;
     private String id;
 
-    public ManHinhEntity() {
+    public PhuongThucThanhToanEntity() {
     }
 
-    public ManHinhEntity(String loaiManHinh, float deleted, LocalDate createdAt, String createdBy, LocalDate updatedAt, String updateBy, String id) {
-        this.loaiManHinh = loaiManHinh;
+    public PhuongThucThanhToanEntity(String tenKieuThanhToan, float deleted, Date createdAt, String createdBy, Date updatedAt, String updateBy, String id) {
+        this.tenKieuThanhToan = tenKieuThanhToan;
         this.deleted = deleted;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
@@ -26,21 +25,12 @@ public class ManHinhEntity {
         this.id = id;
     }
 
-    public ManHinhEntity(String loaiManHinh, float deleted, LocalDate createdAt, String createdBy) {
-        this.loaiManHinh = loaiManHinh;
-        this.deleted = deleted;
-        this.createdAt = createdAt;
-        this.createdBy = createdBy;
-    }
-    
-    
-
-    public String getLoaiManHinh() {
-        return loaiManHinh;
+    public String getTenKieuThanhToan() {
+        return tenKieuThanhToan;
     }
 
-    public void setLoaiManHinh(String loaiManHinh) {
-        this.loaiManHinh = loaiManHinh;
+    public void setTenKieuThanhToan(String tenKieuThanhToan) {
+        this.tenKieuThanhToan = tenKieuThanhToan;
     }
 
     public float getDeleted() {
@@ -51,11 +41,11 @@ public class ManHinhEntity {
         this.deleted = deleted;
     }
 
-    public LocalDate getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -67,11 +57,11 @@ public class ManHinhEntity {
         this.createdBy = createdBy;
     }
 
-    public LocalDate getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 

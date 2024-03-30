@@ -15,7 +15,7 @@ public class Login extends javax.swing.JFrame {
     
     public Login() {
         initComponents();
-        ImageIcon icon = new ImageIcon("E:\\mobileWorld\\src\\mobileworld\\icon\\Logomb.png");
+        ImageIcon icon = new ImageIcon("D:\\mobileWorldCopy\\src\\mobileworld\\icon\\Logomb.png");
         setIconImage(icon.getImage());
         txtID.setText("NV00002");
         txtPass.setText("Khoa212");

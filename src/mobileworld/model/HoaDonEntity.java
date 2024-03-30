@@ -1,4 +1,4 @@
-package mobileworld.entity;
+package mobileworld.model;
 
 import java.math.BigDecimal;
 import java.util.Date;

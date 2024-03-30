@@ -1,10 +1,13 @@
-package mobileworld.entity;
+package mobileworld.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-public class NhaSanXuatEntity {
+public class HoaDonChiTietEntity {
 
-    private String tenNsx;
+    private String idCtsp;
+    private String idHoaDon;
+    private BigDecimal donGia;
     private float deleted;
     private Date createdAt;
     private String createdBy;
@@ -12,11 +15,13 @@ public class NhaSanXuatEntity {
     private String updateBy;
     private String id;
 
-    public NhaSanXuatEntity() {
+    public HoaDonChiTietEntity() {
     }
 
-    public NhaSanXuatEntity(String tenNsx, float deleted, Date createdAt, String createdBy, Date updatedAt, String updateBy, String id) {
-        this.tenNsx = tenNsx;
+    public HoaDonChiTietEntity(String idCtsp, String idHoaDon, BigDecimal donGia, float deleted, Date createdAt, String createdBy, Date updatedAt, String updateBy, String id) {
+        this.idCtsp = idCtsp;
+        this.idHoaDon = idHoaDon;
+        this.donGia = donGia;
         this.deleted = deleted;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
@@ -25,12 +30,28 @@ public class NhaSanXuatEntity {
         this.id = id;
     }
 
-    public String getTenNsx() {
-        return tenNsx;
+    public String getIdCtsp() {
+        return idCtsp;
     }
 
-    public void setTenNsx(String tenNsx) {
-        this.tenNsx = tenNsx;
+    public void setIdCtsp(String idCtsp) {
+        this.idCtsp = idCtsp;
+    }
+
+    public String getIdHoaDon() {
+        return idHoaDon;
+    }
+
+    public void setIdHoaDon(String idHoaDon) {
+        this.idHoaDon = idHoaDon;
+    }
+
+    public BigDecimal getDonGia() {
+        return donGia;
+    }
+
+    public void setDonGia(BigDecimal donGia) {
+        this.donGia = donGia;
     }
 
     public float getDeleted() {

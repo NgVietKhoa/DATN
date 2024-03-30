@@ -6,7 +6,7 @@ package mobileworld.service.HoaDonService;
 
 import java.math.BigDecimal;
 import java.util.List;
-import mobileworld.entity.HoaDon;
+import mobileworld.model.HoaDon;
 import mobileworld.repository.HoaDonRepo.HoaDonRepository;
 import mobileworld.viewModel.HoaDonModel;
 

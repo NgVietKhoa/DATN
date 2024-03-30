@@ -1,14 +1,14 @@
-package mobileworld.entity;
+package mobileworld.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-public class KhachHangEntity {
+public class HinhThucThanhToanEntity {
 
-    private String ten;
-    private String sdt;
-    private float gioiTinh;
-    private Date ngaySinh;
-    private String diaChi;
+    private String idHoaDon;
+    private String idPhuongThucThanhToan;
+    private BigDecimal tienChuyenKhoan;
+    private BigDecimal tienMat;
     private float deleted;
     private Date createdAt;
     private String createdBy;
@@ -16,15 +16,14 @@ public class KhachHangEntity {
     private String updateBy;
     private String id;
 
-    public KhachHangEntity() {
+    public HinhThucThanhToanEntity() {
     }
 
-    public KhachHangEntity(String ten, String sdt, float gioiTinh, Date ngaySinh, String diaChi, float deleted, Date createdAt, String createdBy, Date updatedAt, String updateBy, String id) {
-        this.ten = ten;
-        this.sdt = sdt;
-        this.gioiTinh = gioiTinh;
-        this.ngaySinh = ngaySinh;
-        this.diaChi = diaChi;
+    public HinhThucThanhToanEntity(String idHoaDon, String idPhuongThucThanhToan, BigDecimal tienChuyenKhoan, BigDecimal tienMat, float deleted, Date createdAt, String createdBy, Date updatedAt, String updateBy, String id) {
+        this.idHoaDon = idHoaDon;
+        this.idPhuongThucThanhToan = idPhuongThucThanhToan;
+        this.tienChuyenKhoan = tienChuyenKhoan;
+        this.tienMat = tienMat;
         this.deleted = deleted;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
@@ -33,44 +32,36 @@ public class KhachHangEntity {
         this.id = id;
     }
 
-    public String getTen() {
-        return ten;
+    public String getIdHoaDon() {
+        return idHoaDon;
     }
 
-    public void setTen(String ten) {
-        this.ten = ten;
+    public void setIdHoaDon(String idHoaDon) {
+        this.idHoaDon = idHoaDon;
     }
 
-    public String getSdt() {
-        return sdt;
+    public String getIdPhuongThucThanhToan() {
+        return idPhuongThucThanhToan;
     }
 
-    public void setSdt(String sdt) {
-        this.sdt = sdt;
+    public void setIdPhuongThucThanhToan(String idPhuongThucThanhToan) {
+        this.idPhuongThucThanhToan = idPhuongThucThanhToan;
     }
 
-    public float getGioiTinh() {
-        return gioiTinh;
+    public BigDecimal getTienChuyenKhoan() {
+        return tienChuyenKhoan;
     }
 
-    public void setGioiTinh(float gioiTinh) {
-        this.gioiTinh = gioiTinh;
+    public void setTienChuyenKhoan(BigDecimal tienChuyenKhoan) {
+        this.tienChuyenKhoan = tienChuyenKhoan;
     }
 
-    public Date getNgaySinh() {
-        return ngaySinh;
+    public BigDecimal getTienMat() {
+        return tienMat;
     }
 
-    public void setNgaySinh(Date ngaySinh) {
-        this.ngaySinh = ngaySinh;
-    }
-
-    public String getDiaChi() {
-        return diaChi;
-    }
-
-    public void setDiaChi(String diaChi) {
-        this.diaChi = diaChi;
+    public void setTienMat(BigDecimal tienMat) {
+        this.tienMat = tienMat;
     }
 
     public float getDeleted() {

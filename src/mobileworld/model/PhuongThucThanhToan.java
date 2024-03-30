@@ -1,68 +1,83 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package mobileworld.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
+/**
+ *
+ * @author ADMIN
+ */
 public class PhuongThucThanhToan {
-
-    private String tenKieuThanhToan;
-    private float deleted;
-    private Date createdAt;
-    private String createdBy;
-    private Date updatedAt;
+    private String idPTTT;
+    private String teKieuThanhToan;
+    private Float Delete;
+    private LocalDateTime CcreateAt;
+    private String createBy;
+    private LocalDateTime updateAt;
     private String updateBy;
-    private String id;
 
     public PhuongThucThanhToan() {
     }
 
-    public PhuongThucThanhToan(String tenKieuThanhToan, float deleted, Date createdAt, String createdBy, Date updatedAt, String updateBy, String id) {
-        this.tenKieuThanhToan = tenKieuThanhToan;
-        this.deleted = deleted;
-        this.createdAt = createdAt;
-        this.createdBy = createdBy;
-        this.updatedAt = updatedAt;
+    public PhuongThucThanhToan(String idPTTT, String teKieuThanhToan, Float Delete, LocalDateTime CcreateAt, String createBy, LocalDateTime updateAt, String updateBy) {
+        this.idPTTT = idPTTT;
+        this.teKieuThanhToan = teKieuThanhToan;
+        this.Delete = Delete;
+        this.CcreateAt = CcreateAt;
+        this.createBy = createBy;
+        this.updateAt = updateAt;
         this.updateBy = updateBy;
-        this.id = id;
     }
 
-    public String getTenKieuThanhToan() {
-        return tenKieuThanhToan;
+    public String getIdPTTT() {
+        return idPTTT;
     }
 
-    public void setTenKieuThanhToan(String tenKieuThanhToan) {
-        this.tenKieuThanhToan = tenKieuThanhToan;
+    public void setIdPTTT(String idPTTT) {
+        this.idPTTT = idPTTT;
     }
 
-    public float getDeleted() {
-        return deleted;
+    public String getTeKieuThanhToan() {
+        return teKieuThanhToan;
     }
 
-    public void setDeleted(float deleted) {
-        this.deleted = deleted;
+    public void setTeKieuThanhToan(String teKieuThanhToan) {
+        this.teKieuThanhToan = teKieuThanhToan;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Float getDelete() {
+        return Delete;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setDelete(Float Delete) {
+        this.Delete = Delete;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public LocalDateTime getCcreateAt() {
+        return CcreateAt;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setCcreateAt(LocalDateTime CcreateAt) {
+        this.CcreateAt = CcreateAt;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public String getCreateBy() {
+        return createBy;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
+    }
+
+    public LocalDateTime getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(LocalDateTime updateAt) {
+        this.updateAt = updateAt;
     }
 
     public String getUpdateBy() {
@@ -73,12 +88,10 @@ public class PhuongThucThanhToan {
         this.updateBy = updateBy;
     }
 
-    public String getId() {
-        return id;
+    @Override
+    public String toString() {
+        return "PhuongThucThanhToan{" + "idPTTT=" + idPTTT + ", teKieuThanhToan=" + teKieuThanhToan + ", Delete=" + Delete + ", CcreateAt=" + CcreateAt + ", createBy=" + createBy + ", updateAt=" + updateAt + ", updateBy=" + updateBy + '}';
     }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
+    
+    
 }

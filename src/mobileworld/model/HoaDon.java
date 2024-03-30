@@ -1,87 +1,103 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package mobileworld.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
+/**
+ *
+ * @author ADMIN
+ */
 public class HoaDon {
-
-    private String idKhachHang;
-    private String idNhanVien;
-    private Date ngayTao;
-    private Date ngayThanhToan;
-    private String idChiTietGiamGia;
+    private String idHD;
+    private String idKH;
+    private String idNV;
+    private LocalDateTime NgayTao;
+    private LocalDateTime ngayThanhToan;
+    private String idCTDG;
     private BigDecimal tongTien;
-    private String idHinhThucThanhToan;
-    private String tenKhachHang;
-    private String sdtKhachHang;
-    private String diaChiKhachHang;
-    private float deleted;
-    private Date createdAt;
-    private String createdBy;
-    private Date updatedAt;
+    private String idHTTT;
+    private String tenKH;
+    private String sdtKH;
+    private String diaChiKH;
+    private Float Delete;
+    private LocalDateTime CcreateAt;
+    private String createBy;
+    private LocalDateTime updateAt;
     private String updateBy;
-    private String id;
-
+    private int trangthai;
     public HoaDon() {
     }
 
-    public HoaDon(String idKhachHang, String idNhanVien, Date ngayTao, Date ngayThanhToan, String idChiTietGiamGia, BigDecimal tongTien, String idHinhThucThanhToan, String tenKhachHang, String sdtKhachHang, String diaChiKhachHang, float deleted, Date createdAt, String createdBy, Date updatedAt, String updateBy, String id) {
-        this.idKhachHang = idKhachHang;
-        this.idNhanVien = idNhanVien;
-        this.ngayTao = ngayTao;
+    public HoaDon(String idHD, String idKH, String idNV, LocalDateTime NgayTao, LocalDateTime ngayThanhToan, String idCTDG, BigDecimal tongTien, String idHTTT, String tenKH, String sdtKH, String diaChiKH, Float Delete, LocalDateTime CcreateAt, String createBy, LocalDateTime updateAt, String updateBy, int trangthai) {
+        this.idHD = idHD;
+        this.idKH = idKH;
+        this.idNV = idNV;
+        this.NgayTao = NgayTao;
         this.ngayThanhToan = ngayThanhToan;
-        this.idChiTietGiamGia = idChiTietGiamGia;
+        this.idCTDG = idCTDG;
         this.tongTien = tongTien;
-        this.idHinhThucThanhToan = idHinhThucThanhToan;
-        this.tenKhachHang = tenKhachHang;
-        this.sdtKhachHang = sdtKhachHang;
-        this.diaChiKhachHang = diaChiKhachHang;
-        this.deleted = deleted;
-        this.createdAt = createdAt;
-        this.createdBy = createdBy;
-        this.updatedAt = updatedAt;
+        this.idHTTT = idHTTT;
+        this.tenKH = tenKH;
+        this.sdtKH = sdtKH;
+        this.diaChiKH = diaChiKH;
+        this.Delete = Delete;
+        this.CcreateAt = CcreateAt;
+        this.createBy = createBy;
+        this.updateAt = updateAt;
         this.updateBy = updateBy;
-        this.id = id;
+        this.trangthai = trangthai;
     }
 
-    public String getIdKhachHang() {
-        return idKhachHang;
+    public String getIdHD() {
+        return idHD;
     }
 
-    public void setIdKhachHang(String idKhachHang) {
-        this.idKhachHang = idKhachHang;
+    public void setIdHD(String idHD) {
+        this.idHD = idHD;
     }
 
-    public String getIdNhanVien() {
-        return idNhanVien;
+    public String getIdKH() {
+        return idKH;
     }
 
-    public void setIdNhanVien(String idNhanVien) {
-        this.idNhanVien = idNhanVien;
+    public void setIdKH(String idKH) {
+        this.idKH = idKH;
     }
 
-    public Date getNgayTao() {
-        return ngayTao;
+    public String getIdNV() {
+        return idNV;
     }
 
-    public void setNgayTao(Date ngayTao) {
-        this.ngayTao = ngayTao;
+    public void setIdNV(String idNV) {
+        this.idNV = idNV;
     }
 
-    public Date getNgayThanhToan() {
+    public LocalDateTime getNgayTao() {
+        return NgayTao;
+    }
+
+    public void setNgayTao(LocalDateTime NgayTao) {
+        this.NgayTao = NgayTao;
+    }
+
+    public LocalDateTime getNgayThanhToan() {
         return ngayThanhToan;
     }
 
-    public void setNgayThanhToan(Date ngayThanhToan) {
+    public void setNgayThanhToan(LocalDateTime ngayThanhToan) {
         this.ngayThanhToan = ngayThanhToan;
     }
 
-    public String getIdChiTietGiamGia() {
-        return idChiTietGiamGia;
+    public String getIdCTDG() {
+        return idCTDG;
     }
 
-    public void setIdChiTietGiamGia(String idChiTietGiamGia) {
-        this.idChiTietGiamGia = idChiTietGiamGia;
+    public void setIdCTDG(String idCTDG) {
+        this.idCTDG = idCTDG;
     }
 
     public BigDecimal getTongTien() {
@@ -92,68 +108,68 @@ public class HoaDon {
         this.tongTien = tongTien;
     }
 
-    public String getIdHinhThucThanhToan() {
-        return idHinhThucThanhToan;
+    public String getIdHTTT() {
+        return idHTTT;
     }
 
-    public void setIdHinhThucThanhToan(String idHinhThucThanhToan) {
-        this.idHinhThucThanhToan = idHinhThucThanhToan;
+    public void setIdHTTT(String idHTTT) {
+        this.idHTTT = idHTTT;
     }
 
-    public String getTenKhachHang() {
-        return tenKhachHang;
+    public String getTenKH() {
+        return tenKH;
     }
 
-    public void setTenKhachHang(String tenKhachHang) {
-        this.tenKhachHang = tenKhachHang;
+    public void setTenKH(String tenKH) {
+        this.tenKH = tenKH;
     }
 
-    public String getSdtKhachHang() {
-        return sdtKhachHang;
+    public String getSdtKH() {
+        return sdtKH;
     }
 
-    public void setSdtKhachHang(String sdtKhachHang) {
-        this.sdtKhachHang = sdtKhachHang;
+    public void setSdtKH(String sdtKH) {
+        this.sdtKH = sdtKH;
     }
 
-    public String getDiaChiKhachHang() {
-        return diaChiKhachHang;
+    public String getDiaChiKH() {
+        return diaChiKH;
     }
 
-    public void setDiaChiKhachHang(String diaChiKhachHang) {
-        this.diaChiKhachHang = diaChiKhachHang;
+    public void setDiaChiKH(String diaChiKH) {
+        this.diaChiKH = diaChiKH;
     }
 
-    public float getDeleted() {
-        return deleted;
+    public Float getDelete() {
+        return Delete;
     }
 
-    public void setDeleted(float deleted) {
-        this.deleted = deleted;
+    public void setDelete(Float Delete) {
+        this.Delete = Delete;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCcreateAt() {
+        return CcreateAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCcreateAt(LocalDateTime CcreateAt) {
+        this.CcreateAt = CcreateAt;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public String getCreateBy() {
+        return createBy;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getUpdateAt() {
+        return updateAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdateAt(LocalDateTime updateAt) {
+        this.updateAt = updateAt;
     }
 
     public String getUpdateBy() {
@@ -164,12 +180,18 @@ public class HoaDon {
         this.updateBy = updateBy;
     }
 
-    public String getId() {
-        return id;
+    public int getTrangthai() {
+        return trangthai;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setTrangthai(int trangthai) {
+        this.trangthai = trangthai;
     }
 
+    @Override
+    public String toString() {
+        return "HoaDon{" + "idHD=" + idHD + ", idKH=" + idKH + ", idNV=" + idNV + ", NgayTao=" + NgayTao + ", ngayThanhToan=" + ngayThanhToan + ", idCTDG=" + idCTDG + ", tongTien=" + tongTien + ", idHTTT=" + idHTTT + ", tenKH=" + tenKH + ", sdtKH=" + sdtKH + ", diaChiKH=" + diaChiKH + ", Delete=" + Delete + ", CcreateAt=" + CcreateAt + ", createBy=" + createBy + ", updateAt=" + updateAt + ", updateBy=" + updateBy + ", trangthai=" + trangthai + '}';
+    }
+
+    
 }

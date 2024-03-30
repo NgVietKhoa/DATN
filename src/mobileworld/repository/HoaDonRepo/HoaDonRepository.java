@@ -78,7 +78,7 @@ import java.sql.ResultSetMetaData;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import javax.swing.table.TableColumn;
-import mobileworld.entity.HoaDon;
+import mobileworld.model.HoaDon;
 //import jdk.jfr.Timestamp;
 //import mobileworld.viewModel.ChiTietSanPhamViewModel;
 import mobileworld.viewModel.HoaDonChiTietModel;

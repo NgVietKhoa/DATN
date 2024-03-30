@@ -6,7 +6,7 @@ package mobileworld.repository.PhieuGiamGiaRepo;
 
 import java.util.ArrayList;
 import java.util.List;
-import mobileworld.entity.PhieuGiamGia;
+import mobileworld.model.PhieuGiamGia;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -25,7 +25,7 @@ import javax.mail.internet.MimeMessage;
 import javax.swing.JOptionPane;
 import mobileworld.config.DBConnect;
 import mobileworld.model.KhachHang;
-import mobileworld.entity.NhanVienEntity;
+import mobileworld.model.NhanVien;
 
 /**
  *

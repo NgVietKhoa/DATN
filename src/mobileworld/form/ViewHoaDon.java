@@ -21,8 +21,8 @@ import mobileworld.viewModel.HoaDonChiTietModel;
 import mobileworld.viewModel.HoaDonModel;
 
 import mobileworld.component.Menu;
-import mobileworld.entity.HoaDon;
-import mobileworld.entity.PhuongThucThanhToan;
+import mobileworld.model.HoaDon;
+import mobileworld.model.PhuongThucThanhToan;
 import mobileworld.main.Main;
 import mobileworld.qrcode.qrcode;
 import mobileworld.qrcode.qrcode.QRCodeListener;

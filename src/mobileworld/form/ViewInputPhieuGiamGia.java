@@ -22,7 +22,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import mobileworld.entity.PhieuGiamGia;
+import mobileworld.model.PhieuGiamGia;
 import mobileworld.main.SessionStorage;
 import mobileworld.model.KhachHang;
 import mobileworld.service.PhieuGiamGiaService.PhieuGiamGiaService;

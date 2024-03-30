@@ -29,7 +29,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.View;
-import mobileworld.entity.PhieuGiamGia;
+import mobileworld.model.PhieuGiamGia;
 import mobileworld.service.PhieuGiamGiaService.PhieuGiamGiaService;
 import mobileworld.thread.ThreadTinhTrang;
 import mobileworld.tablecutoms.TableActionCellRender;

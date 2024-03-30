@@ -1,35 +1,35 @@
 package mobileworld.model;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class PhieuGiamGia {
 
+    private String ID;
     private String tenGiamGia;
-    private float soLuongDung;
+    private int soLuongDung;
     private float phanTramGiam;
-    private BigDecimal soTienGiamToiDa;
-    private BigDecimal hoaDonToiThieu;
-    private Date ngayBatDau;
-    private Date ngayKetThuc;
-    private float trangThai;
+    private float soTiemGiamToiDa;
+    private float HoatDonToiThieu;
+    private LocalDateTime ngayBatDau;
+    private LocalDateTime ngayKetThuc;
+    private int trangThai;
     private String moTa;
-    private float deleted;
-    private Date createdAt;
+    private int deleted;
+    private LocalDateTime createdAt;
     private String createdBy;
-    private Date updatedAt;
-    private String updateBy;
-    private String id;
+    private LocalDateTime updatedAt;
+    private String updatedBy;
+    private boolean kieuPGG;
 
     public PhieuGiamGia() {
     }
 
-    public PhieuGiamGia(String tenGiamGia, float soLuongDung, float phanTramGiam, BigDecimal soTienGiamToiDa, BigDecimal hoaDonToiThieu, Date ngayBatDau, Date ngayKetThuc, float trangThai, String moTa, float deleted, Date createdAt, String createdBy, Date updatedAt, String updateBy, String id) {
+     public PhieuGiamGia(String tenGiamGia, int soLuongDung, float phanTramGiam, float soTiemGiamToiDa, float HoatDonToiThieu, LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc, int trangThai, String moTa, int deleted, LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy, boolean kieuPGG) {
         this.tenGiamGia = tenGiamGia;
         this.soLuongDung = soLuongDung;
         this.phanTramGiam = phanTramGiam;
-        this.soTienGiamToiDa = soTienGiamToiDa;
-        this.hoaDonToiThieu = hoaDonToiThieu;
+        this.soTiemGiamToiDa = soTiemGiamToiDa;
+        this.HoatDonToiThieu = HoatDonToiThieu;
         this.ngayBatDau = ngayBatDau;
         this.ngayKetThuc = ngayKetThuc;
         this.trangThai = trangThai;
@@ -38,8 +38,16 @@ public class PhieuGiamGia {
         this.createdAt = createdAt;
         this.createdBy = createdBy;
         this.updatedAt = updatedAt;
-        this.updateBy = updateBy;
-        this.id = id;
+        this.updatedBy = updatedBy;
+        this.kieuPGG = kieuPGG;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public String getTenGiamGia() {
@@ -50,11 +58,11 @@ public class PhieuGiamGia {
         this.tenGiamGia = tenGiamGia;
     }
 
-    public float getSoLuongDung() {
+    public int getSoLuongDung() {
         return soLuongDung;
     }
 
-    public void setSoLuongDung(float soLuongDung) {
+    public void setSoLuongDung(int soLuongDung) {
         this.soLuongDung = soLuongDung;
     }
 
@@ -66,43 +74,43 @@ public class PhieuGiamGia {
         this.phanTramGiam = phanTramGiam;
     }
 
-    public BigDecimal getSoTienGiamToiDa() {
-        return soTienGiamToiDa;
+    public float getSoTiemGiamToiDa() {
+        return soTiemGiamToiDa;
     }
 
-    public void setSoTienGiamToiDa(BigDecimal soTienGiamToiDa) {
-        this.soTienGiamToiDa = soTienGiamToiDa;
+    public void setSoTiemGiamToiDa(float soTiemGiamToiDa) {
+        this.soTiemGiamToiDa = soTiemGiamToiDa;
     }
 
-    public BigDecimal getHoaDonToiThieu() {
-        return hoaDonToiThieu;
+    public float getHoatDonToiThieu() {
+        return HoatDonToiThieu;
     }
 
-    public void setHoaDonToiThieu(BigDecimal hoaDonToiThieu) {
-        this.hoaDonToiThieu = hoaDonToiThieu;
+    public void setHoatDonToiThieu(float HoatDonToiThieu) {
+        this.HoatDonToiThieu = HoatDonToiThieu;
     }
 
-    public Date getNgayBatDau() {
+    public LocalDateTime getNgayBatDau() {
         return ngayBatDau;
     }
 
-    public void setNgayBatDau(Date ngayBatDau) {
+    public void setNgayBatDau(LocalDateTime ngayBatDau) {
         this.ngayBatDau = ngayBatDau;
     }
 
-    public Date getNgayKetThuc() {
+    public LocalDateTime getNgayKetThuc() {
         return ngayKetThuc;
     }
 
-    public void setNgayKetThuc(Date ngayKetThuc) {
+    public void setNgayKetThuc(LocalDateTime ngayKetThuc) {
         this.ngayKetThuc = ngayKetThuc;
     }
 
-    public float getTrangThai() {
+    public int getTrangThai() {
         return trangThai;
     }
 
-    public void setTrangThai(float trangThai) {
+    public void setTrangThai(int trangThai) {
         this.trangThai = trangThai;
     }
 
@@ -114,19 +122,19 @@ public class PhieuGiamGia {
         this.moTa = moTa;
     }
 
-    public float getDeleted() {
+    public int getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(float deleted) {
+    public void setDeleted(int deleted) {
         this.deleted = deleted;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -138,29 +146,31 @@ public class PhieuGiamGia {
         this.createdBy = createdBy;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public String getUpdateBy() {
-        return updateBy;
+    public String getUpdatedBy() {
+        return updatedBy;
     }
 
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
-    public String getId() {
-        return id;
+    public boolean isKieuPGG() {
+        return kieuPGG;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setKieuPGG(boolean kieuPGG) {
+        this.kieuPGG = kieuPGG;
     }
+    
+    
     
     
 }

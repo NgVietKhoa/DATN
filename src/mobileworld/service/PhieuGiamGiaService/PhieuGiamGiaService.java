@@ -7,8 +7,8 @@ package mobileworld.service.PhieuGiamGiaService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import mobileworld.entity.NhanVienEntity;
-import mobileworld.entity.PhieuGiamGia;
+import mobileworld.model.NhanVien;
+import mobileworld.model.PhieuGiamGia;
 import mobileworld.model.KhachHang;
 import mobileworld.repository.PhieuGiamGiaRepo.PhieuGiamGiaRepository;
 
