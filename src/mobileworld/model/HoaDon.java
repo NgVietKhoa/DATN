@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
  * @author ADMIN
  */
 public class HoaDon {
+
     private String idHD;
     private String idKH;
     private String idNV;
@@ -24,15 +25,16 @@ public class HoaDon {
     private String sdtKH;
     private String diaChiKH;
     private Float Delete;
-    private LocalDateTime CcreateAt;
+    private LocalDateTime createAt;
     private String createBy;
     private LocalDateTime updateAt;
     private String updateBy;
     private int trangthai;
+
     public HoaDon() {
     }
 
-    public HoaDon(String idHD, String idKH, String idNV, LocalDateTime NgayTao, LocalDateTime ngayThanhToan, String idCTDG, BigDecimal tongTien, String idHTTT, String tenKH, String sdtKH, String diaChiKH, Float Delete, LocalDateTime CcreateAt, String createBy, LocalDateTime updateAt, String updateBy, int trangthai) {
+    public HoaDon(String idHD, String idKH, String idNV, LocalDateTime NgayTao, LocalDateTime ngayThanhToan, String idCTDG, BigDecimal tongTien, String idHTTT, String tenKH, String sdtKH, String diaChiKH, Float Delete, LocalDateTime createAt, String createBy, LocalDateTime updateAt, String updateBy, int trangthai) {
         this.idHD = idHD;
         this.idKH = idKH;
         this.idNV = idNV;
@@ -45,7 +47,7 @@ public class HoaDon {
         this.sdtKH = sdtKH;
         this.diaChiKH = diaChiKH;
         this.Delete = Delete;
-        this.CcreateAt = CcreateAt;
+        this.createAt = createAt;
         this.createBy = createBy;
         this.updateAt = updateAt;
         this.updateBy = updateBy;
@@ -148,12 +150,12 @@ public class HoaDon {
         this.Delete = Delete;
     }
 
-    public LocalDateTime getCcreateAt() {
-        return CcreateAt;
+    public LocalDateTime getCreateAt() {
+        return createAt;
     }
 
-    public void setCcreateAt(LocalDateTime CcreateAt) {
-        this.CcreateAt = CcreateAt;
+    public void setCreateAt(LocalDateTime createAt) {
+        this.createAt = createAt;
     }
 
     public String getCreateBy() {
@@ -190,8 +192,7 @@ public class HoaDon {
 
     @Override
     public String toString() {
-        return "HoaDon{" + "idHD=" + idHD + ", idKH=" + idKH + ", idNV=" + idNV + ", NgayTao=" + NgayTao + ", ngayThanhToan=" + ngayThanhToan + ", idCTDG=" + idCTDG + ", tongTien=" + tongTien + ", idHTTT=" + idHTTT + ", tenKH=" + tenKH + ", sdtKH=" + sdtKH + ", diaChiKH=" + diaChiKH + ", Delete=" + Delete + ", CcreateAt=" + CcreateAt + ", createBy=" + createBy + ", updateAt=" + updateAt + ", updateBy=" + updateBy + ", trangthai=" + trangthai + '}';
+        return "HoaDon{" + "idHD=" + idHD + ", idKH=" + idKH + ", idNV=" + idNV + ", NgayTao=" + NgayTao + ", ngayThanhToan=" + ngayThanhToan + ", idCTDG=" + idCTDG + ", tongTien=" + tongTien + ", idHTTT=" + idHTTT + ", tenKH=" + tenKH + ", sdtKH=" + sdtKH + ", diaChiKH=" + diaChiKH + ", Delete=" + Delete + ", CcreateAt=" + createAt + ", createBy=" + createBy + ", updateAt=" + updateAt + ", updateBy=" + updateBy + ", trangthai=" + trangthai + '}';
     }
 
-    
 }

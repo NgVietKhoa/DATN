@@ -12,7 +12,7 @@ public class ImelService {
         return repo.getImel();
     }
 
-    public List<Imel> getOneImel() {
-        return repo.getOneImel();
+    public List<Imel> getAllImel(String getImel) {
+        return repo.getAllImel(getImel);
     }
 }

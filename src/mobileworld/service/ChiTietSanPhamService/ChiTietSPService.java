@@ -49,9 +49,13 @@ public class ChiTietSPService {
     public List<ChiTietSanPhamViewModel> LocSP(String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
         return repo.LocSP(Nsx, Pin, ManHinh, Cpu, sapXepGiaTangDan);
     }
-    
+
     public List<ChiTietSanPhamViewModel> LocCTSP(String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
         return repo.LocCTSP(Nsx, Pin, ManHinh, Cpu, sapXepGiaTangDan);
+    }
+
+    public List<ChiTietSanPhamViewModel> getAllQR(String imel) {
+        return repo.getAllQR(imel);
     }
 
 }

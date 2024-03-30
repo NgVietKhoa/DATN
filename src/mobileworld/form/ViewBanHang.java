@@ -1,11 +1,55 @@
 package mobileworld.form;
 
+import java.text.DecimalFormat;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import mobileworld.service.BanHangService.BanHangService;
+import mobileworld.viewModel.BanHangViewModel.HoaDonViewModel;
+import mobileworld.viewModel.ChiTietSanPhamViewModel;
+
 public class ViewBanHang extends javax.swing.JPanel {
+
+    DecimalFormat decimalFormat = new DecimalFormat("###,###");
+    private final BanHangService bhService = new BanHangService();
+    private DefaultTableModel tblModelHD = new DefaultTableModel();
+    private DefaultTableModel tblModelSP = new DefaultTableModel();
 
     public ViewBanHang() {
         initComponents();
         setOpaque(false);
+        tblModelHD = (DefaultTableModel) tblHoaDon.getModel();
+        tblModelSP = (DefaultTableModel) tblSP.getModel();
+        showDataTableHoaDon(bhService.getHD());
+        showDataTableSP(bhService.getSP());
+    }
 
+    private void showDataTableHoaDon(List<HoaDonViewModel> listHD) {
+        tblModelHD.setRowCount(0);
+        int stt = 0;
+        String trangThai = "";
+        for (HoaDonViewModel hdvm : listHD) {
+            stt++;
+            if (hdvm.getTrangthai() == 0) {
+                trangThai = "Chờ thanh toán";
+            } else {
+                trangThai = "Đã thanh toán";
+            }
+            tblModelHD.addRow(new Object[]{
+                stt, hdvm.getIdHD(), hdvm.getCreateAt(), hdvm.getCreateBy(), hdvm.getTenKH(), hdvm.getTongSP(), trangThai
+            });
+        }
+    }
+    
+    private void showDataTableSP(List<ChiTietSanPhamViewModel> listSP) {
+        tblModelSP.setRowCount(0);
+        int stt = 0;
+        for (ChiTietSanPhamViewModel sp : listSP) {
+            String giaBan = decimalFormat.format(sp.getGiaBan());
+            stt++;
+            tblModelSP.addRow(new Object[]{
+                stt, sp.getTenDsp(), sp.getTenNsx(), sp.getLoaiManHinh(), sp.getCpu(), sp.getDungLuongPin(), sp.getSoLuong(), giaBan
+            });
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -19,7 +63,7 @@ public class ViewBanHang extends javax.swing.JPanel {
         combobox1 = new mobileworld.swing.Combobox();
         textField1 = new mobileworld.swing.TextField();
         jScrollPane3 = new javax.swing.JScrollPane();
-        table1 = new mobileworld.swing.Table();
+        tblHoaDon = new mobileworld.swing.Table();
         jPanel2 = new javax.swing.JPanel();
         buttonCustom6 = new mobileworld.swing.ButtonCustom();
         buttonCustom7 = new mobileworld.swing.ButtonCustom();
@@ -33,7 +77,7 @@ public class ViewBanHang extends javax.swing.JPanel {
         combobox5 = new mobileworld.swing.Combobox();
         combobox6 = new mobileworld.swing.Combobox();
         jScrollPane5 = new javax.swing.JScrollPane();
-        table3 = new mobileworld.swing.Table();
+        tblSP = new mobileworld.swing.Table();
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         textField3 = new mobileworld.swing.TextField();
@@ -90,21 +134,21 @@ public class ViewBanHang extends javax.swing.JPanel {
 
         jScrollPane3.setBorder(null);
 
-        table1.setModel(new javax.swing.table.DefaultTableModel(
+        tblHoaDon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "STT", "Mã HĐ", "Ngày Tạo", "Người Tạo", "Khách Hàng", "Trạng Thái"
+                "STT", "Mã HĐ", "Ngày Tạo", "Người Tạo", "Khách Hàng", "Tổng SP", "Trạng Thái"
             }
         ));
-        jScrollPane3.setViewportView(table1);
-        if (table1.getColumnModel().getColumnCount() > 0) {
-            table1.getColumnModel().getColumn(0).setMinWidth(30);
-            table1.getColumnModel().getColumn(0).setMaxWidth(60);
+        jScrollPane3.setViewportView(tblHoaDon);
+        if (tblHoaDon.getColumnModel().getColumnCount() > 0) {
+            tblHoaDon.getColumnModel().getColumn(0).setMinWidth(20);
+            tblHoaDon.getColumnModel().getColumn(0).setMaxWidth(40);
         }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -160,17 +204,17 @@ public class ViewBanHang extends javax.swing.JPanel {
 
         table2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "STT", "Tên Sản Phẩm", "Màn Hình", "CPU", "Pin", "Giá", "Số Lượng", "Thành Tiền", "Trạng Thái", "Chọn"
+                "STT", "NSX", "Tên Sản Phẩm", "Màn Hình", "CPU", "Pin", "Giá", "Số Lượng", "Thành Tiền", "Trạng Thái", "Chọn"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -179,8 +223,8 @@ public class ViewBanHang extends javax.swing.JPanel {
         });
         jScrollPane4.setViewportView(table2);
         if (table2.getColumnModel().getColumnCount() > 0) {
-            table2.getColumnModel().getColumn(0).setMinWidth(30);
-            table2.getColumnModel().getColumn(0).setMaxWidth(60);
+            table2.getColumnModel().getColumn(0).setMinWidth(20);
+            table2.getColumnModel().getColumn(0).setMaxWidth(40);
         }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -223,14 +267,14 @@ public class ViewBanHang extends javax.swing.JPanel {
         combobox4.setLabeText("Pin");
 
         combobox5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        combobox5.setLabeText("Màu Sắc");
+        combobox5.setLabeText("Nsx");
 
         combobox6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         combobox6.setLabeText("Giá");
 
         jScrollPane5.setBorder(null);
 
-        table3.setModel(new javax.swing.table.DefaultTableModel(
+        tblSP.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
@@ -238,13 +282,15 @@ public class ViewBanHang extends javax.swing.JPanel {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "STT", "Tên Sản Phẩm", "Màn Hình", "CPU", "Màu Sắc", "Pin", "Số Lượng", "Giá"
+                "STT", "Tên Sản Phẩm", "NSX", "Màn Hình", "CPU", "Pin", "Số Lượng", "Giá"
             }
         ));
-        jScrollPane5.setViewportView(table3);
-        if (table3.getColumnModel().getColumnCount() > 0) {
-            table3.getColumnModel().getColumn(0).setMinWidth(30);
-            table3.getColumnModel().getColumn(0).setMaxWidth(60);
+        jScrollPane5.setViewportView(tblSP);
+        if (tblSP.getColumnModel().getColumnCount() > 0) {
+            tblSP.getColumnModel().getColumn(0).setMinWidth(20);
+            tblSP.getColumnModel().getColumn(0).setMaxWidth(40);
+            tblSP.getColumnModel().getColumn(1).setMinWidth(150);
+            tblSP.getColumnModel().getColumn(1).setMaxWidth(200);
         }
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -253,16 +299,16 @@ public class ViewBanHang extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(textField2, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                .addComponent(combobox2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addComponent(combobox3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addComponent(combobox4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addComponent(textField2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(combobox5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(combobox2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addComponent(combobox3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addComponent(combobox4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(combobox6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5))
             .addComponent(jScrollPane5)
@@ -272,11 +318,11 @@ public class ViewBanHang extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(textField2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(combobox2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(combobox3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(combobox4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(combobox5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(combobox6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(combobox6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(combobox3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(combobox2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(combobox5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -667,9 +713,9 @@ public class ViewBanHang extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private mobileworld.swing.Table table1;
     private mobileworld.swing.Table table2;
-    private mobileworld.swing.Table table3;
+    private mobileworld.swing.Table tblHoaDon;
+    private mobileworld.swing.Table tblSP;
     private mobileworld.swing.TextField textField1;
     private mobileworld.swing.TextField textField2;
     private mobileworld.swing.TextField textField3;

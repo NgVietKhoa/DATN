@@ -24,6 +24,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.TableView;
 import mobileworld.dialog.ReadQRCode;
 import mobileworld.event.DataChangeListener;
 import mobileworld.event.EventChiTietSP;
@@ -1447,62 +1448,35 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     }//GEN-LAST:event_tblSPMouseClicked
 
     private void btnTaiQRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaiQRActionPerformed
-        boolean isProductSelected = false;
+        try {
+            // Lặp qua các hàng của table view
+            for (int i = 0; i < tblCTSP.getRowCount(); i++) {
+                // Lấy giá trị của cột thứ 13 của hàng hiện tại
+                Boolean column13Value = (Boolean) tblCTSP.getValueAt(i, 13); // Giả sử cột 13 có index là 12
 
-        // Duyệt qua bảng để kiểm tra xem có sản phẩm nào được chọn không
-        for (int i = 0; i < tblCTSP.getRowCount(); i++) {
-            Object isSelectedObj = tblCTSP.getValueAt(i, 13);
-            if (isSelectedObj instanceof Boolean) {
-                boolean isSelected = (Boolean) isSelectedObj;
-                if (isSelected) {
-                    isProductSelected = true;
-                    break;
+                // Kiểm tra nếu cả cột thứ 2 và cột thứ 13 không null và cột thứ 13 là true
+                if (tblCTSP.getValueAt(i, 2) != null && column13Value != null && column13Value) {
+                    // Lấy giá trị từ cột thứ 2 của hàng hiện tại (assumed column index: 1)
+                    String imel = (String) tblCTSP.getValueAt(i, 2);
+
+                    // Tạo và lưu mã QR cho Imel
+                    ByteArrayOutputStream out = QRCode.from(imel)
+                            .to(ImageType.PNG).stream();
+
+                    // Thay thế các ký tự không hợp lệ trong tên tệp
+                    String f_name = imel.replaceAll("[^a-zA-Z0-9.-]", "_");
+                    String Path_name = "D:\\mobileWorldCopy\\QR\\";
+
+                    FileOutputStream fout = new FileOutputStream(new File(Path_name + (f_name + ".PNG")));
+                    fout.write(out.toByteArray());
+                    fout.flush();
+
+                    // Thông báo cho người dùng rằng mã QR đã được tải xuống thành công
+                    System.out.println("QR code for Imel " + imel + " has been downloaded successfully.");
                 }
             }
-        }
-
-        // Nếu không có sản phẩm nào được chọn, hiển thị thông báo và thoát
-        if (!isProductSelected) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn ít nhất một sản phẩm để xuất mã QR!");
-            return;
-        }
-
-        // Duyệt qua danh sách sản phẩm để tạo mã QR
-        for (int i = 0; i < tblCTSP.getRowCount(); i++) {
-            Object isSelectedObj = tblCTSP.getValueAt(i, 13);
-            if (isSelectedObj instanceof Boolean) {
-                boolean isSelected = (Boolean) isSelectedObj;
-                if (isSelected) {
-                    // Lấy dữ liệu IMEL của sản phẩm từ dịch vụ ImelService
-                    List<Imel> qrData = imelService.getOneImel();
-                    // Sử dụng chỉ một phần tử từ danh sách IMEL để tạo mã QR
-                    if (!qrData.isEmpty()) {
-                        String imel = qrData.get(0).getImel(); // Lấy IMEL từ phần tử đầu tiên trong danh sách
-                        try {
-                            ByteArrayOutputStream out = QRCode.from(imel)
-                                    .to(ImageType.PNG).stream();
-
-                            String fileName = "QRCode_" + imel + ".png";
-                            String filePath = "E:\\mobileWorld\\QR\\" + fileName; // Thay đổi đường dẫn xuất file nếu cần
-                            FileOutputStream fout = new FileOutputStream(new File(filePath));
-                            fout.write(out.toByteArray());
-                            fout.flush();
-
-                            JOptionPane.showMessageDialog(this, "Đã xuất mã QR cho sản phẩm " + imel + " vào thư mục: " + filePath);
-                        } catch (QRGenerationException e) {
-                            // Xử lý ngoại lệ khi tạo mã QR
-                            e.printStackTrace();
-                            JOptionPane.showMessageDialog(this, "Lỗi khi tạo mã QR: " + e.getMessage());
-                        } catch (FileNotFoundException ex) {
-                            java.util.logging.Logger.getLogger(ViewSanPham.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                        } catch (IOException ex) {
-                            java.util.logging.Logger.getLogger(ViewSanPham.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Không có dữ liệu IMEL cho sản phẩm này!");
-                    }
-                }
-            }
+        } catch (Exception e) {
+            e.printStackTrace(); // In ra lỗi nếu có
         }
     }//GEN-LAST:event_btnTaiQRActionPerformed
 

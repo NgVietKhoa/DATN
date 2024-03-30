@@ -30,19 +30,18 @@ public class ImelRepository {
         }
         return listImel;
     }
-    
-    public List<Imel> getOneImel() {
+
+    public List<Imel> getAllImel(String getImel) {
         List<Imel> listImel = new ArrayList<>();
 
-        String sql = """
-            select Imel from Imel
-        """;
+        String sql = "SELECT Imel FROM Imel WHERE Imel = ?";
 
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, getImel);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Imel imel = new Imel();
-                imel.setImel(rs.getString(1));
+                imel.setImel(rs.getString("Imel"));
                 listImel.add(imel);
             }
         } catch (Exception e) {

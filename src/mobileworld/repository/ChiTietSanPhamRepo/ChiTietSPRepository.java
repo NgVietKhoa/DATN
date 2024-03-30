@@ -136,6 +136,121 @@ public class ChiTietSPRepository {
         }
         return listSP;
     }
+    
+    public List<ChiTietSanPhamViewModel> getAllQR(String imel) {
+        List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
+
+        String sql = """
+                     SELECT
+                             CTS.IDImel,
+                             CTS.IDNSX,
+                             CTS.IDDongSP,
+                             CTS.IDMauSac,
+                             CTS.IDPin,
+                             CTS.IDManHinh,
+                             CTS.IDRam,
+                             CTS.IDBoNho,
+                             CTS.IDCPU,
+                             CTS.IDCamSau,
+                             CTS.IDCamTruoc,
+                             Imel.Imel,
+                             DS.TenDsp,
+                             NSX.TenNsx,
+                             Pin.DungLuongPin,
+                             ManHinh.LoaiManHinh,
+                             CPU.CPU,
+                             Ram.DungLuongRam,
+                             BoNho.DungLuongBoNho,
+                             MauSac.TenMau,
+                             CTS.GiaBan,
+                             CTS.GhiChu,
+                             COUNT(CTS.ID) AS SoLuong,
+                             CameraSau.SoMP,
+                             CameraTruoc.SoMP,
+                             CTS.ID
+                         FROM
+                             dbo.ChiTietSP AS CTS
+                             INNER JOIN dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID
+                             INNER JOIN dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
+                             INNER JOIN dbo.Pin ON CTS.IDPin = Pin.ID
+                             INNER JOIN dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
+                             INNER JOIN dbo.CPU ON CTS.IDCPU = CPU.ID
+                             INNER JOIN dbo.Ram ON CTS.IDRam = Ram.ID
+                             INNER JOIN dbo.BoNho ON CTS.IDBoNho = BoNho.ID
+                             INNER JOIN dbo.MauSac ON CTS.IDMauSac = MauSac.ID
+                             INNER JOIN dbo.CameraSau ON CTS.IDCamSau = CameraSau.ID
+                             INNER JOIN dbo.CameraTruoc ON CTS.IDCamTruoc = CameraTruoc.ID
+                             INNER JOIN dbo.Imel ON CTS.IDImel = Imel.ID
+                         WHERE
+                             CTS.Deleted = 1 AND Imel.Imel = ?
+                         GROUP BY
+                             CTS.IDImel,
+                             CTS.IDNSX,
+                             CTS.IDDongSP,
+                             CTS.IDMauSac,
+                             CTS.IDPin,
+                             CTS.IDManHinh,
+                             CTS.IDRam,
+                             CTS.IDBoNho,
+                             CTS.IDCPU,
+                             CTS.IDCamSau,
+                             CTS.IDCamTruoc,
+                             Imel.Imel,
+                             DS.TenDsp,
+                             NSX.TenNsx,
+                             Pin.DungLuongPin,
+                             ManHinh.LoaiManHinh,
+                             CPU.CPU,
+                             Ram.DungLuongRam,
+                             BoNho.DungLuongBoNho,
+                             MauSac.TenMau,
+                             CTS.GiaBan,
+                             CTS.GhiChu,
+                             CameraSau.SoMP,
+                             CameraTruoc.SoMP,
+                             CTS.ID
+                         ORDER BY
+                             CTS.ID DESC;
+                     """;
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, imel);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
+                spvm.setIdimel(rs.getString(1));
+                spvm.setIdNsx(rs.getString(2));
+                spvm.setIdDsp(rs.getString(3));
+                spvm.setIdMauSac(rs.getString(4));
+                spvm.setIdPin(rs.getString(5));
+                spvm.setIdManHinh(rs.getString(6));
+                spvm.setIdRam(rs.getString(7));
+                spvm.setIdboNho(rs.getString(8));
+                spvm.setIdCpu(rs.getString(9));
+                spvm.setIdCameraSau(rs.getString(10));
+                spvm.setIdCameraTruoc(rs.getString(11));
+                spvm.setImel(rs.getString(12));
+                spvm.setTenDsp(rs.getString(13));
+                spvm.setTenNsx(rs.getString(14));
+                spvm.setDungLuongPin(rs.getString(15));
+                spvm.setLoaiManHinh(rs.getString(16));
+                spvm.setCpu(rs.getString(17));
+                spvm.setDungLuongRam(rs.getString(18));
+                spvm.setDungLuongBoNho(rs.getString(19));
+                spvm.setTenMau(rs.getString(20));
+                spvm.setGiaBan(rs.getBigDecimal(21));
+                spvm.setGhiChu(rs.getString(22));
+                spvm.setSoLuong(rs.getInt(23));
+                spvm.setCameraSau(rs.getString(24));
+                spvm.setCameraTruoc(rs.getString(25));
+                spvm.setId(rs.getString(26));
+                listSP.add(spvm);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listSP;
+    }
 
     public List<ChiTietSanPhamViewModel> search(String keyword) {
         List<ChiTietSanPhamViewModel> searchResult = new ArrayList<>();

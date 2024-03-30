@@ -10,12 +10,24 @@ import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import java.awt.image.BufferedImage;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import mobileworld.form.ThongTinChiTietSP;
+import mobileworld.model.Imel;
+import mobileworld.service.ChiTietSanPhamService.ChiTietSPService;
+import mobileworld.service.ChiTietSanPhamService.ImelService;
+import mobileworld.viewModel.ChiTietSanPhamViewModel;
 
 public class ReadQRCode extends javax.swing.JFrame {
 
     private Webcam webcam;
     private WebcamPanel webcamPanel;
+    private ThongTinChiTietSP thongTinSP;
+    private final ChiTietSPService ctspService = new ChiTietSPService();
 
     public ReadQRCode() {
         initComponents();
@@ -23,13 +35,13 @@ public class ReadQRCode extends javax.swing.JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         addWindowListener(new java.awt.event.WindowAdapter() {
-        @Override
-        public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-            if (webcam != null) {
-                webcam.close();
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (webcam != null) {
+                    webcam.close();
+                }
             }
-        }
-    });
+        });
     }
 
     private void initialize() {
@@ -47,7 +59,7 @@ public class ReadQRCode extends javax.swing.JFrame {
         startQRCodeScanner();
     }
 
-    public void startQRCodeScanner() {
+    private void startQRCodeScanner() {
         Thread thread = new Thread(() -> {
             while (true) {
                 if (webcam.isOpen()) {
@@ -55,8 +67,19 @@ public class ReadQRCode extends javax.swing.JFrame {
                     if (image != null) {
                         Result result = decodeQRCode(image);
                         if (result != null) {
+                            // Lấy dữ liệu từ mã QR
                             String qrCodeData = result.getText();
-                            txtImel.setText(qrCodeData);
+                            List<ChiTietSanPhamViewModel> products = ctspService.getAllQR(qrCodeData);
+                            if (products != null && !products.isEmpty()) {
+                                // Display all products retrieved based on IMEI
+                                for (ChiTietSanPhamViewModel product : products) {
+                                    displayProductDetails(product);
+                                    return;
+                                }
+                            } else {
+                                // Handle case where no product found
+                                System.out.println("No product found for the QR code data: " + qrCodeData);
+                            }
                         }
                     }
                 }
@@ -65,6 +88,33 @@ public class ReadQRCode extends javax.swing.JFrame {
 
         thread.setDaemon(true);
         thread.start();
+    }
+
+    private void displayProductDetails(ChiTietSanPhamViewModel product) {
+        SwingUtilities.invokeLater(() -> {
+            if (product != null) {
+                String idChiTietSP = product.getId();
+                String pin = product.getDungLuongPin();
+                String ram = product.getDungLuongRam();
+                String manHinh = product.getLoaiManHinh();
+                String nsx = product.getTenNsx();
+                String tenDsp = product.getTenDsp();
+                String mauSac = product.getTenMau();
+                String cpu = product.getCpu();
+                String rom = product.getDungLuongBoNho();
+                String cameraTruoc = product.getCameraTruoc();
+                String cameraSau = product.getCameraSau();
+                BigDecimal gia = product.getGiaBan();
+                String imel = product.getImel();
+                String moTa = product.getGhiChu();
+
+                ThongTinChiTietSP chiTietSP = new ThongTinChiTietSP(idChiTietSP, cameraSau, cameraTruoc, cpu, imel, manHinh, mauSac, nsx, pin, ram, rom, tenDsp, gia, moTa);
+                chiTietSP.setVisible(true);
+            } else {
+                // Handle case where product is null
+                System.out.println("Product details not available.");
+            }
+        });
     }
 
     public Result decodeQRCode(BufferedImage image) {

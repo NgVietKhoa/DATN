@@ -173,7 +173,7 @@ public class TextField extends JTextField {
 
     @Override
     public void setText(String string) {
-        if (!getText().equals(string)) {
+        if (string != null && !getText().equals(string)) {
             showing(string.equals(""));
         }
         super.setText(string);

@@ -37,8 +37,10 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
 
     public void showDataTable(List<KhachHang> khachHangs) {
         dtm.setRowCount(0);
+        int stt = 0;
         for (KhachHang khachHang1 : khachHangs) {
             String gioiTinh;
+            stt++;
             if (khachHang1.isGioiTinh()) {
                 gioiTinh = "Nam";
             } else {
@@ -46,6 +48,7 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
 
             }
             dtm.addRow(new Object[]{
+                stt,
                 khachHang1.getId(),
                 khachHang1.getTen(),
                 khachHang1.getSdt(),
@@ -263,13 +266,13 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
 
         tblBang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Mã Khách Hàng", "Tên", "SĐT", "Giới Tính", "Địa Chỉ"
+                "STT", "Mã Khách Hàng", "Tên", "SĐT", "Giới Tính", "Địa Chỉ"
             }
         ));
         tblBang.addMouseListener(new java.awt.event.MouseAdapter() {
