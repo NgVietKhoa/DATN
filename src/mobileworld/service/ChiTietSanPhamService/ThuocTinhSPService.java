@@ -112,14 +112,6 @@ public class ThuocTinhSPService {
         return repo.updateRam(ram, id);
     }
 
-    public List<BoNho> getTenBoNho() {
-        return repo.getTenBoNho();
-    }
-
-    public List<Pin> getTenPin() {
-        return repo.getTenPin();
-    }
-
     public List<CameraSau> getAllCameraSau() {
         return repo.getAllCameraSau();
     }
@@ -152,6 +144,14 @@ public class ThuocTinhSPService {
         return repo.updateCameraTruoc(cam, id);
     }
 
+    public List<BoNho> getTenBoNho() {
+        return repo.getTenBoNho();
+    }
+
+    public List<Pin> getTenPin() {
+        return repo.getTenPin();
+    }
+
     public List<CPU> getTenCPU() {
         return repo.getTenCPU();
     }
@@ -162,5 +162,21 @@ public class ThuocTinhSPService {
 
     public List<MauSac> getTenMauSac() {
         return repo.getTenMauSac();
+    }
+
+    public List<ManHinh> getLoaiManHinh() {
+        return repo.getLoaiManHinh();
+    }
+
+    public List<Ram> getDungLuongRam() {
+        return repo.getDungLuongRam();
+    }
+
+    public List<CameraTruoc> getCameraTruoc() {
+        return repo.getCameraTruoc();
+    }
+
+    public List<CameraSau> getCameraSau() {
+        return repo.getCameraSau();
     }
 }

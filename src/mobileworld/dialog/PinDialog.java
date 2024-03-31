@@ -1,14 +1,17 @@
 package mobileworld.dialog;
 
 import java.time.LocalDate;
+import java.util.List;
 import javax.swing.JOptionPane;
 import mobileworld.model.Pin;
 import mobileworld.event.DataChangeListener;
 import mobileworld.service.ChiTietSanPhamService.PinService;
+import mobileworld.service.ChiTietSanPhamService.ThuocTinhSPService;
 
 public class PinDialog extends javax.swing.JFrame {
 
     public PinService service = new PinService();
+    private final ThuocTinhSPService ttspService = new ThuocTinhSPService();
 
     public PinDialog() {
         initComponents();
@@ -38,6 +41,15 @@ public class PinDialog extends javax.swing.JFrame {
         if (txtPin.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(this, "Pin không được trống");
             return false;
+        }
+
+        List<Pin> dungLuongPin = ttspService.getTenPin();
+        String getPin = txtPin.getText().trim();
+        for (Pin pin : dungLuongPin) {
+            if (pin.getDungLuongPin().equals(getPin)) {
+                JOptionPane.showMessageDialog(this, "Pin đã tồn tại trong cơ sở dữ liệu!");
+                return false;
+            }
         }
         return true;
     }
@@ -108,6 +120,8 @@ public class PinDialog extends javax.swing.JFrame {
                 service.add(getFormData());
                 changeListener.notifyDataChangeListeners();
                 JOptionPane.showMessageDialog(this, "Thêm Thành Công!");
+                setVisible(false);
+                dispose();
                 return;
             }
             JOptionPane.showMessageDialog(this, "Thêm Thất Bại!");

@@ -1,15 +1,18 @@
 package mobileworld.dialog;
 
 import java.time.LocalDate;
+import java.util.List;
 import javax.swing.JOptionPane;
 import mobileworld.event.DataChangeListener;
 import mobileworld.main.SessionStorage;
 import mobileworld.model.CameraSau;
 import mobileworld.service.ChiTietSanPhamService.CameraSauService;
+import mobileworld.service.ChiTietSanPhamService.ThuocTinhSPService;
 
 public class CameraSauDialog extends javax.swing.JFrame {
 
     public CameraSauService service = new CameraSauService();
+    private final ThuocTinhSPService ttspService = new ThuocTinhSPService();
 
     public CameraSauDialog() {
         initComponents();
@@ -30,7 +33,7 @@ public class CameraSauDialog extends javax.swing.JFrame {
         String cameraSau = txtCamSau.getText();
         LocalDate dateTime = LocalDate.now();
         String nhanVien = SessionStorage.getInstance().getUsername();
-        
+
         CameraSau camSau = new CameraSau(cameraSau, 1, dateTime, nhanVien);
         return camSau;
     }
@@ -39,6 +42,16 @@ public class CameraSauDialog extends javax.swing.JFrame {
         if (txtCamSau.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(this, "Camera sau không được trống");
             return false;
+        }
+
+        List<CameraSau> CamSau = ttspService.getCameraSau();
+
+        String getCam = txtCamSau.getText().trim();
+        for (CameraSau cam : CamSau) {
+            if (cam.getSoMP().equals(getCam)) {
+                JOptionPane.showMessageDialog(this, "Camera đã tồn tại trong cơ sở dữ liệu!");
+                return false;
+            }
         }
         return true;
     }
@@ -109,6 +122,8 @@ public class CameraSauDialog extends javax.swing.JFrame {
                 service.add(getFormData());
                 changeListener.notifyDataChangeListeners();
                 JOptionPane.showMessageDialog(this, "Thêm Thành Công!");
+                setVisible(false);
+                dispose();
                 return;
             }
             JOptionPane.showMessageDialog(this, "Thêm Thất Bại!");

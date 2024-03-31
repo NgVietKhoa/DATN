@@ -1,15 +1,18 @@
 package mobileworld.dialog;
 
 import java.time.LocalDate;
+import java.util.List;
 import javax.swing.JOptionPane;
 import mobileworld.event.DataChangeListener;
 import mobileworld.main.SessionStorage;
 import mobileworld.model.CameraTruoc;
 import mobileworld.service.ChiTietSanPhamService.CameraTruocService;
+import mobileworld.service.ChiTietSanPhamService.ThuocTinhSPService;
 
 public class CameraTruocDialog extends javax.swing.JFrame {
 
     public CameraTruocService service = new CameraTruocService();
+    private final ThuocTinhSPService ttspService = new ThuocTinhSPService();
 
     public CameraTruocDialog() {
         initComponents();
@@ -39,6 +42,16 @@ public class CameraTruocDialog extends javax.swing.JFrame {
         if (txtCamTruoc.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(this, "Camera trước không được trống");
             return false;
+        }
+        
+        List<CameraTruoc> CamTruoc = ttspService.getCameraTruoc();
+
+        String getCam = txtCamTruoc.getText().trim();
+        for (CameraTruoc cam : CamTruoc) {
+            if (cam.getSoMP().equals(getCam)) {
+                JOptionPane.showMessageDialog(this, "Camera đã tồn tại trong cơ sở dữ liệu!");
+                return false;
+            }
         }
         return true;
     }
@@ -109,6 +122,8 @@ public class CameraTruocDialog extends javax.swing.JFrame {
                 service.add(getFormData());
                 changeListener.notifyDataChangeListeners();
                 JOptionPane.showMessageDialog(this, "Thêm Thành Công!");
+                setVisible(false);
+                dispose();
                 return;
             }
             JOptionPane.showMessageDialog(this, "Thêm Thất Bại!");

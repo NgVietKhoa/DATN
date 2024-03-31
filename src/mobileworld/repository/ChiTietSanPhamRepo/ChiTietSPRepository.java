@@ -941,7 +941,7 @@ public class ChiTietSPRepository {
                          GiaBan, IDImel, GhiChu, [Deleted], [CreatedAt], [CreatedBy]
                      ) 
                      VALUES (
-                         (SELECT ID FROM dbo.DongSP WHERE TenDsp = ?),
+                         (SELECT TOP 1 ID FROM dbo.DongSP WHERE TenDsp = ?),
                          (SELECT TOP 1 ID FROM dbo.MauSac WHERE TenMau = ?),
                          (SELECT TOP 1 ID FROM dbo.Pin WHERE DungLuongPin = ?),
                          (SELECT TOP 1 ID FROM dbo.ManHinh WHERE LoaiManHinh = ?),

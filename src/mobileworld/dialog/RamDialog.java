@@ -1,14 +1,17 @@
 package mobileworld.dialog;
 
 import java.time.LocalDate;
+import java.util.List;
 import javax.swing.JOptionPane;
 import mobileworld.model.Ram;
 import mobileworld.event.DataChangeListener;
 import mobileworld.service.ChiTietSanPhamService.RamService;
+import mobileworld.service.ChiTietSanPhamService.ThuocTinhSPService;
 
 public class RamDialog extends javax.swing.JFrame {
 
     public RamService service = new RamService();
+    private final ThuocTinhSPService ttspService = new ThuocTinhSPService();
 
     public RamDialog() {
         initComponents();
@@ -38,6 +41,15 @@ public class RamDialog extends javax.swing.JFrame {
         if (txtRam.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(this, "Ram không được trống");
             return false;
+        }
+
+        List<Ram> dungLuongRam = ttspService.getDungLuongRam();
+        String getRam = txtRam.getText().trim();
+        for (Ram ram : dungLuongRam) {
+            if (ram.getDungLuongRam().equals(getRam)) {
+                JOptionPane.showMessageDialog(this, "Ram đã tồn tại trong cơ sở dữ liệu!");
+                return false;
+            }
         }
         return true;
     }
@@ -108,6 +120,8 @@ public class RamDialog extends javax.swing.JFrame {
                 service.add(getFormData());
                 changeListener.notifyDataChangeListeners();
                 JOptionPane.showMessageDialog(this, "Thêm Thành Công!");
+                setVisible(false);
+                dispose();
                 return;
             }
             JOptionPane.showMessageDialog(this, "Thêm Thất Bại!");

@@ -98,7 +98,6 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
     private final ImelService imelService = new ImelService();
     private final ChiTietSPService chiTietSPService = new ChiTietSPService();
 
-
     public ThemChiTietSP() {
         initComponents();
         //spdialog
@@ -161,6 +160,13 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         setDataCboCameraSau(cameraSauService.getAll());
         setDataCboCameraTruoc(cameraTruocService.getAll());
         setTextArea();
+    }
+
+    public DataChangeListener changeListener = () -> {
+    };
+
+    public void setDataChangeListener(DataChangeListener listener) {
+        this.changeListener = listener;
     }
 
     private void setTextArea() {
@@ -489,11 +495,6 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Imel phải là số nguyên!");
-            return false;
-        }
-
-        if (txtAreaMoTa.getText().trim().equals("")) {
-            JOptionPane.showMessageDialog(this, "Hãy Nhập Mô Tả Sản Phẩm!");
             return false;
         }
 
@@ -1010,6 +1011,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnQuayLaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuayLaiActionPerformed
+        System.out.println("Button Quay lại được nhấn.");
         ViewSanPham viewSanPham = new ViewSanPham();
         JPanel panelCTSP = viewSanPham.getPanelSPCT();
         JPanel viewThemThuocTinhSP = panelAddThuocTinhSP;
@@ -1019,6 +1021,8 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         viewThemThuocTinhSP.add(panelCTSP, BorderLayout.CENTER);
         viewThemThuocTinhSP.revalidate();
         viewThemThuocTinhSP.repaint();
+        viewSanPham.revalidate();
+        viewSanPham.repaint();
     }//GEN-LAST:event_btnQuayLaiActionPerformed
 
     private void btnTenDspActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTenDspActionPerformed
@@ -1062,6 +1066,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
             int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn Thêm không", "Thông Báo", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 chiTietSPService.add(getFormData());
+                changeListener.notifyDataChangeListeners();
                 JOptionPane.showMessageDialog(this, "Thêm Thành Công!");
                 return;
             }

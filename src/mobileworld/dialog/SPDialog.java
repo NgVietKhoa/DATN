@@ -122,6 +122,8 @@ public class SPDialog extends javax.swing.JFrame {
                 service.add(getFormData());
                 changeListener.notifyDataChangeListeners();
                 JOptionPane.showMessageDialog(this, "Thêm Thành Công!");
+                setVisible(false);
+                dispose();
                 return;
             }
             JOptionPane.showMessageDialog(this, "Thêm Thất Bại!");

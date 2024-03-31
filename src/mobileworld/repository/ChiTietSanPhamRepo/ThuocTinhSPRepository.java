@@ -250,6 +250,26 @@ public class ThuocTinhSPRepository {
         }
         return listMH;
     }
+    
+    public List<ManHinh> getLoaiManHinh() {
+        List<ManHinh> listMH = new ArrayList<>();
+
+        String sql = """
+            select LoaiManHinh from ManHinh WHERE Deleted = 1 ORDER BY ID DESC
+        """;
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ManHinh mh = new ManHinh();
+                mh.setLoaiManHinh(rs.getString(1));
+                listMH.add(mh);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listMH;
+    }
 
     public boolean addManHinh(ManHinh mh) {
         String sql = """
@@ -548,6 +568,26 @@ public class ThuocTinhSPRepository {
         }
         return listRam;
     }
+    
+    public List<Ram> getDungLuongRam() {
+        List<Ram> listRam = new ArrayList<>();
+
+        String sql = """
+            select DungLuongRam from Ram WHERE Deleted = 1 ORDER BY ID DESC
+        """;
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Ram ram = new Ram();
+                ram.setDungLuongRam(rs.getString(1));
+                listRam.add(ram);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listRam;
+    }
 
     public boolean addRam(Ram ram) {
         String sql = """
@@ -634,6 +674,26 @@ public class ThuocTinhSPRepository {
         }
         return listCam;
     }
+    
+    public List<CameraSau> getCameraSau() {
+        List<CameraSau> listCam = new ArrayList<>();
+
+        String sql = """
+              select SoMP from CameraSau WHERE Deleted = 1 ORDER BY ID DESC
+        """;
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                CameraSau cam = new CameraSau();
+                cam.setSoMP(rs.getString(1));
+                listCam.add(cam);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listCam;
+    }
 
     public boolean addCameraSau(CameraSau cam) {
         String sql = """
@@ -713,6 +773,26 @@ public class ThuocTinhSPRepository {
                 CameraTruoc cam = new CameraTruoc();
                 cam.setId(rs.getString(1));
                 cam.setSoMP(rs.getString(2));
+                listCam.add(cam);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listCam;
+    }
+    
+    public List<CameraTruoc> getCameraTruoc() {
+        List<CameraTruoc> listCam = new ArrayList<>();
+
+        String sql = """
+                select SoMP from CameraTruoc WHERE Deleted = 1 ORDER BY ID DESC
+        """;
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                CameraTruoc cam = new CameraTruoc();
+                cam.setSoMP(rs.getString(1));
                 listCam.add(cam);
             }
         } catch (Exception e) {

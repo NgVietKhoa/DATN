@@ -8,9 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -24,7 +22,6 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.TableView;
 import mobileworld.dialog.ReadQRCode;
 import mobileworld.event.DataChangeListener;
 import mobileworld.event.EventChiTietSP;
@@ -47,7 +44,6 @@ import mobileworld.viewModel.ChiTietSanPhamViewModel;
 import mobileworld.main.SessionStorage;
 import mobileworld.model.CameraTruoc;
 import mobileworld.model.ChiTietSP;
-import mobileworld.model.Imel;
 import mobileworld.service.ChiTietSanPhamService.ImelService;
 import mobileworld.service.ChiTietSanPhamService.ThuocTinhSPService;
 import mobileworld.tablecutoms.TableActionCellEditor;
@@ -55,7 +51,6 @@ import mobileworld.tablecutoms.TableActionCellRender;
 import mobileworld.tablecutoms.TableActionEvent;
 import mobileworld.viewModel.DongSPViewModel;
 import net.glxn.qrgen.QRCode;
-import net.glxn.qrgen.exception.QRGenerationException;
 import net.glxn.qrgen.image.ImageType;
 
 public class ViewSanPham extends JPanel implements DataChangeListener, EventChiTietSP {
@@ -128,7 +123,6 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                         } else {
                             displayProductDetails(ctspService.getAll().get(index));
                         }
-
                     } else {
                         if (searchResults != null && !searchResults.isEmpty()) {
                             ChiTietSanPhamViewModel product = searchResults.get(index);
@@ -243,24 +237,6 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
     public JPanel getPanelSP() {
         return panelSanPham;
-    }
-
-    public boolean getSelectedProductList() {
-        int index = tblSP.getSelectedRow();
-        if (index >= 0) {
-            String idDSP = (String) tblSP.getValueAt(index, 1);
-
-            materialTabbed1.setSelectedIndex(1);
-
-            // Gọi hàm getSP với iddsp đã lấy
-            listDsp = ctspService.getSP(idDSP);
-
-            // Hiển thị danh sách sản phẩm
-            showDataTableCTSP(listDsp);
-
-            return true;
-        }
-        return false;
     }
 
     public List<ChiTietSanPhamViewModel> getSelectedProductListImel() {
@@ -606,10 +582,17 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     @Override
     public void onDataChange() {
         showDataTableCTSP(ctspService.getAll());
+        showDataTableSP(dspService.getAll());
     }
 
     @Override
     public boolean update(ChiTietSP ctsp, String id) {
+        onDataChange();
+        return true;
+    }
+
+    @Override
+    public boolean add(ChiTietSP ctsp) {
         onDataChange();
         return true;
     }

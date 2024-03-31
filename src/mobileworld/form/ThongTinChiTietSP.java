@@ -1,7 +1,6 @@
 package mobileworld.form;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -34,8 +33,8 @@ import mobileworld.service.ChiTietSanPhamService.PinService;
 import mobileworld.service.ChiTietSanPhamService.RamService;
 import mobileworld.viewModel.DongSPViewModel;
 
-public class ThongTinChiTietSP extends javax.swing.JFrame{
-    
+public class ThongTinChiTietSP extends javax.swing.JFrame {
+
     private DefaultComboBoxModel cbbPin = new DefaultComboBoxModel();
     private final PinService pinService = new PinService();
     private DefaultComboBoxModel cbbManHinh = new DefaultComboBoxModel();
@@ -319,22 +318,8 @@ public class ThongTinChiTietSP extends javax.swing.JFrame{
                 return false;
             }
 
-//            List<Imel> existingImels = imelService.getImel();
-//
-//            // Kiểm tra xem IMEI đã tồn tại trong danh sách hay không
-//            for (Imel imelModel : existingImels) {
-//                if (imelModel.getImel().equals(imelText)) {
-//                    JOptionPane.showMessageDialog(this, "Imel đã tồn tại trong cơ sở dữ liệu!");
-//                    return false;
-//                }
-//            }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Imel phải là số nguyên!");
-            return false;
-        }
-
-        if (txtAreaMoTa.getText().trim().equals("")) {
-            JOptionPane.showMessageDialog(this, "Hãy Nhập Mô Tả Sản Phẩm!");
             return false;
         }
 
@@ -502,6 +487,8 @@ public class ThongTinChiTietSP extends javax.swing.JFrame{
                 ctspService.update(getFormData(), idChiTietSP);
                 changeListener.notifyDataChangeListeners();
                 JOptionPane.showMessageDialog(this, "Sửa Thành Công!");
+                setVisible(false);
+                dispose();
                 return;
             }
             JOptionPane.showMessageDialog(this, "Sửa Thất Bại!");

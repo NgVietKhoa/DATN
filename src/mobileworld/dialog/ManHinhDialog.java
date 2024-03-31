@@ -1,14 +1,17 @@
 package mobileworld.dialog;
 
 import java.time.LocalDate;
+import java.util.List;
 import javax.swing.JOptionPane;
 import mobileworld.model.ManHinh;
 import mobileworld.event.DataChangeListener;
 import mobileworld.service.ChiTietSanPhamService.ManHinhService;
+import mobileworld.service.ChiTietSanPhamService.ThuocTinhSPService;
 
 public class ManHinhDialog extends javax.swing.JFrame {
 
     public ManHinhService service = new ManHinhService();
+    private final ThuocTinhSPService ttspService = new ThuocTinhSPService();
 
     public ManHinhDialog() {
         initComponents();
@@ -38,6 +41,16 @@ public class ManHinhDialog extends javax.swing.JFrame {
         if (txtManHinh.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(this, "Màn hình không được trống");
             return false;
+        }
+
+        List<ManHinh> LoaiManHinh = ttspService.getLoaiManHinh();
+
+        String getManHinh = txtManHinh.getText().trim();
+        for (ManHinh mh : LoaiManHinh) {
+            if (mh.getLoaiManHinh().equals(getManHinh)) {
+                JOptionPane.showMessageDialog(this, "Màn Hình đã tồn tại trong cơ sở dữ liệu!");
+                return false;
+            }
         }
         return true;
     }
@@ -108,6 +121,8 @@ public class ManHinhDialog extends javax.swing.JFrame {
                 service.add(getFormData());
                 changeListener.notifyDataChangeListeners();
                 JOptionPane.showMessageDialog(this, "Thêm Thành Công!");
+                setVisible(false);
+                dispose();
                 return;
             }
             JOptionPane.showMessageDialog(this, "Thêm Thất Bại!");

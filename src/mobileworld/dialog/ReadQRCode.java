@@ -11,15 +11,11 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import mobileworld.form.ThongTinChiTietSP;
-import mobileworld.model.Imel;
 import mobileworld.service.ChiTietSanPhamService.ChiTietSPService;
-import mobileworld.service.ChiTietSanPhamService.ImelService;
 import mobileworld.viewModel.ChiTietSanPhamViewModel;
 
 public class ReadQRCode extends javax.swing.JFrame {
@@ -32,6 +28,7 @@ public class ReadQRCode extends javax.swing.JFrame {
     public ReadQRCode() {
         initComponents();
         initialize();
+        setTitle("Quét QR");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -59,10 +56,13 @@ public class ReadQRCode extends javax.swing.JFrame {
         startQRCodeScanner();
     }
 
+    private volatile boolean productDisplayed = false; // Biến để theo dõi trạng thái hiển thị sản phẩm
+
     private void startQRCodeScanner() {
-        Thread thread = new Thread(() -> {
+        Thread thread;
+        thread = new Thread(() -> {
             while (true) {
-                if (webcam.isOpen()) {
+                if (webcam.isOpen() && !productDisplayed) {
                     BufferedImage image = webcam.getImage();
                     if (image != null) {
                         Result result = decodeQRCode(image);
@@ -74,8 +74,11 @@ public class ReadQRCode extends javax.swing.JFrame {
                                 // Display all products retrieved based on IMEI
                                 for (ChiTietSanPhamViewModel product : products) {
                                     displayProductDetails(product);
-                                    return;
                                 }
+                                // Đặt cờ hiển thị sản phẩm thành true và đóng JFrame
+                                productDisplayed = true;
+                                closeWindowAndWebcam();
+                                return;
                             } else {
                                 // Handle case where no product found
                                 System.out.println("No product found for the QR code data: " + qrCodeData);
@@ -88,6 +91,12 @@ public class ReadQRCode extends javax.swing.JFrame {
 
         thread.setDaemon(true);
         thread.start();
+    }
+
+    public void closeWindowAndWebcam() {
+        webcam.close();
+        setVisible(false);
+        dispose();
     }
 
     private void displayProductDetails(ChiTietSanPhamViewModel product) {
@@ -133,26 +142,20 @@ public class ReadQRCode extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanelQR = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         txtImel = new javax.swing.JTextField();
-        buttonCustom1 = new mobileworld.swing.ButtonCustom();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jPanelQR.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel1.setText("IMEL");
-
-        buttonCustom1.setForeground(new java.awt.Color(255, 255, 255));
-        buttonCustom1.setText("Reset");
-        buttonCustom1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        buttonCustom1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCustom1ActionPerformed(evt);
-            }
-        });
+        txtImel.setBackground(new java.awt.Color(12, 45, 87));
+        txtImel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        txtImel.setForeground(new java.awt.Color(255, 255, 255));
+        txtImel.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtImel.setText("QUÉT QR");
+        txtImel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(242, 242, 242)));
+        txtImel.setDisabledTextColor(new java.awt.Color(12, 45, 87));
+        txtImel.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -160,15 +163,10 @@ public class ReadQRCode extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanelQR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtImel, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buttonCustom1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                    .addComponent(txtImel, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,24 +174,15 @@ public class ReadQRCode extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanelQR, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtImel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonCustom1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(txtImel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonCustom1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom1ActionPerformed
-        txtImel.setText("");
-    }//GEN-LAST:event_buttonCustom1ActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private mobileworld.swing.ButtonCustom buttonCustom1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanelQR;
     private javax.swing.JTextField txtImel;
     // End of variables declaration//GEN-END:variables

@@ -1,14 +1,17 @@
 package mobileworld.dialog;
 
 import java.time.LocalDate;
+import java.util.List;
 import javax.swing.JOptionPane;
 import mobileworld.model.BoNho;
 import mobileworld.event.DataChangeListener;
 import mobileworld.service.ChiTietSanPhamService.BoNhoService;
+import mobileworld.service.ChiTietSanPhamService.ThuocTinhSPService;
 
 public class RomDialog extends javax.swing.JFrame {
 
     public BoNhoService service = new BoNhoService();
+    private final ThuocTinhSPService ttspService = new ThuocTinhSPService();
 
     public RomDialog() {
         initComponents();
@@ -37,6 +40,15 @@ public class RomDialog extends javax.swing.JFrame {
         if (txtRom.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(this, "Bộ Nhớ không được trống");
             return false;
+        }
+
+        List<BoNho> dungLuongRom = ttspService.getTenBoNho();
+        String getRom = txtRom.getText().trim();
+        for (BoNho rom : dungLuongRom) {
+            if (rom.getDungLuongBoNho().equals(getRom)) {
+                JOptionPane.showMessageDialog(this, "Bộ Nhớ đã tồn tại trong cơ sở dữ liệu!");
+                return false;
+            }
         }
         return true;
     }
@@ -107,6 +119,8 @@ public class RomDialog extends javax.swing.JFrame {
                 service.add(getFormData());
                 changeListener.notifyDataChangeListeners();
                 JOptionPane.showMessageDialog(this, "Thêm Thành Công!");
+                setVisible(false);
+                dispose();
                 return;
             }
             JOptionPane.showMessageDialog(this, "Thêm Thất Bại!");

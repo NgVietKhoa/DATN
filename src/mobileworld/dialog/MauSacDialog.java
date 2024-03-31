@@ -42,8 +42,8 @@ public class MauSacDialog extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Màu Sắc không được trống");
             return false;
         }
+        
         List<MauSac> tenMauSac = ttspService.getTenMauSac();
-
         String getMau = txtMauSac.getText().trim();
         for (MauSac getTenMau : tenMauSac) {
             if (getTenMau.getTenMau().equals(getMau)) {
@@ -120,6 +120,8 @@ public class MauSacDialog extends javax.swing.JFrame {
                 service.add(getFormData());
                 changeListener.notifyDataChangeListeners();
                 JOptionPane.showMessageDialog(this, "Thêm Thành Công!");
+                setVisible(false);
+                dispose();
                 return;
             }
             JOptionPane.showMessageDialog(this, "Thêm Thất Bại!");
