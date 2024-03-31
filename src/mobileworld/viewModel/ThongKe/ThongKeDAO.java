@@ -25,12 +25,15 @@ public interface ThongKeDAO {
 
     public List<HoaDonTK> timTheoNam(String Year);
 
-    public List<HoaDonTK> timTheoThoiGian(LocalDate ngayBD, LocalDate ngayKT);
-    
+    public List<HoaDonTK> timTheoThoiGianChart(LocalDate ngayBD, LocalDate ngayKT);
+
     public List<HoaDonTK> hienBang();
 
     public List<HoaDonTK> timTheoNamTable(String Year);
 
     public List<HoaDonTK> timTheoThoiGianTable(LocalDate ngayBD, LocalDate ngayKT);
 
+    public List<HoaDonTK> thongKeTheoNgayChart(LocalDate ngayHT);
+
+    public List<HoaDonTK> thongKeTheoNgayTable(LocalDate ngayHT);
 }

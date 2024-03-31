@@ -15,7 +15,8 @@ public class HoaDonTK {
     private float thanhTien;
     private LocalDate ngayTao;
     private String  maHD;
-
+    private String thongKeThang;    
+            
     public HoaDonTK() {
     }
 
@@ -46,6 +47,14 @@ public class HoaDonTK {
 
     public void setMaHD(String maHD) {
         this.maHD = maHD;
+    }
+
+    public String getThongKeThang() {
+        return thongKeThang;
+    }
+
+    public void setThongKeThang(String thongKeThang) {
+        this.thongKeThang = thongKeThang;
     }
 
   

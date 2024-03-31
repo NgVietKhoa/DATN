@@ -117,6 +117,7 @@ public class ViewThongKe extends javax.swing.JPanel {
         jPanel9 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBang = new mobileworld.swing.Table();
+        btnTKToday = new mobileworld.swing.ButtonCustom();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -444,6 +445,15 @@ public class ViewThongKe extends javax.swing.JPanel {
 
         materialTabbed1.addTab("Doanh thu theo thời gian", jPanel9);
 
+        btnTKToday.setForeground(new java.awt.Color(255, 255, 255));
+        btnTKToday.setText("Thống kê hôm nay");
+        btnTKToday.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnTKToday.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTKTodayActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -460,6 +470,8 @@ public class ViewThongKe extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnTKToday, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnRefesh2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(16, 16, 16)
@@ -478,7 +490,8 @@ public class ViewThongKe extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(btnRefesh2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnRefesh2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTKToday, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(materialTabbed1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -508,13 +521,15 @@ public class ViewThongKe extends javax.swing.JPanel {
     private void cboNgayKTPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_cboNgayKTPropertyChange
         // TODO add your handling code here:
         if (cboNgayBatDau != null && cboNgayKT != null && cboNgayBatDau.getDate() != null && cboNgayKT.getDate() != null) {
+
             Date getNgayBD = cboNgayBatDau.getDate();
             LocalDateTime ngayBD = getNgayBD.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDate ngayBDLocalDate = ngayBD.toLocalDate();
             Date getNgayKT = cboNgayKT.getDate();
             LocalDateTime ngayKT = getNgayKT.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDate ngayKTLocalDate = ngayKT.toLocalDate();
-            sr.timTheoThoiGian(ngayBDLocalDate, ngayKTLocalDate);
+
+            sr.timTheoThoiGianTable(ngayBDLocalDate, ngayKTLocalDate);
             QuanLythongKeController controller = new QuanLythongKeController();
             controller.setDateToChartPerTime(panelTK, ngayBDLocalDate, ngayKTLocalDate);
             dsSearch = sr.timTheoThoiGianTable(ngayBDLocalDate, ngayKTLocalDate);
@@ -539,9 +554,19 @@ public class ViewThongKe extends javax.swing.JPanel {
         materialTabbed1.setSelectedComponent(jPanel8);
     }//GEN-LAST:event_btnRefesh2ActionPerformed
 
+    private void btnTKTodayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTKTodayActionPerformed
+        // TODO add your handling code here:
+        LocalDate ngayHT = LocalDate.now();
+        QuanLythongKeController controller = new QuanLythongKeController();
+        controller.setDateToChartPerDay(panelTK, ngayHT);
+        dsSearch = sr.thongKeTheoNgayTable(ngayHT);
+        filltable(dsSearch);
+    }//GEN-LAST:event_btnTKTodayActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private mobileworld.swing.ButtonCustom btnRefesh2;
+    private mobileworld.swing.ButtonCustom btnTKToday;
     private com.toedter.calendar.JDateChooser cboNgayBatDau;
     private com.toedter.calendar.JDateChooser cboNgayKT;
     private mobileworld.swing.Combobox cboYear;

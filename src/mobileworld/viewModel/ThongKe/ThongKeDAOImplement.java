@@ -24,13 +24,16 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         List<HoaDonTK> ds = new ArrayList<>();
 
         String sql = """
-            SELECT CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTien FROM HoaDon ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC
-                          """;
+                     SELECT CONCAT(YEAR(HoaDon.NgayTao), '-', MONTH(HoaDon.NgayTao)) AS ThangNam, SUM(HoaDon.TongTienSauGiam) AS TongTien
+                          FROM HoaDon
+                          GROUP BY CONCAT(YEAR(HoaDon.NgayTao), '-', MONTH(HoaDon.NgayTao))
+                          ORDER BY ThangNam ASC;   
+                       """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 HoaDonTK tk = new HoaDonTK();
-                tk.setNgayTao(rs.getDate(1).toLocalDate());
+                tk.setThongKeThang(rs.getString(1));
                 tk.setThanhTien(rs.getFloat(2));
                 ds.add(tk);
             }
@@ -44,7 +47,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
     public float getDoanhThu() {
         float tt = 0;
         String sql = """
-			Select SUM(HoaDon.TongTien) from HoaDon
+			Select SUM(HoaDon.TongTienSauGiam) from HoaDon
                                             """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -79,7 +82,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
     public float hoaDonChuaThanhToan() {
         float soLieu = 0;
         String sql = """
-			Select SUM(HoaDon.TongTien) from HoaDon where TrangThai = 0
+			Select SUM(HoaDon.TongTienSauGiam) from HoaDon where TrangThai = 0
                                             """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -96,7 +99,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
     public float soTienDaThuDuoc() {
         float tt = 0;
         String sql = """
-			Select SUM(HoaDon.TongTien) from HoaDon where TrangThai = 1
+			Select SUM(HoaDon.TongTienSauGiam) from HoaDon where TrangThai = 1
                         """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -114,17 +117,18 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         List<HoaDonTK> ds = new ArrayList<>();
 
         String sql = """
-            	SELECT CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTien 
-            FROM HoaDon 
+            	SELECT CONCAT(YEAR(HoaDon.NgayTao), '-', MONTH(HoaDon.NgayTao)) AS ThangNam, SUM(HoaDon.TongTienSauGiam) AS TongTien
+            FROM HoaDon
             WHERE YEAR(HoaDon.NgayTao) = ?
-            ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC;
+            GROUP BY CONCAT(YEAR(HoaDon.NgayTao), '-', MONTH(HoaDon.NgayTao))
+            ORDER BY ThangNam ASC
                           """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, Year);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 HoaDonTK tk = new HoaDonTK();
-                tk.setNgayTao(rs.getDate(1).toLocalDate());
+                tk.setThongKeThang(rs.getString(1));
                 tk.setThanhTien(rs.getFloat(2));
                 ds.add(tk);
             }
@@ -134,38 +138,13 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         return ds;
     }
 
-    @Override
-    public List<HoaDonTK> timTheoThoiGian(LocalDate ngayBD, LocalDate ngayKT) {
-        List<HoaDonTK> ds = new ArrayList<>();
-
-        String sql = """
-            SELECT CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTien 
-            FROM HoaDon 
-            WHERE NgayTao >= ? AND NgayTao <= ?
-            ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC
-                          """;
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, ngayBD);
-            ps.setObject(2, ngayKT);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                HoaDonTK tk = new HoaDonTK();
-                tk.setNgayTao(rs.getDate(1).toLocalDate());
-                tk.setThanhTien(rs.getFloat(2));
-                ds.add(tk);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ds;
-    }
 
     @Override
     public List<HoaDonTK> timTheoNamTable(String Year) {
         List<HoaDonTK> ds = new ArrayList<>();
 
         String sql = """
-            	  SELECT HoaDon.ID, CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTien FROM HoaDon 
+            	  SELECT HoaDon.ID, CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTienSauGiam FROM HoaDon 
                   WHERE YEAR(HoaDon.NgayTao) = ?
                   ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC;
                           """;
@@ -190,7 +169,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         List<HoaDonTK> ds = new ArrayList<>();
 
         String sql = """
-               SELECT HoaDon.ID, CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTien
+            SELECT HoaDon.ID, CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTienSauGiam
             FROM HoaDon 
             WHERE NgayTao >= ? AND NgayTao <= ?
             ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC
@@ -217,7 +196,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         List<HoaDonTK> ds = new ArrayList<>();
 
         String sql = """
-           SELECT HoaDon.ID, CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTien FROM HoaDon 
+           SELECT HoaDon.ID, CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTienSauGiam FROM HoaDon 
            ORDER BY HoaDon.NgayTao ASC
                           """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
@@ -227,6 +206,86 @@ public class ThongKeDAOImplement implements ThongKeDAO {
                 tk.setMaHD(rs.getString(1));
                 tk.setNgayTao(rs.getDate(2).toLocalDate());
                 tk.setThanhTien(rs.getFloat(3));
+                ds.add(tk);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ds;
+    }
+
+    @Override
+    public List<HoaDonTK> thongKeTheoNgayChart(LocalDate ngayHT) {
+        List<HoaDonTK> ds = new ArrayList<>();
+
+        String sql = """
+            SELECT CONVERT(DATE, HoaDon.NgayTao), SUM(HoaDon.TongTienSauGiam) AS TongTien
+            FROM HoaDon 
+            WHERE NgayTao = ?	
+            GROUP BY CONVERT(DATE, HoaDon.NgayTao)
+            ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC
+                          """;
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, ngayHT);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                HoaDonTK tk = new HoaDonTK();
+                tk.setNgayTao(rs.getDate(1).toLocalDate());
+                tk.setThanhTien(rs.getFloat(2));
+                ds.add(tk);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ds;
+
+    }
+
+    @Override
+    public List<HoaDonTK> thongKeTheoNgayTable(LocalDate ngayHT) {
+        List<HoaDonTK> ds = new ArrayList<>();
+
+        String sql = """
+          SELECT HoaDon.ID,CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTienSauGiam AS TongTien
+                       FROM HoaDon 
+                       WHERE NgayTao = ?	
+                       ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC
+                          """;
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, ngayHT);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                HoaDonTK tk = new HoaDonTK();
+                tk.setMaHD(rs.getString(1));
+                tk.setNgayTao(rs.getDate(2).toLocalDate());
+                tk.setThanhTien(rs.getFloat(3));
+                ds.add(tk);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ds;
+    }
+
+    @Override
+    public List<HoaDonTK> timTheoThoiGianChart(LocalDate ngayBD, LocalDate ngayKT) {
+        List<HoaDonTK> ds = new ArrayList<>();
+
+        String sql = """
+            	SELECT CONVERT(DATE, HoaDon.NgayTao), SUM(HoaDon.TongTienSauGiam)
+                        FROM HoaDon 				
+                        WHERE NgayTao >= ?  AND NgayTao <= ?
+                        GROUP BY CONVERT(DATE, HoaDon.NgayTao)
+            			ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC
+                          """;
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, ngayBD);
+            ps.setObject(2, ngayKT);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                HoaDonTK tk = new HoaDonTK();                
+                tk.setNgayTao(rs.getDate(1).toLocalDate());
+                tk.setThanhTien(rs.getFloat(2));
                 ds.add(tk);
             }
         } catch (Exception e) {

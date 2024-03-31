@@ -53,11 +53,6 @@ public class ThongKeServiceImpl implements ThongKeService {
     }
 
     @Override
-    public List<HoaDonTK> timTheoThoiGian(LocalDate ngayBD, LocalDate ngayKT) {
-        return tk.timTheoThoiGian(ngayBD, ngayKT);
-    }
-
-    @Override
     public List<HoaDonTK> timTheoNamTable(String Year) {
         return tk.timTheoNamTable(Year);
     }
@@ -71,8 +66,20 @@ public class ThongKeServiceImpl implements ThongKeService {
     public List<HoaDonTK> hienBang() {
         return tk.hienBang();
     }
-    
-    
-    
+
+    @Override
+    public List<HoaDonTK> thongKeTheoNgayChart(LocalDate ngayHT) {
+        return tk.thongKeTheoNgayChart(ngayHT);
+    }
+
+    @Override
+    public List<HoaDonTK> thongKeTheoNgayTable(LocalDate ngayHT) {
+        return tk.thongKeTheoNgayTable(ngayHT);
+    }
+
+    @Override
+    public List<HoaDonTK> timTheoThoiGianChart(LocalDate ngayBD, LocalDate ngayKT) {
+        return tk.timTheoThoiGianChart(ngayBD, ngayKT);
+    }
 
 }
