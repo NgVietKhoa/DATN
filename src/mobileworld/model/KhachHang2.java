@@ -3,7 +3,7 @@ package mobileworld.model;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public class KhachHang {
+public class KhachHang2 {
 
     private String ten;
     private String sdt;
@@ -18,23 +18,21 @@ public class KhachHang {
     private String id;
     private String email;
 
-    public KhachHang() {
+    public KhachHang2() {
     }
 
-    public KhachHang(String ten, String sdt, Float gioiTinh, String diaChi, int deleted, LocalDateTime createdat, String createdby, LocalDateTime updatedat, String updatedby, String id, String email) {
+    public KhachHang2(String ten, String sdt, Float gioiTinh, Date ngaySinh, String diaChi, String email) {
         this.ten = ten;
         this.sdt = sdt;
         this.gioiTinh = gioiTinh;
+        this.ngaySinh = ngaySinh;
         this.diaChi = diaChi;
-        this.deleted = deleted;
-        this.createdat = createdat;
-        this.createdby = createdby;
-        this.updatedat = updatedat;
-        this.updatedby = updatedby;
-        this.id = id;
         this.email = email;
     }
 
+    
+
+   
     
 
     public String getTen() {

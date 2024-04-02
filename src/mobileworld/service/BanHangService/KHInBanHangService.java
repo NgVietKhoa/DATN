@@ -5,7 +5,7 @@
 package mobileworld.service.BanHangService;
 
 import java.util.List;
-import mobileworld.model.KhachHang;
+import mobileworld.model.KhachHang2;
 import mobileworld.repository.BanHangRepo.KHInBanHangRepository;
 import mobileworld.viewModel.BanHangViewModel.KhachHangViewModel;
 
@@ -21,7 +21,7 @@ public class KHInBanHangService {
         return repo.getAll();
     }
 
-    public boolean addKH(KhachHang kh, String idNV) {
+    public boolean addKH(KhachHang2 kh, String idNV) {
         return repo.addKH(kh, idNV);
     }
 

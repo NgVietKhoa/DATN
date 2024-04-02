@@ -87,4 +87,8 @@ public class PhieuGiamGiaService {
     public void sendEmail(List<String> EmailKH, List<String> tenNN, String noiDung, String ngayBD, String ngayKT) {
         repo.sendEmail(EmailKH, tenNN, noiDung, ngayBD, ngayKT);
     }
+    
+    public float layPGG(String tenPGG) {
+        return repo.layPGG(tenPGG);
+    }
 }

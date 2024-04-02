@@ -41,7 +41,7 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
         for (KhachHang khachHang1 : khachHangs) {
             String gioiTinh;
             stt++;
-            if (khachHang1.isGioiTinh()) {
+            if (khachHang1.getGioiTinh()==0) {
                 gioiTinh = "Nam";
             } else {
                 gioiTinh = "Nữ";
@@ -78,13 +78,18 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
     public KhachHang getFormData() {
         String ten = txtHoten.getText();
         String sdt = txtSđt.getText();
-        boolean gioiTinh = rbtNam.isSelected();
+        float gioiTinh=0;
+        if(rbtNam.isSelected()){
+            gioiTinh=0;
+        }else{
+            gioiTinh=1;
+        }
         String diaChi = txtDiaChi.getText();
         String ma = txtMaKH.getText();
         String email = txtEmail.getText().trim();
         LocalDateTime ngayThucTe = LocalDateTime.now();
         String maNV = SessionStorage.getInstance().getUsername();
-        KhachHang khachHang = new KhachHang(ten, sdt, gioiTinh, diaChi, 1, ngayThucTe, maNV, ngayThucTe, maNV, email);
+        KhachHang khachHang = new KhachHang(ten, sdt, gioiTinh, diaChi, 1, ngayThucTe, maNV, ngayThucTe, maNV, ma, email);
         return khachHang;
     }
 
@@ -399,7 +404,7 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:`
         if (txtHoten.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng không được để trống tên khách hàng");
             return;
@@ -542,9 +547,8 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
             txtHoten.setText(kh.getTen());
             txtSđt.setText(kh.getSdt());
             txtDiaChi.setText(kh.getDiaChi());
-            txtEmail.setText(kh.getEmail());
-            boolean gioitinh = kh.isGioiTinh();
-            if (gioitinh) {
+            txtEmail.setText(kh.getEmail());           
+            if (kh.getGioiTinh()==0) {
                 rbtNam.setSelected(true);
             } else {
                 rbtNu.setSelected(true);
@@ -556,8 +560,7 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
             txtSđt.setText(kh.getSdt());
             txtDiaChi.setText(kh.getDiaChi());
             txtEmail.setText(kh.getEmail());
-            boolean gioitinh = kh.isGioiTinh();
-            if (gioitinh) {
+            if (kh.getGioiTinh()==0) {
                 rbtNam.setSelected(true);
             } else {
                 rbtNu.setSelected(true);

@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Date;
 import mobileworld.config.DBConnect;
-import mobileworld.model.KhachHang;
+import mobileworld.model.KhachHang2;
 
 /**
  *
@@ -50,7 +50,7 @@ public class KHInBanHangRepository {
         return list;
     }
 
-    public boolean addKH(KhachHang kh,String idNV) {
+    public boolean addKH(KhachHang2 kh,String idNV) {
         int check = 0;
         String sql = """
                      INSERT INTO [dbo].[KhachHang]

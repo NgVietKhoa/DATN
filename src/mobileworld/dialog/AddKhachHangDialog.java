@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import mobileworld.main.SessionStorage;
-import mobileworld.model.KhachHang;
+import mobileworld.model.KhachHang2;
 import mobileworld.service.BanHangService.KHInBanHangService;
 
 /**
@@ -32,14 +32,14 @@ public class AddKhachHangDialog extends javax.swing.JFrame {
         initComponents();
     }
 
-    public KhachHang getFormData() throws ParseException {
+    public KhachHang2 getFormData() throws ParseException {
         String diaChi = txtDiaChi.getText();
         String email = txtEmail.getText();
         Date ngaySinh = dateFormat.parse(txtNgaySinh.getText());
         String sdt = txtSDT.getText();
         String ten = txtTen.getText();
         float gioiTinh = (rdoNam.isSelected() ? 0 : 1);
-        KhachHang kh = new KhachHang(ten, sdt, gioiTinh, ngaySinh, diaChi, email);
+        KhachHang2 kh = new KhachHang2(ten, sdt, gioiTinh, ngaySinh, diaChi, email);
         return kh;
     }
 

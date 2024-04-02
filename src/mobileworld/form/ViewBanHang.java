@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
@@ -134,19 +135,20 @@ public class ViewBanHang extends javax.swing.JPanel {
 
     private void setDataCboPhieuGG(List<PhieuGiamGia> setPgg) {
         cbbPgg.removeAllElements();
-
         for (PhieuGiamGia pgg : setPgg) {
-            cbbPgg.addElement(pgg.getTenGiamGia());
+            if (pgg.getDeleted() == 1) {
+                cbbPgg.addElement(pgg.getTenGiamGia());
+            }
         }
         cbbPgg.setSelectedItem(null);
     }
 
     private void setDataCboHTTT() {
-        String[] paymentMethods = {"Tiền mặt", "Chuyển khoản", "Cả 2 hình thức"};
+        String[] paymentMethods = {"", "Tiền mặt", "Chuyển khoản", "Cả 2 hình thức"};
         for (String method : paymentMethods) {
             cboHTT.addItem(method);
         }
-        cboHTT.setSelectedItem(null);
+        cboHTT.setSelectedIndex(0);
     }
 
     private BigDecimal calculateTotalAmountFromGioHang() {
@@ -392,7 +394,6 @@ public class ViewBanHang extends javax.swing.JPanel {
         jLabel13 = new javax.swing.JLabel();
         cboHTT = new javax.swing.JComboBox<>();
         cboPgg = new javax.swing.JComboBox<>();
-        txtTienThua = new javax.swing.JLabel();
         txtTongTien = new javax.swing.JLabel();
         txtSetTenKH = new javax.swing.JLabel();
         txtMaNV = new javax.swing.JLabel();
@@ -401,6 +402,7 @@ public class ViewBanHang extends javax.swing.JPanel {
         txtMaHD = new javax.swing.JLabel();
         txtTienKhachDua = new javax.swing.JTextField();
         txtTienKhachCK = new javax.swing.JTextField();
+        txtTienThua = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -409,6 +411,11 @@ public class ViewBanHang extends javax.swing.JPanel {
         jPanel1.setOpaque(false);
 
         buttonCustom2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-delete-document-24 (1).png"))); // NOI18N
+        buttonCustom2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCustom2ActionPerformed(evt);
+            }
+        });
 
         buttonCustom4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-clear-24 (1).png"))); // NOI18N
 
@@ -751,9 +758,18 @@ public class ViewBanHang extends javax.swing.JPanel {
         jLabel13.setForeground(new java.awt.Color(153, 0, 0));
         jLabel13.setText("Tổng Tiền: 0đ");
 
-        cboPgg.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboHTT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboHTTActionPerformed(evt);
+            }
+        });
 
-        txtTienThua.setText("jLabel16");
+        cboPgg.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboPgg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboPggActionPerformed(evt);
+            }
+        });
 
         txtTongTien.setText("jLabel17");
 
@@ -767,6 +783,18 @@ public class ViewBanHang extends javax.swing.JPanel {
 
         txtMaHD.setText("jLabel22");
 
+        txtTienKhachDua.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTienKhachDuaKeyReleased(evt);
+            }
+        });
+
+        txtTienKhachCK.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTienKhachCKKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
@@ -778,13 +806,8 @@ public class ViewBanHang extends javax.swing.JPanel {
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(buttonCustom3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel8Layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(txtTienThua, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel8Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(buttonCustom8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonCustom8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
@@ -799,7 +822,10 @@ public class ViewBanHang extends javax.swing.JPanel {
                             .addComponent(txtNgayThanhToan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtNgayTao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtMaHD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jLabel12)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addGap(44, 44, 44)
+                        .addComponent(txtTienThua))
                     .addComponent(jLabel13)
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -870,10 +896,10 @@ public class ViewBanHang extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(txtTienThua))
+                    .addComponent(txtTienThua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonCustom3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonCustom8, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1004,6 +1030,161 @@ public class ViewBanHang extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonCustom7ActionPerformed
 
+    private void buttonCustom2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonCustom2ActionPerformed
+
+    private void cboPggActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboPggActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_cboPggActionPerformed
+
+    private void cboHTTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboHTTActionPerformed
+        // TODO add your handling code here:     
+        if (cboHTT.getSelectedIndex() == 1) {
+            txtTienKhachCK.setText("0");
+            txtTienKhachDua.setText("");
+        }
+        if (cboHTT.getSelectedIndex() == 2) {
+            txtTienKhachDua.setText("0");
+            txtTienKhachCK.setText("");
+        } else {
+            txtTienKhachCK.setText("");
+            txtTienKhachDua.setText("");
+        }
+
+    }//GEN-LAST:event_cboHTTActionPerformed
+
+    private void txtTienKhachDuaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTienKhachDuaKeyReleased
+        // TODO add your handling code here:
+
+        if (!txtTienKhachDua.getText().trim().isEmpty()) {
+            String text = txtTienKhachDua.getText();
+            text = text.replaceAll("[^\\d]", "");
+
+            if (!text.isEmpty()) {
+                try {
+                    long number = Long.parseLong(text);
+
+                    // Định dạng số và hiển thị trong JTextField
+                    DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+                    txtTienKhachDua.setText(decimalFormat.format(number));
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số");
+                    return;
+                }
+            }
+        }
+
+        String tenPGG = (String) cboPgg.getSelectedItem();
+        float phanTramGiam = pggService.layPGG(tenPGG);
+        float tienThua = 0;
+        float tongTien = 0;
+        float tienMat = 0;
+        float tienCK = 0;
+        if (calculateTotalAmountFromGioHang().compareTo(BigDecimal.ZERO) != 0) {
+            tongTien = Float.parseFloat(txtTongTien.getText().trim().replace(",", ""));
+        }
+        if (!txtTienKhachDua.getText().isEmpty()) {
+            tienMat = Float.parseFloat(txtTienKhachDua.getText().trim().replace(",", ""));
+        }
+        if (cboHTT.getSelectedIndex() == 1) {
+            if (!txtTienKhachDua.getText().isEmpty()) {
+                if (phanTramGiam == 0) {
+                    tienThua = tienMat - tongTien;
+                } else {
+                    tienThua = tienMat - (tongTien * ((100 - phanTramGiam) / 100));
+                }
+
+                DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                txtTienThua.setText(decimalFormat.format(tienThua));
+            }
+        }
+        if (cboHTT.getSelectedIndex() == 3) {
+            if (!txtTienKhachDua.getText().isEmpty() && !txtTienKhachCK.getText().isEmpty()) {
+                tienCK = Float.parseFloat(txtTienKhachCK.getText().trim().replace(",", ""));
+                if (phanTramGiam == 0) {
+                    tienThua = (tienMat + tienCK) - tongTien;
+                } else {
+                    tienThua = tienMat - (tongTien * ((100 - phanTramGiam) / 100));
+                }
+                tienThua = (tienMat + tienCK) - (tongTien * ((100 - phanTramGiam) / 100));
+                // Format tiền thừa thành tiền tệ
+                DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                txtTienThua.setText(decimalFormat.format(tienThua));
+            }
+        }
+        if (phanTramGiam == 0) {
+            jLabel13.setText("Tổng tiền: " + decimalFormat.format(tongTien));
+        } else {
+            jLabel13.setText("Tổng tiền: " + decimalFormat.format(tongTien * ((100 - phanTramGiam)) / 100));
+        }
+    }//GEN-LAST:event_txtTienKhachDuaKeyReleased
+
+    private void txtTienKhachCKKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTienKhachCKKeyReleased
+        // TODO add your handling code here:
+        if (!txtTienKhachCK.getText().trim().isEmpty()) {
+            String text = txtTienKhachCK.getText();
+            text = text.replaceAll("[^\\d]", "");
+
+            if (!text.isEmpty()) {
+                try {
+                    long number = Long.parseLong(text);
+
+                    // Định dạng số và hiển thị trong JTextField
+                    DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+                    txtTienKhachCK.setText(decimalFormat.format(number));
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số");
+                    return;
+                }
+            }
+        }
+        String tenPGG = (String) cboPgg.getSelectedItem();
+        float phanTramGiam = pggService.layPGG(tenPGG);
+        float tienThua = 0;
+        float tongTien = 0;
+        float tienMat = 0;
+        float tienCK = 0;
+        if (calculateTotalAmountFromGioHang().compareTo(BigDecimal.ZERO) != 0) {
+            tongTien = Float.parseFloat(txtTongTien.getText().trim().replace(",", ""));
+        }
+        if (!txtTienKhachDua.getText().isEmpty()) {
+            tienCK = Float.parseFloat(txtTienKhachCK.getText().trim().replace(",", ""));
+        }
+        if (cboHTT.getSelectedIndex() == 2) {
+            if (!txtTienKhachCK.getText().isEmpty()) {
+                if (phanTramGiam == 0) {
+                    tienThua = tienCK - tongTien;
+                } else {
+                    tienThua = tienCK - (tongTien * ((100 - phanTramGiam) / 100));
+                }
+                // Format tiền thừa thành tiền tệ
+                DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                txtTienThua.setText(decimalFormat.format(tienThua));
+            }
+        }
+        if (cboHTT.getSelectedIndex() == 3) {
+
+            if (!txtTienKhachDua.getText().isEmpty() && !txtTienKhachCK.getText().isEmpty()) {
+                tienMat = Float.parseFloat(txtTienKhachDua.getText().trim().replace(",", ""));
+                if (phanTramGiam == 0) {
+                    tienThua = (tienMat + tienCK) - tongTien;
+                } else {
+                    tienThua = (tienMat + tienCK) - (tongTien * ((100 - phanTramGiam) / 100));
+                }
+                // Format tiền thừa thành tiền tệ
+                DecimalFormat decimalFormat = new DecimalFormat("#,###");
+                txtTienThua.setText(decimalFormat.format(tienThua));
+            }
+        }
+        if (phanTramGiam == 0) {
+            jLabel13.setText("Tổng tiền: " + decimalFormat.format(tongTien));
+        } else {
+            jLabel13.setText("Tổng tiền: " + decimalFormat.format(tongTien * ((100 - phanTramGiam)) / 100));
+        }
+    }//GEN-LAST:event_txtTienKhachCKKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private mobileworld.swing.ButtonCustom buttonCustom1;
@@ -1058,7 +1239,7 @@ public class ViewBanHang extends javax.swing.JPanel {
     private javax.swing.JLabel txtSetTenKH;
     private javax.swing.JTextField txtTienKhachCK;
     private javax.swing.JTextField txtTienKhachDua;
-    private javax.swing.JLabel txtTienThua;
+    private javax.swing.JTextField txtTienThua;
     private mobileworld.swing.TextField txtTimKiemSP;
     private javax.swing.JLabel txtTongTien;
     // End of variables declaration//GEN-END:variables
