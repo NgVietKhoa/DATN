@@ -157,58 +157,6 @@ public class HoaDonRepository {
         return list;
     }
 
-//    public List<HoaDonModel> getAll() {
-//        List<HoaDonModel> list = new ArrayList<>();
-//        String sql = """
-//                   SELECT 
-//                       dbo.HoaDon.ID, 
-//                       dbo.KHACHHANG.Ten, 
-//                       dbo.KHACHHANG.SDT, 
-//                       dbo.KHACHHANG.DiaChi, 
-//                       dbo.HoaDon.IDNhanVien, 
-//                       dbo.HoaDon.NgayTao, 
-//                       dbo.HoaDon.NgayThanhToan, 
-//                       dbo.HinhThucThanhToan.IDPhuongThucThanhToan, 
-//                       dbo.PhuongThucThanhToan.TenKieuThanhToan, 
-//                       dbo.HoaDon.TongTien, 
-//                       dbo.HoaDon.TrangThai
-//                   FROM   
-//                       dbo.HoaDon 
-//                   INNER JOIN
-//                       dbo.NHANVIEN ON dbo.HoaDon.IDNhanVien = dbo.NHANVIEN.ID 
-//                   INNER JOIN
-//                       dbo.KHACHHANG ON dbo.HoaDon.IDKhachHang = dbo.KHACHHANG.ID 
-//                   INNER JOIN
-//                       dbo.HinhThucThanhToan ON dbo.HoaDon.ID = dbo.HinhThucThanhToan.IDHoaDon 
-//                   INNER JOIN
-//                       dbo.PhuongThucThanhToan ON dbo.HinhThucThanhToan.IDPhuongThucThanhToan = dbo.PhuongThucThanhToan.ID
-//                   ORDER BY  
-//                       HoaDon.NgayTao, 
-//                       HoaDon.NgayThanhToan ASC;
-//                     """;
-//
-//        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
-//            ResultSet rs = ps.executeQuery();
-//            while (rs.next()) {
-//                HoaDonModel hoaDon = new HoaDonModel();
-//                hoaDon.setIdHoaDon(rs.getString(1));
-//                hoaDon.setTenKH(rs.getString(2));
-//                hoaDon.setSdt(rs.getString(3));
-//                hoaDon.setDiaChi(rs.getString(4));
-//                hoaDon.setIdNhV(rs.getString(5));
-//                hoaDon.setNgayTao(rs.getTimestamp(6).toLocalDateTime());
-//                hoaDon.setNgayThanhToan(rs.getTimestamp(7).toLocalDateTime());
-//                hoaDon.setIdPhuongThucThanhToan(rs.getString(8));
-//                hoaDon.setKieuThanhToan(rs.getString(9));
-//                hoaDon.setTongTien(rs.getBigDecimal(10));
-//                hoaDon.setTrangThai(rs.getInt(11));
-//                list.add(hoaDon);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return list;
-//    }
     public List<HoaDonModel> getAllQR(String result) {
         List<HoaDonModel> list = new ArrayList<>();
         String sql = """
@@ -850,7 +798,7 @@ public class HoaDonRepository {
         com.itextpdf.text.Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 22, BaseColor.BLACK);
         com.itextpdf.text.Font subtitleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, BaseColor.BLACK);
         com.itextpdf.text.Font contentFont = FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.BLACK);
-        
+
         // Thêm logo của công ty (nếu có)
         com.itextpdf.text.Image logo = com.itextpdf.text.Image.getInstance("C:\\Users\\ADMIN\\Documents\\FINAL_DATN\\DATN\\src\\mobileworld\\icon\\Logomb.png");
         logo.setAlignment(Element.ALIGN_CENTER);

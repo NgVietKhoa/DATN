@@ -40,7 +40,7 @@ public class KhachHangRepository {
                 KhachHang kh = new KhachHang();
                 kh.setTen(rs.getString(1));
                 kh.setSdt(rs.getString(2));
-                kh.setGioiTinh(rs.getBoolean(3));
+                kh.setGioiTinh(rs.getFloat(3));
                 kh.setNgaySinh(rs.getDate(4));
                 kh.setDiaChi(rs.getString(5));
                 kh.setDeleted(rs.getInt(6));               
@@ -82,7 +82,7 @@ public class KhachHangRepository {
                     KhachHang kh = new KhachHang();
                     kh.setTen(rs.getString(1));
                     kh.setSdt(rs.getString(2));
-                    kh.setGioiTinh(rs.getBoolean(3));
+                    kh.setGioiTinh(rs.getFloat(3));
                     kh.setNgaySinh(rs.getDate(4));
                     kh.setDiaChi(rs.getString(5));
                     kh.setDeleted(rs.getInt(6));                   
@@ -120,7 +120,7 @@ public class KhachHangRepository {
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareCall(sql)) {
             ps.setObject(1, kh.getTen());
             ps.setObject(2, kh.getSdt());
-            ps.setObject(3, kh.isGioiTinh());
+            ps.setObject(3, kh.getGioiTinh());
             ps.setObject(4, kh.getNgaySinh());
             ps.setObject(5, kh.getDiaChi());
             ps.setObject(6, kh.getDeleted());
@@ -154,7 +154,7 @@ public class KhachHangRepository {
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareCall(sql)) {
             ps.setObject(1, kh.getTen());
             ps.setObject(2, kh.getSdt());
-            ps.setObject(3, kh.isGioiTinh());
+            ps.setObject(3, kh.getGioiTinh());
             ps.setObject(4, kh.getNgaySinh());
             ps.setObject(5, kh.getDiaChi());
             ps.setObject(6, kh.getDeleted());

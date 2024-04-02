@@ -7,7 +7,7 @@ public class KhachHang {
 
     private String ten;
     private String sdt;
-    private boolean gioiTinh;
+    private Float gioiTinh;
     private Date ngaySinh;
     private String diaChi;
     private int deleted;
@@ -21,18 +21,20 @@ public class KhachHang {
     public KhachHang() {
     }
 
-    public KhachHang(String ten, String sdt, boolean gioiTinh, String diaChi, int deleted, LocalDateTime createdat, String createdby, LocalDateTime updatedat, String updatedby, String email) {
+  
+
+    public KhachHang(String ten, String sdt, Float gioiTinh, Date ngaySinh, String diaChi, String email) {
         this.ten = ten;
         this.sdt = sdt;
         this.gioiTinh = gioiTinh;
+        this.ngaySinh = ngaySinh;
         this.diaChi = diaChi;
-        this.deleted = deleted;
-        this.createdat = createdat;
-        this.createdby = createdby;
-        this.updatedat = updatedat;
-        this.updatedby = updatedby;
         this.email = email;
     }
+
+    
+
+    
 
     public String getTen() {
         return ten;
@@ -50,11 +52,11 @@ public class KhachHang {
         this.sdt = sdt;
     }
 
-    public boolean isGioiTinh() {
+    public Float getGioiTinh() {
         return gioiTinh;
     }
 
-    public void setGioiTinh(boolean gioiTinh) {
+    public void setGioiTinh(Float gioiTinh) {
         this.gioiTinh = gioiTinh;
     }
 

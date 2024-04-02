@@ -18,6 +18,7 @@ public class HoaDon {
     private String idNV;
     private LocalDateTime NgayTao;
     private LocalDateTime ngayThanhToan;
+    private BigDecimal tongTienSauGiam;
     private String idCTDG;
     private BigDecimal tongTien;
     private String idHTTT;
@@ -34,12 +35,13 @@ public class HoaDon {
     public HoaDon() {
     }
 
-    public HoaDon(String idHD, String idKH, String idNV, LocalDateTime NgayTao, LocalDateTime ngayThanhToan, String idCTDG, BigDecimal tongTien, String idHTTT, String tenKH, String sdtKH, String diaChiKH, Float Delete, LocalDateTime createAt, String createBy, LocalDateTime updateAt, String updateBy, int trangthai) {
+    public HoaDon(String idHD, String idKH, String idNV, LocalDateTime NgayTao, LocalDateTime ngayThanhToan, BigDecimal tongTienSauGiam, String idCTDG, BigDecimal tongTien, String idHTTT, String tenKH, String sdtKH, String diaChiKH, Float Delete, LocalDateTime createAt, String createBy, LocalDateTime updateAt, String updateBy, int trangthai) {
         this.idHD = idHD;
         this.idKH = idKH;
         this.idNV = idNV;
         this.NgayTao = NgayTao;
         this.ngayThanhToan = ngayThanhToan;
+        this.tongTienSauGiam = tongTienSauGiam;
         this.idCTDG = idCTDG;
         this.tongTien = tongTien;
         this.idHTTT = idHTTT;
@@ -53,6 +55,15 @@ public class HoaDon {
         this.updateBy = updateBy;
         this.trangthai = trangthai;
     }
+
+    public BigDecimal getTongTienSauGiam() {
+        return tongTienSauGiam;
+    }
+
+    public void setTongTienSauGiam(BigDecimal tongTienSauGiam) {
+        this.tongTienSauGiam = tongTienSauGiam;
+    }
+
 
     public String getIdHD() {
         return idHD;
@@ -192,7 +203,8 @@ public class HoaDon {
 
     @Override
     public String toString() {
-        return "HoaDon{" + "idHD=" + idHD + ", idKH=" + idKH + ", idNV=" + idNV + ", NgayTao=" + NgayTao + ", ngayThanhToan=" + ngayThanhToan + ", idCTDG=" + idCTDG + ", tongTien=" + tongTien + ", idHTTT=" + idHTTT + ", tenKH=" + tenKH + ", sdtKH=" + sdtKH + ", diaChiKH=" + diaChiKH + ", Delete=" + Delete + ", CcreateAt=" + createAt + ", createBy=" + createBy + ", updateAt=" + updateAt + ", updateBy=" + updateBy + ", trangthai=" + trangthai + '}';
+        return "HoaDon{" + "idHD=" + idHD + ", idKH=" + idKH + ", idNV=" + idNV + ", NgayTao=" + NgayTao + ", ngayThanhToan=" + ngayThanhToan + ", tongTienSauGiam=" + tongTienSauGiam + ", idCTDG=" + idCTDG + ", tongTien=" + tongTien + ", idHTTT=" + idHTTT + ", tenKH=" + tenKH + ", sdtKH=" + sdtKH + ", diaChiKH=" + diaChiKH + ", Delete=" + Delete + ", createAt=" + createAt + ", createBy=" + createBy + ", updateAt=" + updateAt + ", updateBy=" + updateBy + ", trangthai=" + trangthai + '}';
     }
+
 
 }
