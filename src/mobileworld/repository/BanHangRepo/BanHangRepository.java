@@ -160,22 +160,10 @@ WITH DSP_Count AS (
                 || String.valueOf(sp.getSoLuong()).toLowerCase().contains(searchTerm);
     }
 
-    public List<ChiTietSanPhamViewModel> LocSP(String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
+    public List<ChiTietSanPhamViewModel> LocSP(String Nsx, String Pin, String ManHinh, String Cpu) {
         List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
 
-        String sql = "WITH DSP_Count AS ("
-                + "SELECT "
-                + "    IDDongSP, "
-                + "    COUNT(*) AS SoLuongDSP "
-                + "FROM "
-                + "    dbo.ChiTietSP "
-                + "WHERE "
-                + "    Deleted = 1 "
-                + "GROUP BY "
-                + "    IDDongSP "
-                + "), "
-                + "CTE_RN AS ("
-                + "SELECT "
+        String sql = "SELECT "
                 + "    CTS.IDDongSP, "
                 + "    CTS.ID, "
                 + "    DS.TenDSP, "
@@ -183,13 +171,10 @@ WITH DSP_Count AS (
                 + "    ManHinh.LoaiManHinh, "
                 + "    CPU.CPU, "
                 + "    Pin.DungLuongPin, "
-                + "    SUM(CTS.GiaBan) OVER(PARTITION BY CTS.IDDongSP) AS TongGiaBan, "
-                + "    DC.SoLuongDSP, "
-                + "    ROW_NUMBER() OVER(PARTITION BY CTS.IDDongSP ORDER BY CTS.GiaBan " + (sapXepGiaTangDan ? "ASC" : "DESC") + ") AS RN "
+                + "    CTS.GiaBan, "
+                + "    (SELECT COUNT(*) FROM dbo.ChiTietSP WHERE IDDongSP = CTS.IDDongSP AND Deleted = 1) AS SoLuongDSP "
                 + "FROM "
                 + "    dbo.ChiTietSP AS CTS "
-                + "INNER JOIN "
-                + "    DSP_Count AS DC ON CTS.IDDongSP = DC.IDDongSP "
                 + "INNER JOIN "
                 + "    dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID "
                 + "INNER JOIN "
@@ -201,35 +186,13 @@ WITH DSP_Count AS (
                 + "INNER JOIN "
                 + "    dbo.CPU ON CTS.IDCPU = CPU.ID "
                 + "WHERE "
-                + "CTS.Deleted = 1 "
-                + "AND ( "
-                + "NSX.TenNsx LIKE ? OR "
-                + "Pin.DungLuongPin LIKE ? OR "
-                + "ManHinh.LoaiManHinh LIKE ? OR "
-                + "CPU.CPU LIKE ? "
-                + ") "
-                + "), "
-                + "CTE_Final AS ("
-                + "SELECT "
-                + "    IDDongSP, "
-                + "    ID, "
-                + "    TenDSP, "
-                + "    TenNsx, "
-                + "    LoaiManHinh, "
-                + "    CPU, "
-                + "    DungLuongPin, "
-                + "    (SELECT SUM(GiaBan) FROM dbo.ChiTietSP WHERE IDDongSP = CTE_RN.IDDongSP) AS TongGiaBan, "
-                + "    SoLuongDSP, "
-                + "    ROW_NUMBER() OVER(PARTITION BY IDDongSP ORDER BY ID DESC) AS RN "
-                + "FROM "
-                + "    CTE_RN "
-                + "WHERE "
-                + "    RN = 1 "
-                + ") "
-                + "SELECT "
-                + "    * "
-                + "FROM "
-                + "    CTE_Final ";
+                + "    CTS.Deleted = 1 "
+                + "    AND ( "
+                + "        NSX.TenNsx LIKE ? OR "
+                + "        Pin.DungLuongPin LIKE ? OR "
+                + "        ManHinh.LoaiManHinh LIKE ? OR "
+                + "        CPU.CPU LIKE ? "
+                + "    )";
 
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, Nsx);
@@ -246,7 +209,7 @@ WITH DSP_Count AS (
                 spvm.setLoaiManHinh(rs.getString("LoaiManHinh"));
                 spvm.setCpu(rs.getString("CPU"));
                 spvm.setDungLuongPin(rs.getString("DungLuongPin"));
-                spvm.setGiaBan(rs.getBigDecimal("TongGiaBan"));
+                spvm.setGiaBan(rs.getBigDecimal("GiaBan"));
                 spvm.setSoLuong(rs.getInt("SoLuongDSP"));
                 listSP.add(spvm);
             }
@@ -316,7 +279,74 @@ WITH DSP_Count AS (
                 spvm.setIdDsp(rs.getString(11));
                 listSP.add(spvm);
             }
-            updateDeletedStatus(imel);
+            updateSelectSP(imel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listSP;
+    }
+
+    public List<ChiTietSanPhamViewModel> deleteGioHang(String imel) {
+        List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
+
+        String sql = """
+                     SELECT
+                         Imel.Imel,
+                         DS.TenDSP,
+                         Pin.DungLuongPin,
+                         ManHinh.LoaiManHinh,
+                         CPU.CPU,
+                         Ram.DungLuongRam,
+                         BoNho.DungLuongBoNho,
+                         MauSac.TenMau,
+                         CTS.GiaBan,
+                         CTS.ID,
+                         CTS.IDDongSP
+                     FROM
+                         dbo.ChiTietSP AS CTS
+                     INNER JOIN 
+                         dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID
+                     INNER JOIN 
+                         dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
+                     INNER JOIN 
+                         dbo.Pin ON CTS.IDPin = Pin.ID
+                     INNER JOIN 
+                         dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
+                     INNER JOIN 
+                         dbo.CPU ON CTS.IDCPU = CPU.ID
+                     INNER JOIN 
+                         dbo.Ram ON CTS.IDRam = Ram.ID
+                     INNER JOIN 
+                         dbo.BoNho ON CTS.IDBoNho = BoNho.ID
+                     INNER JOIN 
+                         dbo.MauSac ON CTS.IDMauSac = MauSac.ID
+                     INNER JOIN 
+                         dbo.Imel ON CTS.IDImel = Imel.ID
+                     WHERE 
+                         CTS.Deleted = 0 AND Imel.Imel = ?
+                     ORDER BY 
+                         ID DESC;
+                     """;
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, imel);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
+                spvm.setImel(rs.getString(1));
+                spvm.setTenDsp(rs.getString(2));
+                spvm.setDungLuongPin(rs.getString(3));
+                spvm.setLoaiManHinh(rs.getString(4));
+                spvm.setCpu(rs.getString(5));
+                spvm.setDungLuongRam(rs.getString(6));
+                spvm.setDungLuongBoNho(rs.getString(7));
+                spvm.setTenMau(rs.getString(8));
+                spvm.setGiaBan(rs.getBigDecimal(9));
+                spvm.setId(rs.getString(10));
+                spvm.setIdDsp(rs.getString(11));
+                listSP.add(spvm);
+            }
+            updateDeleteSP(imel);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -358,7 +388,42 @@ WITH DSP_Count AS (
         return listSP;
     }
 
-    public void updateDeletedStatus(String imel) {
+    public List<ChiTietSanPhamViewModel> deleteIdDSP(String idDsp) {
+        List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
+
+        String sql = """
+                 SELECT
+                             CTS.IDDongSP,
+                             DS.TenDsp,
+                             Imel.Imel
+                         FROM
+                             dbo.ChiTietSP AS CTS
+                             INNER JOIN dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
+                             INNER JOIN dbo.Imel ON CTS.IDImel = Imel.ID
+                         WHERE
+                             CTS.Deleted = 0 AND DS.ID = (SELECT ID FROM DongSP WHERE TenDsp = ?)
+                         ORDER BY
+                             CTS.ID DESC;
+                 """;
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, idDsp);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
+                spvm.setIdDsp(rs.getString(1));
+                spvm.setTenDsp(rs.getString(2));
+                spvm.setImel(rs.getString(3));
+                listSP.add(spvm);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listSP;
+    }
+
+    public void updateSelectSP(String imel) {
         String updateSql = "UPDATE dbo.ChiTietSP SET Deleted = 0 WHERE IDImel = (SELECT ID FROM dbo.Imel WHERE Imel = ?)";
 
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(updateSql)) {
@@ -367,6 +432,34 @@ WITH DSP_Count AS (
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void updateDeleteSP(String imel) {
+        String updateSql = "UPDATE dbo.ChiTietSP SET Deleted = 1 WHERE IDImel = (SELECT ID FROM dbo.Imel WHERE Imel = ?)";
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(updateSql)) {
+            ps.setString(1, imel);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean removeGioHang(String Ten) {
+        int check = 0;
+        String sql = "UPDATE dbo.ChiTietSP "
+                + "SET Deleted = 1 "
+                + "FROM dbo.ChiTietSP "
+                + "INNER JOIN dbo.DongSP ON ChiTietSP.IDDongSP = DongSP.ID "
+                + "WHERE DongSP.TenDsp = ?";
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, Ten);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return check > 0;
     }
 
 }

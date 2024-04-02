@@ -1,6 +1,8 @@
 package mobileworld.dialog;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 import mobileworld.form.ViewBanHang;
 import mobileworld.service.BanHangService.BanHangService;
@@ -125,18 +127,24 @@ public class SelectProductSP extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnXacNhanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXacNhanActionPerformed
-        int totalQuantity = 0; // Biến để lưu tổng số lượng
+        Map<String, Integer> selectedQuantities = new HashMap<>();
 
         for (int i = 0; i < tblSelectDsp.getRowCount(); i++) {
             boolean isSelected = (boolean) tblSelectDsp.getValueAt(i, 0);
             if (isSelected) {
-                totalQuantity++; // Tăng số lượng lên 1 mỗi khi có sản phẩm được chọn
                 String imel = (String) tblSelectDsp.getValueAt(i, 3);
-                viewBanHang.updateGioHangWithImel(imel, totalQuantity);
+                int currentQuantity = selectedQuantities.getOrDefault(imel, 0); // Lấy số lượng đã chọn trước đó, nếu không có thì lấy 0
+                selectedQuantities.put(imel, currentQuantity + 1); // Tăng số lượng lên 1 và lưu lại vào bản đồ
             }
         }
 
-        // Không cần sử dụng totalQuantity cho các mục đích khác nếu không cần thiết
+        // Cập nhật số lượng trong giỏ hàng dựa trên bản đồ selectedQuantities
+        for (Map.Entry<String, Integer> entry : selectedQuantities.entrySet()) {
+            String imel = entry.getKey();
+            int quantity = entry.getValue();
+            viewBanHang.updateGioHangWithImel(imel, quantity);
+        }
+
         setVisible(false);
         dispose();
     }//GEN-LAST:event_btnXacNhanActionPerformed

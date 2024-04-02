@@ -12,6 +12,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import mobileworld.dialog.DeselectProductSP;
 import mobileworld.dialog.SelectProductSP;
 import mobileworld.model.CPU;
 import mobileworld.model.ManHinh;
@@ -68,7 +69,6 @@ public class ViewBanHang extends javax.swing.JPanel {
         setDataCboCpu(cpuService.getAll());
         setDataCboNsx(NsxService.getAll());
         setDataCboPhieuGG(pggService.getAll());
-        setDataCboGia();
         setDataCboHTTT();
 
         tblSP.addMouseListener(new MouseAdapter() {
@@ -80,6 +80,18 @@ public class ViewBanHang extends javax.swing.JPanel {
 
                     SelectProductSP productImel = new SelectProductSP(idDsp, ViewBanHang.this);
                     productImel.setVisible(true);
+                }
+            }
+        });
+
+        tblGioHang.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                int index = tblGioHang.getSelectedRow();
+                if (index >= 0 && evt.getClickCount() == 2) {
+                    String idDsp = (String) tblGioHang.getValueAt(index, 1);
+                    DeselectProductSP deselectProductSP = new DeselectProductSP(idDsp, ViewBanHang.this);
+                    deselectProductSP.setVisible(true);
                 }
             }
         });
@@ -137,6 +149,21 @@ public class ViewBanHang extends javax.swing.JPanel {
         cboHTT.setSelectedItem(null);
     }
 
+    private BigDecimal calculateTotalAmountFromGioHang() {
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        for (int i = 0; i < tblGioHang.getRowCount(); i++) {
+            Object amountObject = tblGioHang.getValueAt(i, 10);
+            if (amountObject != null) {
+                String amountString = amountObject.toString();
+                if (!amountString.isEmpty()) {
+                    BigDecimal amount = new BigDecimal(amountString.replace(",", ""));
+                    totalAmount = totalAmount.add(amount);
+                }
+            }
+        }
+        return totalAmount;
+    }
+
     private void setTxtFieldsFromSelectedHoaDon(HoaDonViewModel selectedHoaDon) {
         Date createAt = selectedHoaDon.getCreateAt();
         String createBy = selectedHoaDon.getCreateBy();
@@ -151,6 +178,10 @@ public class ViewBanHang extends javax.swing.JPanel {
         txtMaNV.setText(createBy);
         txtMaHD.setText(maHD);
         txtSetTenKH.setText(tenKH);
+        // Tính tổng số tiền từ bảng tblGioHang
+        BigDecimal totalAmount = calculateTotalAmountFromGioHang();
+        // Hiển thị tổng số tiền tính được vào txtTongTien
+        txtTongTien.setText(decimalFormat.format(totalAmount));
     }
 
     private void showDataTableHoaDon(List<HoaDonViewModel> listHD) {
@@ -167,6 +198,13 @@ public class ViewBanHang extends javax.swing.JPanel {
             tblModelHD.addRow(new Object[]{
                 stt, hdvm.getIdHD(), hdvm.getCreateAt(), hdvm.getCreateBy(), hdvm.getTongSP(), trangThai
             });
+        }
+
+        // Sau khi cập nhật dữ liệu cho bảng tblHoaDon, cập nhật lại tổng tiền
+        if (listHD.isEmpty()) {
+            txtTongTien.setText(decimalFormat.format(BigDecimal.ZERO));
+        } else {
+            setTxtFieldsFromSelectedHoaDon(listHD.get(0)); // Chọn mặc định hóa đơn đầu tiên
         }
     }
 
@@ -186,43 +224,77 @@ public class ViewBanHang extends javax.swing.JPanel {
         List<ChiTietSanPhamViewModel> gioHang = bhService.getGioHang(imel);
         showDataTableGioHang(gioHang, totalQuantity);
         showDataTableSP(bhService.getSP());
+
+        // Sau khi cập nhật dữ liệu cho bảng tblGioHang, cập nhật lại tổng tiền
+        BigDecimal totalAmount = calculateTotalAmountFromGioHang();
+        txtTongTien.setText(decimalFormat.format(totalAmount));
+    }
+
+    public void deleteGioHangWithImel(String imel, int totalQuantity) {
+        List<ChiTietSanPhamViewModel> gioHang = bhService.deleteGioHang(imel);
+        showDataDeleteTableGioHang(gioHang, totalQuantity);
+        showDataTableSP(bhService.getSP());
+
+        // Sau khi cập nhật dữ liệu cho bảng tblGioHang, cập nhật lại tổng tiền
+        BigDecimal totalAmount = calculateTotalAmountFromGioHang();
+        txtTongTien.setText(decimalFormat.format(totalAmount));
     }
 
     private void showDataTableGioHang(List<ChiTietSanPhamViewModel> listSP, int totalQuantity) {
-        int stt = 0;
         for (ChiTietSanPhamViewModel sp : listSP) {
             boolean existed = false;
             for (ChiTietSanPhamViewModel gioHangSP : gioHangList) {
                 if (gioHangSP.getTenDsp().equals(sp.getTenDsp())) {
                     // Sản phẩm đã tồn tại trong giỏ hàng, chỉ cập nhật số lượng
-                    gioHangSP.setSoLuong(gioHangSP.getSoLuong() + totalQuantity);
+                    gioHangSP.setSoLuong(gioHangSP.getSoLuong() + 1); // Chỉ cộng thêm 1 vào số lượng
                     existed = true;
                     break;
                 }
             }
-            // Nếu sản phẩm chưa tồn tại trong giỏ hàng, thêm mới vào giỏ hàng
+            // Nếu sản phẩm chưa tồn tại trong giỏ hàng, thêm mới vào giỏ hàng với số lượng là 1
             if (!existed) {
+                sp.setSoLuong(1);
                 gioHangList.add(sp);
             }
         }
+        // Cập nhật dữ liệu trên bảng
+        updateDataTableGioHang();
+    }
 
+    private void showDataDeleteTableGioHang(List<ChiTietSanPhamViewModel> listSP, int totalQuantity) {
+        for (ChiTietSanPhamViewModel sp : listSP) {
+            boolean existed = false;
+            for (ChiTietSanPhamViewModel gioHangSP : gioHangList) {
+                if (gioHangSP.getTenDsp().equals(sp.getTenDsp())) {
+                    // Sản phẩm đã tồn tại trong giỏ hàng, giảm số lượng đi 1
+                    gioHangSP.setSoLuong(gioHangSP.getSoLuong() - 1); // Giảm đi 1 số lượng
+                    if (gioHangSP.getSoLuong() == 0) { // Nếu số lượng bằng 0, xóa sản phẩm khỏi giỏ hàng
+                        gioHangList.remove(gioHangSP);
+                    }
+                    existed = true;
+                    break;
+                }
+            }
+            // Nếu sản phẩm không tồn tại trong giỏ hàng, không cần thực hiện gì cả
+        }
+        // Cập nhật dữ liệu trên bảng
+        updateDataTableGioHang();
+    }
+
+    private void updateDataTableGioHang() {
+        int stt = 0;
         tblModelGH.setRowCount(0);
         for (ChiTietSanPhamViewModel sp : gioHangList) {
             stt++;
             String giaBan = decimalFormat.format(sp.getGiaBan());
-            BigDecimal thanhTienBigDecimal = BigDecimal.valueOf(totalQuantity).multiply(sp.getGiaBan());
+            BigDecimal thanhTienBigDecimal = BigDecimal.valueOf(sp.getSoLuong()).multiply(sp.getGiaBan());
             String thanhTienFormatted = decimalFormat.format(thanhTienBigDecimal);
+
             tblModelGH.addRow(new Object[]{
                 stt, sp.getTenDsp(), sp.getLoaiManHinh(), sp.getCpu(), sp.getDungLuongRam(), sp.getDungLuongBoNho(),
-                sp.getDungLuongPin(), sp.getTenMau(), totalQuantity, giaBan, thanhTienFormatted
+                sp.getDungLuongPin(), sp.getTenMau(), sp.getSoLuong(), giaBan, thanhTienFormatted
             });
         }
-    }
-
-    private void setDataCboGia() {
-        cboGia.addItem("Giá Tăng Dần");
-        cboGia.addItem("Giá Giảm Dần");
-        cboGia.setSelectedItem(null);
     }
 
     private void setDataCboPin(List<Pin> setPin) {
@@ -267,9 +339,7 @@ public class ViewBanHang extends javax.swing.JPanel {
         String manHinh = (String) cboManHinh.getSelectedItem();
         String cpu = (String) cboCPU.getSelectedItem();
 
-        boolean sapXepGiaTangDan = "Giá Tăng Dần".equals(cboGia.getSelectedItem());
-
-        BoLocCtsp = bhService.LocSP(nsx, pin, manHinh, cpu, sapXepGiaTangDan);
+        BoLocCtsp = bhService.LocSP(nsx, pin, manHinh, cpu);
         showDataTableSP(BoLocCtsp);
     }
 
@@ -295,7 +365,6 @@ public class ViewBanHang extends javax.swing.JPanel {
         cboCPU = new mobileworld.swing.Combobox();
         cboPin = new mobileworld.swing.Combobox();
         cboNSX = new mobileworld.swing.Combobox();
-        cboGia = new mobileworld.swing.Combobox();
         jScrollPane5 = new javax.swing.JScrollPane();
         tblSP = new mobileworld.swing.Table();
         jPanel5 = new javax.swing.JPanel();
@@ -416,6 +485,11 @@ public class ViewBanHang extends javax.swing.JPanel {
         buttonCustom7.setForeground(new java.awt.Color(255, 255, 255));
         buttonCustom7.setText("Xóa");
         buttonCustom7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        buttonCustom7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCustom7ActionPerformed(evt);
+            }
+        });
 
         jScrollPane4.setBorder(null);
 
@@ -501,14 +575,6 @@ public class ViewBanHang extends javax.swing.JPanel {
             }
         });
 
-        cboGia.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        cboGia.setLabeText("Giá");
-        cboGia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cboGiaActionPerformed(evt);
-            }
-        });
-
         jScrollPane5.setBorder(null);
 
         tblSP.setModel(new javax.swing.table.DefaultTableModel(
@@ -537,16 +603,14 @@ public class ViewBanHang extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(txtTimKiemSP, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42)
+                .addGap(120, 120, 120)
                 .addComponent(cboNSX, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(cboManHinh, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(cboCPU, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(cboPin, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                .addComponent(cboGia, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5))
             .addComponent(jScrollPane5)
         );
@@ -556,7 +620,6 @@ public class ViewBanHang extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtTimKiemSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cboPin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cboGia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cboCPU, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cboManHinh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cboNSX, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -907,10 +970,6 @@ public class ViewBanHang extends javax.swing.JPanel {
         filterCTSP();
     }//GEN-LAST:event_cboPinActionPerformed
 
-    private void cboGiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboGiaActionPerformed
-        filterCTSP();
-    }//GEN-LAST:event_cboGiaActionPerformed
-
     private void txtTimKiemSPKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemSPKeyReleased
         if (txtTimKiemSP.getText().trim().equals("")) {
             showDataTableSP(bhService.getSP());
@@ -922,6 +981,29 @@ public class ViewBanHang extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtGetTenKHActionPerformed
 
+    private void showDataDeleteTableGioHang(String TenDsp) {
+        List<ChiTietSanPhamViewModel> tempList = new ArrayList<>();
+
+        for (ChiTietSanPhamViewModel gioHangSP : gioHangList) {
+            if (!gioHangSP.getTenDsp().equals(TenDsp)) {
+                tempList.add(gioHangSP);
+            }
+        }
+
+        gioHangList = tempList;
+        updateDataTableGioHang();
+    }
+    private void buttonCustom7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom7ActionPerformed
+        int index = tblGioHang.getSelectedRow();
+        if (index != -1) {
+            String TenDsp = (String) tblGioHang.getValueAt(index, 1);
+            bhService.removeGioHang(TenDsp);
+            showDataDeleteTableGioHang(TenDsp);
+            showDataTableSP(bhService.getSP());
+            txtTongTien.setText("0");
+        }
+    }//GEN-LAST:event_buttonCustom7ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private mobileworld.swing.ButtonCustom buttonCustom1;
@@ -932,7 +1014,6 @@ public class ViewBanHang extends javax.swing.JPanel {
     private mobileworld.swing.ButtonCustom buttonCustom7;
     private mobileworld.swing.ButtonCustom buttonCustom8;
     private mobileworld.swing.Combobox cboCPU;
-    private mobileworld.swing.Combobox cboGia;
     private javax.swing.JComboBox<String> cboHTT;
     private mobileworld.swing.Combobox cboManHinh;
     private mobileworld.swing.Combobox cboNSX;

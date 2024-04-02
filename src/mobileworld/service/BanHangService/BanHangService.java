@@ -30,8 +30,8 @@ public class BanHangService {
         return null;
     }
 
-    public List<ChiTietSanPhamViewModel> LocSP(String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
-        return repo.LocSP(Nsx, Pin, ManHinh, Cpu, sapXepGiaTangDan);
+    public List<ChiTietSanPhamViewModel> LocSP(String Nsx, String Pin, String ManHinh, String Cpu) {
+        return repo.LocSP(Nsx, Pin, ManHinh, Cpu);
     }
 
     public List<ChiTietSanPhamViewModel> search(String keyword) {
@@ -42,8 +42,20 @@ public class BanHangService {
         return repo.getGioHang(imel);
     }
 
+    public List<ChiTietSanPhamViewModel> deleteGioHang(String imel) {
+        return repo.deleteGioHang(imel);
+    }
+
     public List<ChiTietSanPhamViewModel> selectIdDSP(String idDsp) {
         return repo.selectIdDSP(idDsp);
+    }
+
+    public List<ChiTietSanPhamViewModel> deleteIdDSP(String idDsp) {
+        return repo.deleteIdDSP(idDsp);
+    }
+
+    public boolean removeGioHang(String Ten) {
+        return repo.removeGioHang(Ten);
     }
 
 }

@@ -284,6 +284,9 @@
               <Font name="Segoe UI" size="12" style="1"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCustom7ActionPerformed"/>
+          </Events>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane4">
           <Properties>
@@ -401,16 +404,14 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="txtTimKiemSP" min="-2" pref="179" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="120" max="-2" attributes="0"/>
                   <Component id="cboNSX" min="-2" pref="100" max="-2" attributes="0"/>
-                  <EmptySpace pref="17" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="32767" attributes="0"/>
                   <Component id="cboManHinh" min="-2" pref="100" max="-2" attributes="0"/>
-                  <EmptySpace pref="24" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="32767" attributes="0"/>
                   <Component id="cboCPU" min="-2" pref="100" max="-2" attributes="0"/>
-                  <EmptySpace pref="24" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="32767" attributes="0"/>
                   <Component id="cboPin" min="-2" pref="100" max="-2" attributes="0"/>
-                  <EmptySpace pref="17" max="32767" attributes="0"/>
-                  <Component id="cboGia" min="-2" pref="100" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
               </Group>
               <Component id="jScrollPane5" alignment="0" max="32767" attributes="0"/>
@@ -422,7 +423,6 @@
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="txtTimKiemSP" max="32767" attributes="0"/>
                       <Component id="cboPin" alignment="0" max="32767" attributes="0"/>
-                      <Component id="cboGia" alignment="0" max="32767" attributes="0"/>
                       <Component id="cboCPU" alignment="0" max="32767" attributes="0"/>
                       <Component id="cboManHinh" alignment="0" max="32767" attributes="0"/>
                       <Component id="cboNSX" alignment="0" max="32767" attributes="0"/>
@@ -494,17 +494,6 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboNSXActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="mobileworld.swing.Combobox" name="cboGia">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Segoe UI" size="12" style="1"/>
-            </Property>
-            <Property name="labeText" type="java.lang.String" value="Gi&#xe1;"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboGiaActionPerformed"/>
           </Events>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane5">
