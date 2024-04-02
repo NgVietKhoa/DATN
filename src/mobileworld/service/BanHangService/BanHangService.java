@@ -1,6 +1,7 @@
 package mobileworld.service.BanHangService;
 
 import java.util.List;
+import mobileworld.model.HoaDon;
 import mobileworld.repository.BanHangRepo.BanHangRepository;
 import mobileworld.viewModel.BanHangViewModel.HoaDonViewModel;
 import mobileworld.viewModel.ChiTietSanPhamViewModel;
@@ -30,6 +31,10 @@ public class BanHangService {
         return null;
     }
 
+    public boolean addNewBlankInvoice(HoaDon hd, String idNV) {
+        return repo.addNewBlankInvoice(hd, idNV);
+    }
+
     public List<ChiTietSanPhamViewModel> LocSP(String Nsx, String Pin, String ManHinh, String Cpu) {
         return repo.LocSP(Nsx, Pin, ManHinh, Cpu);
     }
@@ -57,5 +62,5 @@ public class BanHangService {
     public boolean removeGioHang(String Ten) {
         return repo.removeGioHang(Ten);
     }
-
+    
 }

@@ -15,7 +15,10 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import mobileworld.dialog.DeselectProductSP;
 import mobileworld.dialog.SelectProductSP;
+import mobileworld.dialog.ThongTinKhachHangDialog;
+import mobileworld.main.SessionStorage;
 import mobileworld.model.CPU;
+import mobileworld.model.HoaDon;
 import mobileworld.model.ManHinh;
 import mobileworld.model.NhaSanXuat;
 import mobileworld.model.PhieuGiamGia;
@@ -48,6 +51,7 @@ public class ViewBanHang extends javax.swing.JPanel {
     private final PhieuGiamGiaService pggService = new PhieuGiamGiaService();
     private DefaultComboBoxModel cbbPgg = new DefaultComboBoxModel();
     private List<ChiTietSanPhamViewModel> gioHangList = new ArrayList<>();
+    private List<HoaDonViewModel> listHDM = new ArrayList<>();
 
     public ViewBanHang() {
         initComponents();
@@ -222,6 +226,10 @@ public class ViewBanHang extends javax.swing.JPanel {
         }
     }
 
+    public void getTenKH(String Ten) {
+        txtGetTenKH.setText(Ten);
+    }
+
     public void updateGioHangWithImel(String imel, int totalQuantity) {
         List<ChiTietSanPhamViewModel> gioHang = bhService.getGioHang(imel);
         showDataTableGioHang(gioHang, totalQuantity);
@@ -345,6 +353,23 @@ public class ViewBanHang extends javax.swing.JPanel {
         showDataTableSP(BoLocCtsp);
     }
 
+//    public void show() {
+//
+////        int index = tblHienThi1.getSelectedRow();
+////        HoaDonModel hdm = list.get(index);
+////
+////        tableModel2 = (DefaultTableModel) tblHienThi2.getModel();
+////        list2 = srCT.getAll(hdm.getIdHD());
+////        showDataTable2(list2);
+////
+////        tableModel3 = (DefaultTableModel) tblHienThi3.getModel();
+////        listLS = srLSHD.getAll(hdm.getIdHD());
+////        showDataTable3(listLS);
+//        int index = tblHoaDon.getSelectedRow();
+//        HoaDonViewModel hdvm = listHDM.get(index);
+//        tblModelGH = (DefaultTableModel) tblGioHang.getModel();
+//        bhService.getGioHangClick(hdvm.getImel());
+//    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -420,6 +445,11 @@ public class ViewBanHang extends javax.swing.JPanel {
         buttonCustom4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-clear-24 (1).png"))); // NOI18N
 
         buttonCustom5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-add-receipt-24.png"))); // NOI18N
+        buttonCustom5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCustom5ActionPerformed(evt);
+            }
+        });
 
         combobox1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         combobox1.setLabeText("Trạng Thái");
@@ -442,6 +472,11 @@ public class ViewBanHang extends javax.swing.JPanel {
                 "STT", "Mã HĐ", "Ngày Tạo", "Người Tạo", "Tổng SP", "Trạng Thái"
             }
         ));
+        tblHoaDon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblHoaDonMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tblHoaDon);
         if (tblHoaDon.getColumnModel().getColumnCount() > 0) {
             tblHoaDon.getColumnModel().getColumn(0).setMinWidth(20);
@@ -673,6 +708,11 @@ public class ViewBanHang extends javax.swing.JPanel {
         buttonCustom1.setForeground(new java.awt.Color(255, 255, 255));
         buttonCustom1.setText("Chọn");
         buttonCustom1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        buttonCustom1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCustom1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -1185,6 +1225,45 @@ public class ViewBanHang extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_txtTienKhachCKKeyReleased
 
+    private void buttonCustom1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom1ActionPerformed
+        ThongTinKhachHangDialog thongTinKhachHangDialog = new ThongTinKhachHangDialog(this);
+        thongTinKhachHangDialog.setVisible(true);
+    }//GEN-LAST:event_buttonCustom1ActionPerformed
+
+    private void buttonCustom5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom5ActionPerformed
+        // TODO add your handling code here:
+        int checkAddHD = JOptionPane.showConfirmDialog(this, "Bạn có muốn thêm Hóa đơn không?", "Confirm", JOptionPane.YES_NO_CANCEL_OPTION);
+        if (checkAddHD == JOptionPane.YES_OPTION) {
+            HoaDon hd = new HoaDon();
+            String idNV = SessionStorage.getInstance().getUsername();
+            // Kiểm tra xem hóa đơn có tồn tại trong danh sách hay không
+            // Nếu không trùng, thực hiện thêm hóa đơn
+            boolean result = bhService.addNewBlankInvoice(hd, idNV);
+            if (result) {
+                // Xử lý thành công
+                listHDM = bhService.getHD();
+                showDataTableHoaDon(listHDM);
+                System.out.println("Thêm hóa đơn trống thành công!");
+                return;
+            } else {
+                // Xử lý thất bại
+                System.out.println("Thêm hóa đơn trống thất bại!");
+                return;
+            }
+        }
+        if (checkAddHD == JOptionPane.NO_OPTION) {
+            JOptionPane.showMessageDialog(this, "Bạn đã chọn NO");
+            return;
+        }
+    }//GEN-LAST:event_buttonCustom5ActionPerformed
+
+    private void tblHoaDonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonMouseClicked
+        // TODO add your handling code here:
+    
+    }//GEN-LAST:event_tblHoaDonMouseClicked
+    
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private mobileworld.swing.ButtonCustom buttonCustom1;
