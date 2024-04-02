@@ -82,4 +82,24 @@ public class ThongKeServiceImpl implements ThongKeService {
         return tk.timTheoThoiGianChart(ngayBD, ngayKT);
     }
 
+    @Override
+    public List<HoaDonTK> sanPhamBanChayTable() {
+        return tk.sanPhamBanChayTable();
+    }
+
+    @Override
+    public List<HoaDonTK> sanPhamBanChayPerYear(String Year) {
+        return tk.sanPhamBanChayPerYear(Year);
+    }
+
+    @Override
+    public List<HoaDonTK> sanPhamBanChayPerTime(LocalDate ngayBD, LocalDate ngayKT) {
+        return tk.sanPhamBanChayPerTime(ngayBD, ngayKT);
+    }
+
+    @Override
+    public List<HoaDonTK> sanPhamBanChayToday(LocalDate ngayHT) {
+        return tk.sanPhamBanChayToday(ngayHT);
+    }
+
 }

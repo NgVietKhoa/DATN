@@ -7,6 +7,7 @@ package mobileworld.service.ThongKeService;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -54,7 +55,7 @@ public class QuanLythongKeController {
                 int month = Integer.parseInt(parts[1]);
                 LocalDate localDate = LocalDate.of(year, month, 1);
                 String formattedDate = localDate.format(formatterOutput);
-               dataset.addValue(item.getThanhTien(), "Doanh thu", formattedDate);
+                dataset.addValue(item.getThanhTien(), "Doanh thu", formattedDate);
             }
 
             JFreeChart chart = ChartFactory.createBarChart("Thống kê doanh thu", "Thời gian", "Doanh thu", dataset);

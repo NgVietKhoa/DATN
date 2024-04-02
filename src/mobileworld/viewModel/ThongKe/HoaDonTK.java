@@ -16,7 +16,10 @@ public class HoaDonTK {
     private LocalDate ngayTao;
     private String  maHD;
     private String thongKeThang;    
-            
+    private String dongSP;
+    private int soLuong; 
+    
+    
     public HoaDonTK() {
     }
 
@@ -55,6 +58,22 @@ public class HoaDonTK {
 
     public void setThongKeThang(String thongKeThang) {
         this.thongKeThang = thongKeThang;
+    }
+
+    public String getDongSP() {
+        return dongSP;
+    }
+
+    public void setDongSP(String dongSP) {
+        this.dongSP = dongSP;
+    }
+
+    public int getSoLuong() {
+        return soLuong;
+    }
+
+    public void setSoLuong(int soLuong) {
+        this.soLuong = soLuong;
     }
 
   

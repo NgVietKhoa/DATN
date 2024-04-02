@@ -138,7 +138,6 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         return ds;
     }
 
-
     @Override
     public List<HoaDonTK> timTheoNamTable(String Year) {
         List<HoaDonTK> ds = new ArrayList<>();
@@ -146,7 +145,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         String sql = """
             	  SELECT HoaDon.ID, CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTienSauGiam FROM HoaDon 
                   WHERE YEAR(HoaDon.NgayTao) = ?
-                  ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC;
+                  ORDER BY CONVERT(DATE, HoaDon.NgayTao) DESC;
                           """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, Year);
@@ -172,7 +171,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
             SELECT HoaDon.ID, CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTienSauGiam
             FROM HoaDon 
             WHERE NgayTao >= ? AND NgayTao <= ?
-            ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC
+            ORDER BY CONVERT(DATE, HoaDon.NgayTao) DESC
                           """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, ngayBD);
@@ -197,7 +196,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
 
         String sql = """
            SELECT HoaDon.ID, CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTienSauGiam FROM HoaDon 
-           ORDER BY HoaDon.NgayTao ASC
+           ORDER BY HoaDon.NgayTao DESC
                           """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -249,7 +248,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
           SELECT HoaDon.ID,CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTienSauGiam AS TongTien
                        FROM HoaDon 
                        WHERE NgayTao = ?	
-                       ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC
+                       ORDER BY CONVERT(DATE, HoaDon.NgayTao) DESC
                           """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, ngayHT);
@@ -283,7 +282,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
             ps.setObject(2, ngayKT);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                HoaDonTK tk = new HoaDonTK();                
+                HoaDonTK tk = new HoaDonTK();
                 tk.setNgayTao(rs.getDate(1).toLocalDate());
                 tk.setThanhTien(rs.getFloat(2));
                 ds.add(tk);
@@ -293,6 +292,121 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         }
         return ds;
 
+    }
+
+    @Override
+    public List<HoaDonTK> sanPhamBanChayTable() {
+
+        List<HoaDonTK> ds = new ArrayList<>();
+        String sql = """
+            	SELECT top 10 dbo.DongSP.TenDsp, COUNT(dbo.DongSP.TenDsp) AS Expr1
+                FROM            dbo.HoaDonChiTiet INNER JOIN
+                                         dbo.ChiTietSP ON dbo.HoaDonChiTiet.IDCTSP = dbo.ChiTietSP.ID INNER JOIN
+                                         dbo.DongSP ON dbo.ChiTietSP.IDDongSP = dbo.DongSP.ID INNER JOIN
+                                         dbo.HoaDon ON dbo.HoaDonChiTiet.IDHoaDon = dbo.HoaDon.ID                
+                GROUP BY dbo.DongSP.TenDsp
+                ORDER BY COUNT(dbo.DongSP.TenDsp) DESC
+                          """;
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                HoaDonTK tk = new HoaDonTK();
+                tk.setDongSP(rs.getString(1));
+                tk.setSoLuong(rs.getInt(2));
+                ds.add(tk);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ds;
+
+    }
+
+    @Override
+    public List<HoaDonTK> sanPhamBanChayPerYear(String Year) {
+        List<HoaDonTK> ds = new ArrayList<>();
+        String sql = """
+            	SELECT TOP 10 dbo.DongSP.TenDsp, COUNT(dbo.DongSP.TenDsp) AS Expr1
+                                FROM            dbo.HoaDonChiTiet INNER JOIN
+                                                         dbo.ChiTietSP ON dbo.HoaDonChiTiet.IDCTSP = dbo.ChiTietSP.ID INNER JOIN
+                                                         dbo.DongSP ON dbo.ChiTietSP.IDDongSP = dbo.DongSP.ID INNER JOIN
+                                                         dbo.HoaDon ON dbo.HoaDonChiTiet.IDHoaDon = dbo.HoaDon.ID
+                                                         where YEAR(HoaDon.NgayTao) = ?
+                                GROUP BY dbo.DongSP.TenDsp
+                                ORDER BY COUNT(dbo.DongSP.TenDsp)  DESC
+                          """;
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, Year);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                HoaDonTK tk = new HoaDonTK();
+                tk.setDongSP(rs.getString(1));
+                tk.setSoLuong(rs.getInt(2));
+                ds.add(tk);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ds;
+
+    }
+
+    @Override
+    public List<HoaDonTK> sanPhamBanChayPerTime(LocalDate ngayBD, LocalDate ngayKT) {
+        List<HoaDonTK> ds = new ArrayList<>();
+        String sql = """
+                SELECT TOP 10 dbo.DongSP.TenDsp, COUNT(dbo.DongSP.TenDsp) AS Expr1
+                FROM            dbo.HoaDonChiTiet INNER JOIN
+                                         dbo.ChiTietSP ON dbo.HoaDonChiTiet.IDCTSP = dbo.ChiTietSP.ID INNER JOIN
+                                         dbo.DongSP ON dbo.ChiTietSP.IDDongSP = dbo.DongSP.ID INNER JOIN
+                                         dbo.HoaDon ON dbo.HoaDonChiTiet.IDHoaDon = dbo.HoaDon.ID
+                                         where HoaDon.NgayTao >= ?  AND HoaDon.NgayTao <= ?
+                GROUP BY dbo.DongSP.TenDsp
+                ORDER BY COUNT(dbo.DongSP.TenDsp)  DESC
+                          """;
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, ngayBD);
+            ps.setObject(2, ngayKT);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                HoaDonTK tk = new HoaDonTK();
+                tk.setDongSP(rs.getString(1));
+                tk.setSoLuong(rs.getInt(2));
+                ds.add(tk);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ds;
+
+    }
+
+    @Override
+    public List<HoaDonTK> sanPhamBanChayToday(LocalDate ngayHT) {
+        List<HoaDonTK> ds = new ArrayList<>();
+        String sql = """
+              SELECT TOP 10 dbo.DongSP.TenDsp, COUNT(dbo.DongSP.TenDsp) AS Expr1
+                FROM            dbo.HoaDonChiTiet INNER JOIN
+                                         dbo.ChiTietSP ON dbo.HoaDonChiTiet.IDCTSP = dbo.ChiTietSP.ID INNER JOIN
+                                         dbo.DongSP ON dbo.ChiTietSP.IDDongSP = dbo.DongSP.ID INNER JOIN
+                                         dbo.HoaDon ON dbo.HoaDonChiTiet.IDHoaDon = dbo.HoaDon.ID
+                						 where HoaDon.NgayTao = ?
+                GROUP BY dbo.DongSP.TenDsp
+                ORDER BY COUNT(dbo.DongSP.TenDsp)  DESC
+                          """;
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, ngayHT);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                HoaDonTK tk = new HoaDonTK();
+                tk.setDongSP(rs.getString(1));
+                tk.setSoLuong(rs.getInt(2));
+                ds.add(tk);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ds;
     }
 
 }

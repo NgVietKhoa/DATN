@@ -36,4 +36,13 @@ public interface ThongKeDAO {
     public List<HoaDonTK> thongKeTheoNgayChart(LocalDate ngayHT);
 
     public List<HoaDonTK> thongKeTheoNgayTable(LocalDate ngayHT);
+
+    public List<HoaDonTK> sanPhamBanChayTable();
+
+    public List<HoaDonTK> sanPhamBanChayPerYear(String Year);
+
+    public List<HoaDonTK> sanPhamBanChayPerTime(LocalDate ngayBD, LocalDate ngayKT);
+    
+    public List<HoaDonTK> sanPhamBanChayToday(LocalDate ngayHT);
+
 }

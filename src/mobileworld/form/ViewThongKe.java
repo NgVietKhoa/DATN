@@ -17,16 +17,20 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class ViewThongKe extends javax.swing.JPanel {
-
+    
     private ThongKeService sr = new ThongKeServiceImpl();
-
+    
     DefaultTableModel dtm = new DefaultTableModel();
     private List<HoaDonTK> ds = new ArrayList<>();
     private List<HoaDonTK> dsSearch = new ArrayList<>();
-
+    
     SimpleDateFormat spxHien = new SimpleDateFormat("dd-MM-yyyy");
     DecimalFormat decimalFormat = new DecimalFormat("###,###");
-
+    
+    DefaultTableModel dtmSP = new DefaultTableModel();
+    private List<HoaDonTK> dsSP = new ArrayList<>();
+    private List<HoaDonTK> dsSPSearch = new ArrayList<>();
+    
     public ViewThongKe() {
         initComponents();
         setOpaque(false);
@@ -39,12 +43,16 @@ public class ViewThongKe extends javax.swing.JPanel {
         ds = sr.hienBang();
         dtm = (DefaultTableModel) tblBang.getModel();
         filltable(ds);
+        
+        dsSP = sr.sanPhamBanChayTable();
+        dtmSP = (DefaultTableModel) tblBangSP.getModel();
+        filltableSP(dsSP);
     }
-
+    
     private void filltable(List<HoaDonTK> TKList) {
         dtm.setRowCount(0);
         int i = 0;
-
+        
         for (HoaDonTK tk : TKList) {
             i++;
             LocalDate localDate = tk.getNgayTao();
@@ -55,34 +63,43 @@ public class ViewThongKe extends javax.swing.JPanel {
             dtm.addRow(new Object[]{i, tk.getMaHD(), ngay, tongTien});
         }
     }
-
+    
+    private void filltableSP(List<HoaDonTK> TKList) {
+        dtmSP.setRowCount(0);
+        int i = 0;
+        for (HoaDonTK sp : TKList) {
+            i++;
+            dtmSP.addRow(new Object[]{i, sp.getDongSP(), sp.getSoLuong()});
+        }
+    }
+    
     private void hienDoanhThu() {
         float dt = sr.getDoanhThu();
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
         String tt = decimalFormat.format(dt);
-        textDoanhThu.setText(tt);
+        textDoanhThu.setText(tt+" VNÐ");
     }
-
+    
     private void soTienDaThu() {
         float dt = sr.soTienDaThuDuoc();
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
         String tt = decimalFormat.format(dt);
-        textSoHoaDonDTT.setText(tt);
+        textSoHoaDonDTT.setText(tt+" VNÐ");
     }
-
+    
     private void hienHoaDonChuaTT() {
         float dt = sr.hoaDonChuaThanhToan();
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
         String tt = decimalFormat.format(dt);
-        textHoaDonCTT.setText(tt);
+        textHoaDonCTT.setText(tt+" VNÐ");
     }
-
+    
     private void soHD() {
         int soHD = sr.soHD();
         String hienHDCTT = "" + soHD;
         textsoHD.setText(hienHDCTT);
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -117,6 +134,9 @@ public class ViewThongKe extends javax.swing.JPanel {
         jPanel9 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBang = new mobileworld.swing.Table();
+        jPanel11 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblBangSP = new mobileworld.swing.Table();
         btnTKToday = new mobileworld.swing.ButtonCustom();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -313,11 +333,11 @@ public class ViewThongKe extends javax.swing.JPanel {
                 .addComponent(cboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)), "Lọc Theo Khoảng Thời Gian", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
         jPanel7.setOpaque(false);
 
         cboNgayBatDau.setDateFormatString("dd-MM-yyyy");
+        cboNgayBatDau.setOpaque(false);
 
         jLabel2.setBackground(new java.awt.Color(12, 45, 87));
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -328,6 +348,7 @@ public class ViewThongKe extends javax.swing.JPanel {
         jLabel3.setText("Đến");
 
         cboNgayKT.setDateFormatString("dd-MM-yyyy");
+        cboNgayKT.setOpaque(false);
         cboNgayKT.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 cboNgayKTPropertyChange(evt);
@@ -380,7 +401,7 @@ public class ViewThongKe extends javax.swing.JPanel {
         );
         panelTKLayout.setVerticalGroup(
             panelTKLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 336, Short.MAX_VALUE)
+            .addGap(0, 342, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
@@ -425,6 +446,9 @@ public class ViewThongKe extends javax.swing.JPanel {
         });
         tblBang.setOpaque(false);
         jScrollPane1.setViewportView(tblBang);
+        if (tblBang.getColumnModel().getColumnCount() > 0) {
+            tblBang.getColumnModel().getColumn(1).setHeaderValue("Mã hóa đơn");
+        }
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -439,11 +463,57 @@ public class ViewThongKe extends javax.swing.JPanel {
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         materialTabbed1.addTab("Doanh thu theo thời gian", jPanel9);
+
+        jPanel11.setOpaque(false);
+
+        jScrollPane3.setBorder(null);
+        jScrollPane3.setOpaque(false);
+
+        tblBangSP.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "STT", "Tên sản phẩm ", "Số lượng đã bán "
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblBangSP.setOpaque(false);
+        jScrollPane3.setViewportView(tblBangSP);
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1169, Short.MAX_VALUE)
+                .addGap(3, 3, 3))
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        materialTabbed1.addTab("Sản phẩm bán chạy ", jPanel11);
 
         btnTKToday.setForeground(new java.awt.Color(255, 255, 255));
         btnTKToday.setText("Thống kê hôm nay");
@@ -492,9 +562,9 @@ public class ViewThongKe extends javax.swing.JPanel {
                         .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(btnRefesh2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnTKToday, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(materialTabbed1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(12, 12, 12)
+                .addComponent(materialTabbed1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33))
         );
 
         materialTabbed1.getAccessibleContext().setAccessibleName("Biểu đồ");
@@ -508,12 +578,16 @@ public class ViewThongKe extends javax.swing.JPanel {
             controller.setDateToChart(panelTK);
             ds = sr.hienBang();
             filltable(ds);
+            dsSP = sr.sanPhamBanChayTable();
+            filltableSP(dsSP);
         } else {
             sr.timTheoNam(Year);
             QuanLythongKeController controller = new QuanLythongKeController();
             controller.setDateToChartPerYear(panelTK, Year);
             dsSearch = sr.timTheoNamTable(Year);
             filltable(dsSearch);
+            dsSPSearch = sr.sanPhamBanChayPerYear(Year);
+            filltableSP(dsSPSearch);
         }
 
     }//GEN-LAST:event_cboYearActionPerformed
@@ -521,19 +595,21 @@ public class ViewThongKe extends javax.swing.JPanel {
     private void cboNgayKTPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_cboNgayKTPropertyChange
         // TODO add your handling code here:
         if (cboNgayBatDau != null && cboNgayKT != null && cboNgayBatDau.getDate() != null && cboNgayKT.getDate() != null) {
-
+            
             Date getNgayBD = cboNgayBatDau.getDate();
             LocalDateTime ngayBD = getNgayBD.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDate ngayBDLocalDate = ngayBD.toLocalDate();
             Date getNgayKT = cboNgayKT.getDate();
             LocalDateTime ngayKT = getNgayKT.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDate ngayKTLocalDate = ngayKT.toLocalDate();
-
+            
             sr.timTheoThoiGianTable(ngayBDLocalDate, ngayKTLocalDate);
             QuanLythongKeController controller = new QuanLythongKeController();
             controller.setDateToChartPerTime(panelTK, ngayBDLocalDate, ngayKTLocalDate);
             dsSearch = sr.timTheoThoiGianTable(ngayBDLocalDate, ngayKTLocalDate);
             filltable(dsSearch);
+            dsSPSearch = sr.sanPhamBanChayPerTime(ngayBDLocalDate, ngayKTLocalDate);
+            filltableSP(dsSPSearch);
         }
     }//GEN-LAST:event_cboNgayKTPropertyChange
 
@@ -552,6 +628,9 @@ public class ViewThongKe extends javax.swing.JPanel {
         ds = sr.hienBang();
         filltable(ds);
         materialTabbed1.setSelectedComponent(jPanel8);
+        dsSPSearch.clear();
+        dsSP = sr.sanPhamBanChayTable();
+        filltableSP(dsSP);
     }//GEN-LAST:event_btnRefesh2ActionPerformed
 
     private void btnTKTodayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTKTodayActionPerformed
@@ -561,6 +640,8 @@ public class ViewThongKe extends javax.swing.JPanel {
         controller.setDateToChartPerDay(panelTK, ngayHT);
         dsSearch = sr.thongKeTheoNgayTable(ngayHT);
         filltable(dsSearch);
+        dsSPSearch=sr.sanPhamBanChayToday(ngayHT);
+        filltableSP(dsSPSearch);
     }//GEN-LAST:event_btnTKTodayActionPerformed
 
 
@@ -580,6 +661,7 @@ public class ViewThongKe extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -589,9 +671,11 @@ public class ViewThongKe extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private mobileworld.swing.MaterialTabbed materialTabbed1;
     private javax.swing.JPanel panelTK;
     private mobileworld.swing.Table tblBang;
+    private mobileworld.swing.Table tblBangSP;
     private javax.swing.JLabel textDoanhThu;
     private javax.swing.JLabel textHoaDonCTT;
     private javax.swing.JLabel textSoHoaDonDTT;
