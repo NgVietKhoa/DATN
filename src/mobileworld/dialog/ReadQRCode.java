@@ -10,6 +10,9 @@ import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.swing.JFrame;
@@ -17,6 +20,8 @@ import javax.swing.SwingUtilities;
 import mobileworld.form.ThongTinChiTietSP;
 import mobileworld.service.ChiTietSanPhamService.ChiTietSPService;
 import mobileworld.viewModel.ChiTietSanPhamViewModel;
+import net.glxn.qrgen.QRCode;
+import net.glxn.qrgen.image.ImageType;
 
 public class ReadQRCode extends javax.swing.JFrame {
 
@@ -116,14 +121,38 @@ public class ReadQRCode extends javax.swing.JFrame {
                 BigDecimal gia = product.getGiaBan();
                 String imel = product.getImel();
                 String moTa = product.getGhiChu();
+                String QRImagePath = generateQRCode(imel);
 
-                ThongTinChiTietSP chiTietSP = new ThongTinChiTietSP(idChiTietSP, cameraSau, cameraTruoc, cpu, imel, manHinh, mauSac, nsx, pin, ram, rom, tenDsp, gia, moTa);
+                ThongTinChiTietSP chiTietSP = new ThongTinChiTietSP(idChiTietSP, cameraSau, cameraTruoc, cpu, imel, manHinh, mauSac, nsx, pin, ram, rom, tenDsp, gia, moTa, QRImagePath);
                 chiTietSP.setVisible(true);
             } else {
                 // Handle case where product is null
                 System.out.println("Product details not available.");
             }
         });
+    }
+
+    private String generateQRCode(String imel) {
+        try {
+            // Tạo mã QR từ Imel
+            ByteArrayOutputStream out = QRCode.from(imel)
+                    .to(ImageType.PNG).stream();
+
+            // Thay thế các ký tự không hợp lệ trong tên tệp
+            String f_name = imel.replaceAll("[^a-zA-Z0-9.-]", "_") + ".PNG"; // Thêm phần mở rộng tệp vào tên tệp
+            String Path_name = "D:\\mobileWorldCopy\\QR\\";
+
+            // Lưu mã QR thành tệp hình ảnh PNG
+            FileOutputStream fout = new FileOutputStream(new File(Path_name + f_name));
+            fout.write(out.toByteArray());
+            fout.flush();
+
+            // Trả về đường dẫn của tệp mã QR được tạo
+            return Path_name + f_name;
+        } catch (Exception e) {
+            e.printStackTrace(); // In ra lỗi nếu có
+            return null; // Trả về null nếu có lỗi xảy ra
+        }
     }
 
     public Result decodeQRCode(BufferedImage image) {

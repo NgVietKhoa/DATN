@@ -1,13 +1,11 @@
 package mobileworld.form;
 
-import java.awt.BorderLayout;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import mobileworld.dialog.CPUDialog;
 import mobileworld.dialog.CameraSauDialog;
@@ -18,15 +16,6 @@ import mobileworld.dialog.PinDialog;
 import mobileworld.dialog.RamDialog;
 import mobileworld.dialog.RomDialog;
 import mobileworld.dialog.SPDialog;
-import mobileworld.model.BoNho;
-import mobileworld.model.CPU;
-import mobileworld.model.DongSP;
-import mobileworld.model.ManHinh;
-import mobileworld.model.MauSac;
-import mobileworld.model.NhaSanXuat;
-import mobileworld.model.Pin;
-import mobileworld.model.Ram;
-import mobileworld.model.CameraSau;
 import mobileworld.event.DataChangeListener;
 import mobileworld.event.EventCPUDialog;
 import mobileworld.event.EventCameraSauDialog;
@@ -38,24 +27,33 @@ import mobileworld.event.EventRamDialog;
 import mobileworld.event.EventRomDialog;
 import mobileworld.event.EventSPDialog;
 import mobileworld.main.SessionStorage;
+import mobileworld.model.BoNho;
+import mobileworld.model.CPU;
+import mobileworld.model.CameraSau;
 import mobileworld.model.CameraTruoc;
 import mobileworld.model.ChiTietSP;
+import mobileworld.model.DongSP;
 import mobileworld.model.Imel;
+import mobileworld.model.ManHinh;
+import mobileworld.model.MauSac;
+import mobileworld.model.NhaSanXuat;
+import mobileworld.model.Pin;
+import mobileworld.model.Ram;
 import mobileworld.service.ChiTietSanPhamService.BoNhoService;
+import mobileworld.service.ChiTietSanPhamService.CameraSauService;
+import mobileworld.service.ChiTietSanPhamService.CameraTruocService;
+import mobileworld.service.ChiTietSanPhamService.ChiTietSPService;
 import mobileworld.service.ChiTietSanPhamService.CpuService;
 import mobileworld.service.ChiTietSanPhamService.DongSPService;
+import mobileworld.service.ChiTietSanPhamService.ImelService;
 import mobileworld.service.ChiTietSanPhamService.ManHinhService;
 import mobileworld.service.ChiTietSanPhamService.MauSacService;
 import mobileworld.service.ChiTietSanPhamService.NhaSanXuatService;
 import mobileworld.service.ChiTietSanPhamService.PinService;
 import mobileworld.service.ChiTietSanPhamService.RamService;
-import mobileworld.service.ChiTietSanPhamService.CameraSauService;
-import mobileworld.service.ChiTietSanPhamService.CameraTruocService;
-import mobileworld.service.ChiTietSanPhamService.ChiTietSPService;
-import mobileworld.service.ChiTietSanPhamService.ImelService;
 import mobileworld.viewModel.DongSPViewModel;
 
-public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListener,
+public class ThemChiTietSPDialog extends javax.swing.JDialog implements DataChangeListener,
         EventCPUDialog,
         EventManHinhDialog,
         EventMauSacDialog,
@@ -98,8 +96,11 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
     private final ImelService imelService = new ImelService();
     private final ChiTietSPService chiTietSPService = new ChiTietSPService();
 
-    public ThemChiTietSP() {
+    public ThemChiTietSPDialog(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
+        setTitle("Thêm Sản Phẩm Chi Tiết");
         //spdialog
         spDialog = new SPDialog();
         spDialog.changeListener.addDataChangeListener(this);
@@ -545,7 +546,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelAddThuocTinhSP = new javax.swing.JPanel();
+        jPanel12 = new javax.swing.JPanel();
         btnQuayLai = new mobileworld.swing.ButtonCustom();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -586,10 +587,10 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         jLabel1 = new javax.swing.JLabel();
         btnThem = new mobileworld.swing.ButtonCustom();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(1377, 695));
 
-        panelAddThuocTinhSP.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel12.setBackground(new java.awt.Color(255, 255, 255));
 
         btnQuayLai.setForeground(new java.awt.Color(255, 255, 255));
         btnQuayLai.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-back-24.png"))); // NOI18N
@@ -621,7 +622,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(cboTenDsp, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                .addComponent(cboTenDsp, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnTenDsp, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
@@ -653,14 +654,14 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(cboNsx, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                .addComponent(cboNsx, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnNsx, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(cboNsx, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+            .addComponent(cboNsx, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnNsx, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -685,7 +686,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(cboMauSac, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                .addComponent(cboMauSac, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnMauSac, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
@@ -717,7 +718,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(cboManHinh, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                .addComponent(cboManHinh, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnManHinh, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
@@ -749,7 +750,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(cboCPU, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                .addComponent(cboCPU, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCpu, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
@@ -781,14 +782,14 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(cboRam, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                .addComponent(cboRam, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRam, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(cboRam, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+            .addComponent(cboRam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnRam, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -813,7 +814,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addComponent(cboRom, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                .addComponent(cboRom, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRom, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
@@ -845,14 +846,14 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
-                .addComponent(cboPin, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                .addComponent(cboPin, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnPin, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(cboPin, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+            .addComponent(cboPin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnPin, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -877,7 +878,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         jPanel10Layout.setHorizontalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel10Layout.createSequentialGroup()
-                .addComponent(cboCameraTruoc, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                .addComponent(cboCameraTruoc, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCameraTruoc, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
@@ -909,13 +910,13 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
-                .addComponent(cboCameraSau, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                .addComponent(cboCameraSau, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCameraSau, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(cboCameraSau, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+            .addComponent(cboCameraSau, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnCameraSau, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -969,58 +970,55 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
             }
         });
 
-        javax.swing.GroupLayout panelAddThuocTinhSPLayout = new javax.swing.GroupLayout(panelAddThuocTinhSP);
-        panelAddThuocTinhSP.setLayout(panelAddThuocTinhSPLayout);
-        panelAddThuocTinhSPLayout.setHorizontalGroup(
-            panelAddThuocTinhSPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(panelAddThuocTinhSPLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 892, Short.MAX_VALUE)
+                            .addGroup(jPanel12Layout.createSequentialGroup()
+                                .addComponent(btnQuayLai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(0, 0, 0))
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelAddThuocTinhSPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panelAddThuocTinhSPLayout.createSequentialGroup()
-                        .addComponent(btnQuayLai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnQuayLai, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                    .addComponent(btnThem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        panelAddThuocTinhSPLayout.setVerticalGroup(
-            panelAddThuocTinhSPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAddThuocTinhSPLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 576, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelAddThuocTinhSPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnQuayLai, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
-        );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelAddThuocTinhSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelAddThuocTinhSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnQuayLaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuayLaiActionPerformed
         System.out.println("Button Quay lại được nhấn.");
-        ViewSanPham viewSanPham = new ViewSanPham();
-        JPanel paneSPCT = viewSanPham.getPanelSPCT();
-        JPanel viewThemThuocTinhSP = panelAddThuocTinhSP;
-        viewThemThuocTinhSP.removeAll();
-        viewThemThuocTinhSP.add(paneSPCT);
-        viewThemThuocTinhSP.setLayout(new BorderLayout());
-        viewThemThuocTinhSP.add(paneSPCT, BorderLayout.CENTER);
-        viewThemThuocTinhSP.revalidate();
-        viewThemThuocTinhSP.repaint();
+        setVisible(false);
+        dispose();
     }//GEN-LAST:event_btnQuayLaiActionPerformed
 
     private void btnTenDspActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTenDspActionPerformed
@@ -1059,19 +1057,6 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
         cameraTruocDialog.setVisible(true);
     }//GEN-LAST:event_btnCameraTruocActionPerformed
 
-    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-        if (check()) {
-            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn Thêm không", "Thông Báo", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                chiTietSPService.add(getFormData());
-                changeListener.notifyDataChangeListeners();
-                JOptionPane.showMessageDialog(this, "Thêm Thành Công!");
-                return;
-            }
-            JOptionPane.showMessageDialog(this, "Thêm Thất Bại!");
-        }
-    }//GEN-LAST:event_btnThemActionPerformed
-
     private void btnCameraSauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCameraSauActionPerformed
         cameraSauDialog.setVisible(true);
     }//GEN-LAST:event_btnCameraSauActionPerformed
@@ -1095,6 +1080,22 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
             }
         }
     }//GEN-LAST:event_txtGiaKeyReleased
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        if (check()) {
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn Thêm không", "Thông Báo", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                chiTietSPService.add(getFormData());
+                changeListener.notifyDataChangeListeners();
+                JOptionPane.showMessageDialog(this, "Thêm Thành Công!");
+                setVisible(false);
+                dispose();
+                return;
+            }
+            JOptionPane.showMessageDialog(this, "Thêm Thất Bại!");
+        }
+
+    }//GEN-LAST:event_btnThemActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1124,6 +1125,7 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -1134,7 +1136,6 @@ public class ThemChiTietSP extends javax.swing.JPanel implements DataChangeListe
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JPanel panelAddThuocTinhSP;
     private javax.swing.JTextArea txtAreaImel;
     private javax.swing.JTextArea txtAreaMoTa;
     private mobileworld.swing.TextField txtGia;

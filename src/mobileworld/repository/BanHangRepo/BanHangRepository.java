@@ -58,60 +58,60 @@ public class BanHangRepository {
         List<ChiTietSanPhamViewModel> listSp = new ArrayList<>();
 
         String sql = """
-                 WITH DSP_Count AS (
-                                         SELECT
-                                             IDDongSP,
-                                             COUNT(*) AS SoLuongDSP
-                                         FROM
-                                             dbo.ChiTietSP
-                                         WHERE 
-                                             Deleted = 1
-                                         GROUP BY
-                                             IDDongSP
-                                     ),
-                                     CTE_RN AS (
-                                         SELECT
-                                             CTS.ID,
-                                             DS.TenDsp,
-                                             NSX.TenNsx,
-                                             ManHinh.LoaiManHinh,
-                                             CPU.CPU,
-                                             Pin.DungLuongPin,
-                                             DC.SoLuongDSP,
-                                             SUM(CTS.GiaBan) OVER(PARTITION BY CTS.IDDongSP) AS TongGiaBan,
-                                             ROW_NUMBER() OVER(PARTITION BY CTS.IDDongSP ORDER BY CTS.ID DESC) AS RN
-                                         FROM
-                                             dbo.ChiTietSP AS CTS
-                                         INNER JOIN 
-                                             DSP_Count AS DC ON CTS.IDDongSP = DC.IDDongSP
-                                         INNER JOIN 
-                                             dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID
-                                         INNER JOIN 
-                                             dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
-                                         INNER JOIN 
-                                             dbo.Pin ON CTS.IDPin = Pin.ID
-                                         INNER JOIN 
-                                             dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
-                                         INNER JOIN 
-                                             dbo.CPU ON CTS.IDCPU = CPU.ID
-                                         WHERE 
-                                             CTS.Deleted = 1
-                                     )
-                                     SELECT 
-                 			 ID,
-                                         TenDsp,
-                                         TenNsx,
-                                         LoaiManHinh,
-                                         CPU,
-                                         DungLuongPin,
-                                         TongGiaBan,
-                                         SoLuongDSP
-                                     FROM 
-                                         CTE_RN
-                                     WHERE 
-                                         RN = 1
-                                     ORDER BY 
-                                         ID DESC;
+WITH DSP_Count AS (
+                     SELECT
+                         IDDongSP,
+                         COUNT(*) AS SoLuongDSP
+                     FROM
+                         dbo.ChiTietSP
+                     WHERE 
+                         Deleted = 1
+                     GROUP BY
+                         IDDongSP
+                 ),
+                 CTE_RN AS (
+                     SELECT
+                         CTS.ID,
+                         DS.TenDsp,
+                         NSX.TenNsx,
+                         ManHinh.LoaiManHinh,
+                         CPU.CPU,
+                         Pin.DungLuongPin,
+                         DC.SoLuongDSP,
+                         CTS.GiaBan,
+                         ROW_NUMBER() OVER(PARTITION BY CTS.IDDongSP ORDER BY CTS.ID DESC) AS RN
+                     FROM
+                         dbo.ChiTietSP AS CTS
+                     INNER JOIN 
+                         DSP_Count AS DC ON CTS.IDDongSP = DC.IDDongSP
+                     INNER JOIN 
+                         dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID
+                     INNER JOIN 
+                         dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
+                     INNER JOIN 
+                         dbo.Pin ON CTS.IDPin = Pin.ID
+                     INNER JOIN 
+                         dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
+                     INNER JOIN 
+                         dbo.CPU ON CTS.IDCPU = CPU.ID
+                     WHERE 
+                         CTS.Deleted = 1
+                 )
+                 SELECT 
+                     ID,
+                     TenDsp,
+                     TenNsx,
+                     LoaiManHinh,
+                     CPU,
+                     DungLuongPin,
+                     GiaBan,
+                     SoLuongDSP
+                 FROM 
+                     CTE_RN
+                 WHERE 
+                     RN = 1
+                 ORDER BY 
+                     ID DESC;
                  """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -260,84 +260,76 @@ public class BanHangRepository {
         List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
 
         String sql = """
-                     WITH DSP_Count AS (
-                                                  SELECT
-                                                      IDDongSP,
-                                                      COUNT(*) AS SoLuongDSP
-                                                  FROM
-                                                      dbo.ChiTietSP
-                                                  WHERE 
-                                                      Deleted = 1
-                                                  GROUP BY
-                                                      IDDongSP
-                                              ),
-                                              CTE_RN AS (
-                                                  SELECT
-                                                      Imel.Imel,
-                                                      DS.TenDSP,
-                                                      Pin.DungLuongPin,
-                                                      ManHinh.LoaiManHinh,
-                                                      CPU.CPU,
-                                                      Ram.DungLuongRam,
-                                                      BoNho.DungLuongBoNho,
-                                                      MauSac.TenMau,
-                                                      CameraTruoc.SoMP AS CameraTruoc,
-                                                      CameraSau.SoMP AS CameraSau,
-                                                      DC.SoLuongDSP,
-                                                      SUM(CTS.GiaBan) OVER(PARTITION BY CTS.IDDongSP) AS TongGiaBan,
-                                              		CTS.GiaBan,
-                                              		CTS.ID
-                                                  FROM
-                                                      dbo.ChiTietSP AS CTS
-                                                  INNER JOIN 
-                                                      DSP_Count AS DC ON CTS.IDDongSP = DC.IDDongSP
-                                                  INNER JOIN 
-                                                      dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID
-                                                  INNER JOIN 
-                                                      dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
-                                                  INNER JOIN 
-                                                      dbo.Pin ON CTS.IDPin = Pin.ID
-                                                  INNER JOIN 
-                                                      dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
-                                                  INNER JOIN 
-                                                      dbo.CPU ON CTS.IDCPU = CPU.ID
-                                                  INNER JOIN 
-                                                      dbo.Ram ON CTS.IDRam = Ram.ID
-                                                  INNER JOIN 
-                                                      dbo.BoNho ON CTS.IDBoNho = BoNho.ID
-                                                  INNER JOIN 
-                                                      dbo.MauSac ON CTS.IDMauSac = MauSac.ID
-                                                  INNER JOIN 
-                                                      dbo.CameraSau ON CTS.IDCamSau = CameraSau.ID
-                                                  INNER JOIN 
-                                                      dbo.CameraTruoc ON CTS.IDCamTruoc = CameraTruoc.ID
-                                                  INNER JOIN 
-                                                      dbo.Imel ON CTS.IDImel = Imel.ID
-                                                  WHERE 
-                                                      CTS.Deleted = 1 AND DS.TenDsp = ?
-                                              )
-                                              SELECT
-                                                  Imel,
-                                                  TenDsp,
-                                                  DungLuongPin,
-                                                  LoaiManHinh,
-                                                  CPU,
-                                                  DungLuongRam,
-                                                  DungLuongBoNho,
-                                                  TenMau,
-                                                  CameraTruoc,
-                                                  CameraSau,
-                                                  SoLuongDSP,
-                                                  GiaBan,
-                                                  ID    
-                                              FROM 
-                                                  CTE_RN
-                                              ORDER BY 
-                                                  ID DESC;
+                    WITH DSP_Count AS (
+                                 SELECT
+                                     IDDongSP,
+                                     COUNT(*) AS SoLuongDSP
+                                 FROM
+                                     dbo.ChiTietSP
+                                 WHERE 
+                                     Deleted = 1
+                                 GROUP BY
+                                     IDDongSP
+                             ),
+                             CTE_RN AS (
+                                 SELECT
+                                     Imel.Imel,
+                                     DS.TenDSP,
+                                     Pin.DungLuongPin,
+                                     ManHinh.LoaiManHinh,
+                                     CPU.CPU,
+                                     Ram.DungLuongRam,
+                                     BoNho.DungLuongBoNho,
+                                     MauSac.TenMau,
+                                     CTS.GiaBan,
+                                     CTS.ID,
+                                     ROW_NUMBER() OVER (PARTITION BY DS.TenDSP ORDER BY CTS.ID DESC) AS RN
+                                 FROM
+                                     dbo.ChiTietSP AS CTS
+                                 INNER JOIN 
+                                     DSP_Count AS DC ON CTS.IDDongSP = DC.IDDongSP
+                                 INNER JOIN 
+                                     dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID
+                                 INNER JOIN 
+                                     dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
+                                 INNER JOIN 
+                                     dbo.Pin ON CTS.IDPin = Pin.ID
+                                 INNER JOIN 
+                                     dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
+                                 INNER JOIN 
+                                     dbo.CPU ON CTS.IDCPU = CPU.ID
+                                 INNER JOIN 
+                                     dbo.Ram ON CTS.IDRam = Ram.ID
+                                 INNER JOIN 
+                                     dbo.BoNho ON CTS.IDBoNho = BoNho.ID
+                                 INNER JOIN 
+                                     dbo.MauSac ON CTS.IDMauSac = MauSac.ID
+                                 INNER JOIN 
+                                     dbo.Imel ON CTS.IDImel = Imel.ID
+                                 WHERE 
+                                     CTS.Deleted = 1 AND DS.ID = (SELECT ID FROM DongSP WHERE TenDsp = ?)
+                             )
+                             SELECT
+                                 Imel,
+                                 TenDsp,
+                                 DungLuongPin,
+                                 LoaiManHinh,
+                                 CPU,
+                                 DungLuongRam,
+                                 DungLuongBoNho,
+                                 TenMau,
+                                 GiaBan,
+                                 ID    
+                             FROM 
+                                 CTE_RN
+                             WHERE 
+                                 RN = 1
+                             ORDER BY 
+                                 ID DESC;
                      """;
 
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, idDsp);
+            ps.setObject(1, idDsp);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
@@ -349,11 +341,8 @@ public class BanHangRepository {
                 spvm.setDungLuongRam(rs.getString(6));
                 spvm.setDungLuongBoNho(rs.getString(7));
                 spvm.setTenMau(rs.getString(8));
-                spvm.setCameraTruoc(rs.getString(9));
-                spvm.setCameraSau(rs.getString(10));
-                spvm.setSoLuong(rs.getInt(11));
-                spvm.setGiaBan(rs.getBigDecimal(12));
-                spvm.setId(rs.getString(13));
+                spvm.setGiaBan(rs.getBigDecimal(9));
+                spvm.setId(rs.getString(10));
                 listSP.add(spvm);
             }
         } catch (Exception e) {
@@ -362,24 +351,26 @@ public class BanHangRepository {
         return listSP;
     }
 
-    public List<ChiTietSanPhamViewModel> selectImelSP() {
+    public List<ChiTietSanPhamViewModel> selectIdDSP(String idDsp) {
         List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
 
         String sql = """
-                     SELECT
-                         DS.TenDsp,
-                         Imel.Imel
-                     FROM
-                         dbo.ChiTietSP AS CTS
-                         INNER JOIN dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
-                         INNER JOIN dbo.Imel ON CTS.IDImel = Imel.ID
-                     WHERE
-                         CTS.Deleted = 1
-                     ORDER BY
-                         CTS.ID DESC;
-                     """;
+                 SELECT
+                             CTS.IDDongSP,
+                             DS.TenDsp,
+                             Imel.Imel
+                         FROM
+                             dbo.ChiTietSP AS CTS
+                             INNER JOIN dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
+                             INNER JOIN dbo.Imel ON CTS.IDImel = Imel.ID
+                         WHERE
+                             CTS.Deleted = 1 AND DS.ID = (SELECT ID FROM DongSP WHERE TenDsp = ?)
+                         ORDER BY
+                             CTS.ID DESC;
+                 """;
 
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, idDsp);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
@@ -392,4 +383,5 @@ public class BanHangRepository {
         }
         return listSP;
     }
+
 }

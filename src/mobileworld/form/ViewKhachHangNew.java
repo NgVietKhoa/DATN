@@ -112,12 +112,10 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         tblBang = new mobileworld.swing.Table();
         txtTimKiem = new mobileworld.swing.TextField();
-        buttonCustom1 = new mobileworld.swing.ButtonCustom();
         jPanel7 = new javax.swing.JPanel();
         txtTimKiem2 = new mobileworld.swing.TextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBang2 = new mobileworld.swing.Table();
-        buttonCustom5 = new mobileworld.swing.ButtonCustom();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -284,11 +282,9 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
 
         txtTimKiem.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtTimKiem.setLabelText("Tìm Kiếm");
-
-        buttonCustom1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-search-24 (1).png"))); // NOI18N
-        buttonCustom1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCustom1ActionPerformed(evt);
+        txtTimKiem.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTimKiemKeyReleased(evt);
             }
         });
 
@@ -296,11 +292,7 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(308, 308, 308)
-                .addComponent(buttonCustom1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(460, Short.MAX_VALUE))
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 828, Short.MAX_VALUE)
             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel6Layout.createSequentialGroup()
                     .addGap(4, 4, 4)
@@ -310,9 +302,7 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(buttonCustom1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(60, 60, 60)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE))
             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel6Layout.createSequentialGroup()
@@ -327,6 +317,11 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
 
         txtTimKiem2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtTimKiem2.setLabelText("Tìm Kiếm");
+        txtTimKiem2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTimKiem2KeyReleased(evt);
+            }
+        });
 
         jScrollPane1.setBorder(null);
         jScrollPane1.setOpaque(false);
@@ -353,45 +348,28 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
         tblBang2.setOpaque(false);
         jScrollPane1.setViewportView(tblBang2);
 
-        buttonCustom5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-search-24 (1).png"))); // NOI18N
-        buttonCustom5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCustom5ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(308, 308, 308)
-                .addComponent(buttonCustom5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(460, Short.MAX_VALUE))
-            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel7Layout.createSequentialGroup()
-                    .addGap(4, 4, 4)
-                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel7Layout.createSequentialGroup()
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 819, Short.MAX_VALUE)
-                            .addGap(5, 5, 5))
-                        .addGroup(jPanel7Layout.createSequentialGroup()
-                            .addComponent(txtTimKiem2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addGap(4, 4, 4)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 819, Short.MAX_VALUE)
+                        .addGap(5, 5, 5))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(txtTimKiem2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(buttonCustom5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(599, Short.MAX_VALUE))
-            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel7Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(txtTimKiem2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(4, 4, 4)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 581, Short.MAX_VALUE)
-                    .addContainerGap()))
+                .addContainerGap()
+                .addComponent(txtTimKiem2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         materialTabbed1.addTab("Lịch Sử Giao Dịch", jPanel7);
@@ -588,25 +566,15 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
 
     }//GEN-LAST:event_tblBangMouseClicked
 
-    private void buttonCustom1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom1ActionPerformed
-        // TODO add your handling code here:
-        if (txtTimKiem.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin cần tìm");
-            return;
-        }
+    private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyReleased
         listTK = sv.search(txtTimKiem.getText().trim());
         showDataTable(listTK);
-    }//GEN-LAST:event_buttonCustom1ActionPerformed
+    }//GEN-LAST:event_txtTimKiemKeyReleased
 
-    private void buttonCustom5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom5ActionPerformed
-        // TODO add your handling code here:
-        if (txtTimKiem2.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin lịch sử giao dịch cần tìm");
-            return;
-        }
+    private void txtTimKiem2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiem2KeyReleased
         listLSGD = srLSGD.searchLSGG(txtTimKiem2.getText().trim());
         fillTableLSGG(listLSGD);
-    }//GEN-LAST:event_buttonCustom5ActionPerformed
+    }//GEN-LAST:event_txtTimKiem2KeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -614,8 +582,6 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
     private mobileworld.swing.ButtonCustom btnSua;
     private mobileworld.swing.ButtonCustom btnThem;
     private mobileworld.swing.ButtonCustom btnXoa;
-    private mobileworld.swing.ButtonCustom buttonCustom1;
-    private mobileworld.swing.ButtonCustom buttonCustom5;
     private javax.swing.ButtonGroup grp1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

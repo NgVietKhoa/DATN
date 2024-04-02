@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -59,7 +60,7 @@ public class ThongTinChiTietSP extends javax.swing.JFrame {
     private final ImelService imelService = new ImelService();
     private final String idChiTietSP;
 
-    public ThongTinChiTietSP(String idChiTietSP, String CameraSau, String CameraTruoc, String Cpu, String Imel, String ManHinh, String MauSac, String NSX, String Pin, String Ram, String Rom, String TenDsp, BigDecimal gia, String moTa) {
+    public ThongTinChiTietSP(String idChiTietSP, String CameraSau, String CameraTruoc, String Cpu, String Imel, String ManHinh, String MauSac, String NSX, String Pin, String Ram, String Rom, String TenDsp, BigDecimal gia, String moTa, String QRImagePath) {
         initComponents();
         setLocationRelativeTo(null);
         setTitle("Thông Tin Chi Tiết Sản Phẩm");
@@ -100,6 +101,10 @@ public class ThongTinChiTietSP extends javax.swing.JFrame {
         txtAreaImel.setText(Imel);
         txtAreaMoTa.setText(moTa);
         txtGia.setText(String.valueOf(gia));
+        // Tạo ImageIcon từ đường dẫn QRImagePath
+        ImageIcon qrIcon = new ImageIcon(QRImagePath);
+        // Đặt ImageIcon lên JLabel
+        imageAvatar1.setIcon(qrIcon);
         this.idChiTietSP = idChiTietSP;
     }
 
@@ -361,6 +366,8 @@ public class ThongTinChiTietSP extends javax.swing.JFrame {
         jScrollPane5 = new javax.swing.JScrollPane();
         txtAreaMoTa = new javax.swing.JTextArea();
         buttonCustom1 = new mobileworld.swing.ButtonCustom();
+        imageAvatar1 = new mobileworld.swing.ImageAvatar();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -440,6 +447,11 @@ public class ThongTinChiTietSP extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(12, 45, 87));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Mã QR ");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -450,7 +462,10 @@ public class ThongTinChiTietSP extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1054, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                            .addComponent(imageAvatar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(buttonCustom1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -461,9 +476,14 @@ public class ThongTinChiTietSP extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(buttonCustom1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(imageAvatar1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2))
+                    .addComponent(buttonCustom1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -509,7 +529,9 @@ public class ThongTinChiTietSP extends javax.swing.JFrame {
     private mobileworld.swing.Combobox cboRam;
     private mobileworld.swing.Combobox cboRom;
     private mobileworld.swing.Combobox cboTenDsp;
+    private mobileworld.swing.ImageAvatar imageAvatar1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane4;

@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class Table extends JTable {
 
-    private Color MAIN_COLOR_1 = Color.decode("#8f94fb");
+    Color MAIN_COLOR_1 = Color.decode("#8f94fb");
 
     public Table() {
         setShowHorizontalLines(true);
@@ -34,7 +34,7 @@ public class Table extends JTable {
                 com.setBackground(Color.WHITE);
                 setBorder(noFocusBorder);
                 if (selected) {
-                    com.setForeground(new Color(0, 102, 102));
+                    com.setForeground(new Color(12,45,87));
                     Font labelFont = new Font(com.getFont().getName(), Font.BOLD, 12);
                     com.setFont(labelFont);
                 } else {

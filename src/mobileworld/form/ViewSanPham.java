@@ -70,6 +70,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     private final CpuService cpuService = new CpuService();
     private final DongSPService dspService = new DongSPService();
     private DefaultComboBoxModel cbbNsx = new DefaultComboBoxModel();
+    private DefaultComboBoxModel cbbSanPham = new DefaultComboBoxModel();
     private final NhaSanXuatService NsxService = new NhaSanXuatService();
     private final ImelService imelService = new ImelService();
     private List<ChiTietSanPhamViewModel> searchResults = new ArrayList<>();
@@ -78,24 +79,26 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     private List<DongSPViewModel> listConHang = new ArrayList<>();
     private List<DongSPViewModel> listHetHang = new ArrayList<>();
     private final ThongTinChiTietSP thongTinChiTietSP;
-    private String idChiTietSP, CameraSau, CameraTruoc, Cpu, Imel, ManHinh, MauSac, NSX, Pin, Ram, Rom, TenDsp, MoTa;
+    private String idChiTietSP, CameraSau, CameraTruoc, Cpu, Imel, ManHinh, MauSac, NSX, Pin, Ram, Rom, TenDsp, MoTa, QRImagePath;
     private BigDecimal gia;
 
     public ViewSanPham() {
         initComponents();
         setOpaque(false);
-        thongTinChiTietSP = new ThongTinChiTietSP(idChiTietSP, CameraSau, CameraTruoc, Cpu, Imel, ManHinh, MauSac, NSX, Pin, Ram, Rom, TenDsp, gia, MoTa);
+        thongTinChiTietSP = new ThongTinChiTietSP(idChiTietSP, CameraSau, CameraTruoc, Cpu, Imel, ManHinh, MauSac, NSX, Pin, Ram, Rom, TenDsp, gia, MoTa, QRImagePath);
         thongTinChiTietSP.changeListener.addDataChangeListener(this);
         thongTinChiTietSP.changeListener.setEventDataChangeListener(this);
 
         //setcombobox
         cbbNsx = (DefaultComboBoxModel) cboNsx.getModel();
+        cbbSanPham = (DefaultComboBoxModel) cboSanPham.getModel();
         cbbPin = (DefaultComboBoxModel) cboPin.getModel();
         cbbManHinh = (DefaultComboBoxModel) cboManHinh.getModel();
         cbbCpu = (DefaultComboBoxModel) cboCPU.getModel();
         setDataCboCpu(cpuService.getAll());
         setDataCboManHinh(mhService.getAll());
         setDataCboNsx(NsxService.getAll());
+        setDataCboSanPham(dspService.getAll());
         setDataCboPin(pinService.getAll());
         setDataCboGia();
 
@@ -104,7 +107,12 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
             public void mouseClicked(MouseEvent evt) {
                 int index = tblSP.getSelectedRow();
                 if (index >= 0 && evt.getClickCount() == 2) {
-                    getSelectedProductListImel();
+                    String selectedSP = getSelectedSanPham();
+                    if (selectedSP != null) {
+                        cbbSanPham.setSelectedItem(selectedSP);
+                    }
+                    List<ChiTietSanPhamViewModel> productList = getSelectedProductListImel();
+                    showDataTableCTSP(productList);
                 }
             }
         });
@@ -115,6 +123,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 int index = tblCTSP.getSelectedRow();
                 if (index >= 0 && evt.getClickCount() == 2) {
                     ArrayList<ChiTietSanPhamViewModel> productListImel = (ArrayList<ChiTietSanPhamViewModel>) getSelectedProductListImel();
+                    showDataTableCTSP(productListImel);
                     if (productListImel.isEmpty()) {
                         if (searchResults != null && !searchResults.isEmpty()) {
                             displayProductDetails(searchResults.get(index));
@@ -153,8 +162,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 BigDecimal gia = product.getGiaBan();
                 String Imel = product.getImel();
                 String MoTa = product.getGhiChu();
+                String QRImagePath = generateQRCode(Imel);
 
-                ThongTinChiTietSP chiTietSP = new ThongTinChiTietSP(idChiTietSP, CameraSau, CameraTruoc, Cpu, Imel, ManHinh, MauSac, NSX, Pin, Ram, Rom, TenDsp, gia, MoTa);
+                ThongTinChiTietSP chiTietSP = new ThongTinChiTietSP(idChiTietSP, CameraSau, CameraTruoc, Cpu, Imel, ManHinh, MauSac, NSX, Pin, Ram, Rom, TenDsp, gia, MoTa, QRImagePath);
                 chiTietSP.setVisible(true);
             }
         });
@@ -231,12 +241,41 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         showDataTableSP(dspService.getAll());
     }
 
+    private String generateQRCode(String imel) {
+        try {
+            ByteArrayOutputStream out = QRCode.from(imel)
+                    .to(ImageType.PNG).stream();
+
+            // Thay thế các ký tự không hợp lệ trong tên tệp
+            String f_name = imel.replaceAll("[^a-zA-Z0-9.-]", "_") + ".PNG";
+            String Path_name = "D:\\mobileWorldCopy\\QR\\";
+
+            FileOutputStream fout = new FileOutputStream(new File(Path_name + f_name));
+            fout.write(out.toByteArray());
+            fout.flush();
+
+            return Path_name + f_name;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public JPanel getPanelSPCT() {
         return panelSanPhamCT;
     }
 
     public JPanel getPanelSP() {
         return panelSanPham;
+    }
+
+    public String getSelectedSanPham() {
+        int index = tblSP.getSelectedRow();
+        if (index >= 0) {
+            String tenSp = (String) tblSP.getValueAt(index, 2);
+            return tenSp;
+        }
+        return null;
     }
 
     public List<ChiTietSanPhamViewModel> getSelectedProductListImel() {
@@ -258,25 +297,8 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                     }
                 }
             }
-
-            // Hiển thị danh sách sản phẩm
-            showDataTableCTSPImel(productList);
         }
         return productList;
-    }
-
-    //chi tiet san pham
-    private void showDataTableCTSPImel(List<ChiTietSanPhamViewModel> showSP) {
-        tblModel.setRowCount(0);
-        int stt = 0;
-        boolean check = false;
-        for (ChiTietSanPhamViewModel spvm : showSP) {
-            String giaBan = decimalFormat.format(spvm.getGiaBan());
-            stt++;
-            tblModel.addRow(new Object[]{
-                stt, spvm.getTenDsp(), spvm.getImel(), spvm.getTenNsx(), spvm.getDungLuongPin(), spvm.getLoaiManHinh(), spvm.getCpu(), spvm.getDungLuongRam(), spvm.getDungLuongBoNho(), spvm.getTenMau(), giaBan, spvm.getCameraSau(), spvm.getCameraTruoc()
-            });
-        }
     }
 
     private void showDataTableCTSP(List<ChiTietSanPhamViewModel> showSP) {
@@ -286,7 +308,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
             String giaBan = decimalFormat.format(spvm.getGiaBan());
             stt++;
             tblModel.addRow(new Object[]{
-                stt, spvm.getTenDsp(), spvm.getImel(), spvm.getTenNsx(), spvm.getDungLuongPin(), spvm.getLoaiManHinh(), spvm.getCpu(), spvm.getDungLuongRam(), spvm.getDungLuongBoNho(), spvm.getTenMau(), giaBan, spvm.getCameraSau(), spvm.getCameraTruoc()
+                false, stt, spvm.getTenDsp(), spvm.getImel(), spvm.getTenNsx(), spvm.getDungLuongPin(), spvm.getLoaiManHinh(), spvm.getCpu(), spvm.getDungLuongRam(), spvm.getDungLuongBoNho(), spvm.getTenMau(), giaBan, spvm.getCameraSau(), spvm.getCameraTruoc()
 
             });
         }
@@ -483,6 +505,15 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         cboNsx.setSelectedItem(null);
     }
 
+    private void setDataCboSanPham(List<DongSPViewModel> setNsx) {
+        cbbSanPham.removeAllElements();
+
+        for (DongSPViewModel nsx : setNsx) {
+            cbbSanPham.addElement(nsx.getTenDsp());
+        }
+        cbbSanPham.setSelectedItem(null);
+    }
+
     private void setDataCboCpu(List<CPU> setCpu) {
         cbbCpu.removeAllElements();
 
@@ -581,8 +612,8 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
     @Override
     public void onDataChange() {
-        showDataTableCTSP(ctspService.getAll());
-        showDataTableSP(dspService.getAll());
+//        showDataTableCTSP(ctspService.getAll());
+//        showDataTableSP(dspService.getAll());
     }
 
     @Override
@@ -598,6 +629,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     }
 
     private void filterCTSP() {
+        String tenSP = (String) cboSanPham.getSelectedItem();
         String nsx = (String) cboNsx.getSelectedItem();
         String pin = (String) cboPin.getSelectedItem();
         String manHinh = (String) cboManHinh.getSelectedItem();
@@ -606,7 +638,8 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         // Kiểm tra xem giá trị được chọn từ combobox có null không
         boolean sapXepGiaTangDan = "Giá Tăng Dần".equals(cboGia.getSelectedItem());
 
-        BoLocCtsp = ctspService.LocCTSP(nsx, pin, manHinh, cpu, sapXepGiaTangDan);
+        List<ChiTietSanPhamViewModel> list = ctspService.LocCTSP(tenSP, nsx, pin, manHinh, cpu, sapXepGiaTangDan);
+        BoLocCtsp = list;
         showDataTableCTSP(BoLocCtsp);
     }
 
@@ -644,6 +677,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        cboSanPham = new mobileworld.swing.Combobox();
         cboNsx = new mobileworld.swing.Combobox();
         cboPin = new mobileworld.swing.Combobox();
         cboManHinh = new mobileworld.swing.Combobox();
@@ -884,11 +918,11 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
             },
             new String [] {
-                "STT", "Tên SP", "Imel", "NSX", "Pin", "Màn Hình", "CPU", "RAM", "ROM", "Màu", "Giá", "Camera Sau", "Camera Trước", "Chọn"
+                "#", "STT", "Tên SP", "Imel", "NSX", "Pin", "Màn Hình", "CPU", "RAM", "ROM", "Màu", "Giá", "Camera Sau", "Camera Trước"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -899,30 +933,25 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         if (tblCTSP.getColumnModel().getColumnCount() > 0) {
             tblCTSP.getColumnModel().getColumn(0).setMinWidth(20);
             tblCTSP.getColumnModel().getColumn(0).setMaxWidth(40);
-            tblCTSP.getColumnModel().getColumn(1).setMinWidth(150);
-            tblCTSP.getColumnModel().getColumn(1).setMaxWidth(200);
+            tblCTSP.getColumnModel().getColumn(1).setMinWidth(20);
+            tblCTSP.getColumnModel().getColumn(1).setMaxWidth(40);
             tblCTSP.getColumnModel().getColumn(2).setMinWidth(150);
             tblCTSP.getColumnModel().getColumn(2).setMaxWidth(200);
-            tblCTSP.getColumnModel().getColumn(3).setMinWidth(30);
-            tblCTSP.getColumnModel().getColumn(3).setMaxWidth(60);
-            tblCTSP.getColumnModel().getColumn(4).setMinWidth(50);
-            tblCTSP.getColumnModel().getColumn(4).setMaxWidth(80);
-            tblCTSP.getColumnModel().getColumn(6).setMinWidth(120);
-            tblCTSP.getColumnModel().getColumn(6).setMaxWidth(150);
-            tblCTSP.getColumnModel().getColumn(7).setMinWidth(30);
-            tblCTSP.getColumnModel().getColumn(7).setMaxWidth(50);
+            tblCTSP.getColumnModel().getColumn(3).setMinWidth(150);
+            tblCTSP.getColumnModel().getColumn(3).setMaxWidth(200);
+            tblCTSP.getColumnModel().getColumn(4).setMinWidth(30);
+            tblCTSP.getColumnModel().getColumn(4).setMaxWidth(60);
+            tblCTSP.getColumnModel().getColumn(5).setMinWidth(50);
+            tblCTSP.getColumnModel().getColumn(5).setMaxWidth(80);
+            tblCTSP.getColumnModel().getColumn(7).setMinWidth(120);
+            tblCTSP.getColumnModel().getColumn(7).setMaxWidth(150);
             tblCTSP.getColumnModel().getColumn(8).setMinWidth(30);
             tblCTSP.getColumnModel().getColumn(8).setMaxWidth(50);
-            tblCTSP.getColumnModel().getColumn(13).setMinWidth(20);
-            tblCTSP.getColumnModel().getColumn(13).setMaxWidth(40);
+            tblCTSP.getColumnModel().getColumn(9).setMinWidth(30);
+            tblCTSP.getColumnModel().getColumn(9).setMaxWidth(50);
         }
 
         txtTimKiem.setLabelText("Tìm Kiếm");
-        txtTimKiem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTimKiemActionPerformed(evt);
-            }
-        });
         txtTimKiem.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtTimKiemKeyReleased(evt);
@@ -971,6 +1000,14 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         jPanel2.setLayout(new java.awt.GridLayout(1, 0, 20, 20));
 
+        cboSanPham.setLabeText("Sản phẩm");
+        cboSanPham.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboSanPhamActionPerformed(evt);
+            }
+        });
+        jPanel2.add(cboSanPham);
+
         cboNsx.setLabeText("Nhà Sản Xuất");
         cboNsx.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1016,9 +1053,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(220, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 929, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(220, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 860, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1051,7 +1088,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                         .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 500, Short.MAX_VALUE)
                         .addComponent(buttonCustom10, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(btnTaiQR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1361,26 +1398,21 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         ThemChiTietSP themChiTietSP = new ThemChiTietSP();
 
         // Lấy tham chiếu đến viewsanpham và xóa tất cả các thành phần hiện tại
-        JPanel viewsanpham = panelSanPhamCT;
-        viewsanpham.removeAll();
+        JPanel viewsanphamCT = panelSanPhamCT;
+        viewsanphamCT.removeAll();
 
         // Thêm ThemChiTietSP vào viewsanpham
-        viewsanpham.add(themChiTietSP);
+        viewsanphamCT.add(themChiTietSP);
 
-        viewsanpham.setLayout(new BorderLayout());
+        viewsanphamCT.setLayout(new BorderLayout());
 
         // Thêm ThemChiTietSP vào viewsanpham với ràng buộc layout phù hợp
-        viewsanpham.add(themChiTietSP, BorderLayout.CENTER);
+        viewsanphamCT.add(themChiTietSP, BorderLayout.CENTER);
 
         // Cập nhật giao diện
-        viewsanpham.revalidate();
-        viewsanpham.repaint();
+        viewsanphamCT.revalidate();
+        viewsanphamCT.repaint();
     }//GEN-LAST:event_buttonCustom10ActionPerformed
-
-    private void txtTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemActionPerformed
-        searchResults = ctspService.search(txtTimKiem.getText());
-        showDataTableCTSP(searchResults);
-    }//GEN-LAST:event_txtTimKiemActionPerformed
 
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyReleased
         if (txtTimKiem.getText().trim().equals("")) {
@@ -1403,12 +1435,12 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 DefaultTableModel model = (DefaultTableModel) tblCTSP.getModel();
                 for (int i = 0; i < model.getRowCount(); i++) {
                     // Get the value of the checkbox (column 13)
-                    Boolean column13Value = (Boolean) model.getValueAt(i, 13);
+                    Boolean column13Value = (Boolean) model.getValueAt(i, 0);
 
                     // Check if the checkbox is ticked
                     if (column13Value != null && column13Value) {
                         // Get the IMEI from column 2 (assuming column index is 1)
-                        String imel = (String) model.getValueAt(i, 2);
+                        String imel = (String) model.getValueAt(i, 3);
                         selectedImels.add(imel);
                     }
                 }
@@ -1454,12 +1486,12 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
             // Lặp qua các hàng của table view
             for (int i = 0; i < tblCTSP.getRowCount(); i++) {
                 // Lấy giá trị của cột thứ 13 của hàng hiện tại
-                Boolean column13Value = (Boolean) tblCTSP.getValueAt(i, 13); // Giả sử cột 13 có index là 12
+                Boolean column13Value = (Boolean) tblCTSP.getValueAt(i, 0);
 
                 // Kiểm tra nếu cả cột thứ 2 và cột thứ 13 không null và cột thứ 13 là true
                 if (tblCTSP.getValueAt(i, 2) != null && column13Value != null && column13Value) {
                     // Lấy giá trị từ cột thứ 2 của hàng hiện tại (assumed column index: 1)
-                    String imel = (String) tblCTSP.getValueAt(i, 2);
+                    String imel = (String) tblCTSP.getValueAt(i, 3);
 
                     // Tạo và lưu mã QR cho Imel
                     ByteArrayOutputStream out = QRCode.from(imel)
@@ -1850,10 +1882,19 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         if (isChecked) {
             int rowCount = tblModel.getRowCount();
             for (int i = 0; i < rowCount; i++) {
-                tblModel.setValueAt(true, i, 13);
+                tblModel.setValueAt(true, i, 0);
+            }
+        } else if (!isChecked) {
+            int rowCount = tblModel.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                tblModel.setValueAt(false, i, 0);
             }
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void cboSanPhamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboSanPhamActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboSanPhamActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1877,6 +1918,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     private mobileworld.swing.Combobox cboManHinh;
     private mobileworld.swing.Combobox cboNsx;
     private mobileworld.swing.Combobox cboPin;
+    private mobileworld.swing.Combobox cboSanPham;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;

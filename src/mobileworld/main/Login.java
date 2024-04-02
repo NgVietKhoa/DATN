@@ -3,6 +3,7 @@ package mobileworld.main;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import mobileworld.dialog.LoadingDialog;
@@ -161,7 +162,8 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-        System.exit(0);
+        setVisible(false);
+        dispose();
     }//GEN-LAST:event_jLabel3MouseClicked
 
     private void jLabel2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseEntered
@@ -179,13 +181,15 @@ public class Login extends javax.swing.JFrame {
         if (nvService.checkLogin(maNhanVien, password)) {            
             SessionStorage.getInstance().setUsername(maNhanVien);
             LoadingDialog loading = new LoadingDialog(this, true);
+            this.setVisible(false);
+            this.dispose();
             
             Timer timerLoading = new Timer(1500, (ActionEvent e) -> {
                 loading.setVisible(false);
                 loading.dispose();
                 Main main = new Main();
+                main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 main.setVisible(true);
-                dispose();
             });
             
             timerLoading.setRepeats(false);
@@ -237,9 +241,11 @@ public class Login extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new Login().setVisible(true);
-        });
+//        java.awt.EventQueue.invokeLater(() -> {
+            JFrame loginFrame = new Login();
+            loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            loginFrame.setVisible(true);
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

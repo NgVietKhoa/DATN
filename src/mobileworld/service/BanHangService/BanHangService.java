@@ -42,7 +42,7 @@ public class BanHangService {
         return repo.getGioHang(idDsp);
     }
 
-    public List<ChiTietSanPhamViewModel> selectImelSP() {
-        return repo.selectImelSP();
+    public List<ChiTietSanPhamViewModel> selectIdDSP(String idDsp) {
+        return repo.selectIdDSP(idDsp);
     }
 }
