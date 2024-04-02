@@ -38,11 +38,12 @@ public class BanHangService {
         return repo.search(keyword);
     }
 
-    public List<ChiTietSanPhamViewModel> getGioHang(String idDsp) {
-        return repo.getGioHang(idDsp);
+    public List<ChiTietSanPhamViewModel> getGioHang(String imel) {
+        return repo.getGioHang(imel);
     }
 
     public List<ChiTietSanPhamViewModel> selectIdDSP(String idDsp) {
         return repo.selectIdDSP(idDsp);
     }
+
 }

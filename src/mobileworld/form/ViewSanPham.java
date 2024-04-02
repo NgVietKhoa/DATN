@@ -107,10 +107,6 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
             public void mouseClicked(MouseEvent evt) {
                 int index = tblSP.getSelectedRow();
                 if (index >= 0 && evt.getClickCount() == 2) {
-                    String selectedSP = getSelectedSanPham();
-                    if (selectedSP != null) {
-                        cbbSanPham.setSelectedItem(selectedSP);
-                    }
                     List<ChiTietSanPhamViewModel> productList = getSelectedProductListImel();
                     showDataTableCTSP(productList);
                 }

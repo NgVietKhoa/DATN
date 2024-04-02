@@ -12,7 +12,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import mobileworld.dialog.SelectProductImel;
+import mobileworld.dialog.SelectProductSP;
 import mobileworld.model.CPU;
 import mobileworld.model.ManHinh;
 import mobileworld.model.NhaSanXuat;
@@ -45,6 +45,7 @@ public class ViewBanHang extends javax.swing.JPanel {
     private List<ChiTietSanPhamViewModel> BoLocCtsp = new ArrayList<>();
     private final PhieuGiamGiaService pggService = new PhieuGiamGiaService();
     private DefaultComboBoxModel cbbPgg = new DefaultComboBoxModel();
+    private List<ChiTietSanPhamViewModel> gioHangList = new ArrayList<>();
 
     public ViewBanHang() {
         initComponents();
@@ -77,7 +78,7 @@ public class ViewBanHang extends javax.swing.JPanel {
                 if (index >= 0 && evt.getClickCount() == 2) {
                     String idDsp = (String) tblSP.getValueAt(index, 1);
 
-                    SelectProductImel productImel = new SelectProductImel(idDsp, ViewBanHang.this);
+                    SelectProductSP productImel = new SelectProductSP(idDsp, ViewBanHang.this);
                     productImel.setVisible(true);
                 }
             }
@@ -181,22 +182,39 @@ public class ViewBanHang extends javax.swing.JPanel {
         }
     }
 
-    public void updateGioHangWithImel(String idDsp, int totalQuantity) {
-        List<ChiTietSanPhamViewModel> gioHang = bhService.getGioHang(idDsp);
+    public void updateGioHangWithImel(String imel, int totalQuantity) {
+        List<ChiTietSanPhamViewModel> gioHang = bhService.getGioHang(imel);
         showDataTableGioHang(gioHang, totalQuantity);
-        System.out.println(idDsp);
+        showDataTableSP(bhService.getSP());
     }
 
     private void showDataTableGioHang(List<ChiTietSanPhamViewModel> listSP, int totalQuantity) {
-        tblModelGH.setRowCount(0);
         int stt = 0;
         for (ChiTietSanPhamViewModel sp : listSP) {
+            boolean existed = false;
+            for (ChiTietSanPhamViewModel gioHangSP : gioHangList) {
+                if (gioHangSP.getTenDsp().equals(sp.getTenDsp())) {
+                    // Sản phẩm đã tồn tại trong giỏ hàng, chỉ cập nhật số lượng
+                    gioHangSP.setSoLuong(gioHangSP.getSoLuong() + totalQuantity);
+                    existed = true;
+                    break;
+                }
+            }
+            // Nếu sản phẩm chưa tồn tại trong giỏ hàng, thêm mới vào giỏ hàng
+            if (!existed) {
+                gioHangList.add(sp);
+            }
+        }
+
+        tblModelGH.setRowCount(0);
+        for (ChiTietSanPhamViewModel sp : gioHangList) {
             stt++;
+            String giaBan = decimalFormat.format(sp.getGiaBan());
             BigDecimal thanhTienBigDecimal = BigDecimal.valueOf(totalQuantity).multiply(sp.getGiaBan());
-            float thanhTien = thanhTienBigDecimal.floatValue();
+            String thanhTienFormatted = decimalFormat.format(thanhTienBigDecimal);
             tblModelGH.addRow(new Object[]{
                 stt, sp.getTenDsp(), sp.getLoaiManHinh(), sp.getCpu(), sp.getDungLuongRam(), sp.getDungLuongBoNho(),
-                sp.getDungLuongPin(), sp.getTenMau(), totalQuantity, sp.getGiaBan(), thanhTien
+                sp.getDungLuongPin(), sp.getTenMau(), totalQuantity, giaBan, thanhTienFormatted
             });
         }
     }
@@ -268,7 +286,6 @@ public class ViewBanHang extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         tblHoaDon = new mobileworld.swing.Table();
         jPanel2 = new javax.swing.JPanel();
-        buttonCustom6 = new mobileworld.swing.ButtonCustom();
         buttonCustom7 = new mobileworld.swing.ButtonCustom();
         jScrollPane4 = new javax.swing.JScrollPane();
         tblGioHang = new mobileworld.swing.Table();
@@ -396,15 +413,6 @@ public class ViewBanHang extends javax.swing.JPanel {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Giỏ Hàng", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(102, 102, 102))); // NOI18N
         jPanel2.setOpaque(false);
 
-        buttonCustom6.setForeground(new java.awt.Color(255, 255, 255));
-        buttonCustom6.setText("Chọn Tất Cả");
-        buttonCustom6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        buttonCustom6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCustom6ActionPerformed(evt);
-            }
-        });
-
         buttonCustom7.setForeground(new java.awt.Color(255, 255, 255));
         buttonCustom7.setText("Xóa");
         buttonCustom7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -434,20 +442,16 @@ public class ViewBanHang extends javax.swing.JPanel {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(656, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(buttonCustom7, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(buttonCustom6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
-            .addComponent(jScrollPane4)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonCustom6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonCustom7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(buttonCustom7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -918,10 +922,6 @@ public class ViewBanHang extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtGetTenKHActionPerformed
 
-    private void buttonCustom6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom6ActionPerformed
-
-    }//GEN-LAST:event_buttonCustom6ActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private mobileworld.swing.ButtonCustom buttonCustom1;
@@ -929,7 +929,6 @@ public class ViewBanHang extends javax.swing.JPanel {
     private mobileworld.swing.ButtonCustom buttonCustom3;
     private mobileworld.swing.ButtonCustom buttonCustom4;
     private mobileworld.swing.ButtonCustom buttonCustom5;
-    private mobileworld.swing.ButtonCustom buttonCustom6;
     private mobileworld.swing.ButtonCustom buttonCustom7;
     private mobileworld.swing.ButtonCustom buttonCustom8;
     private mobileworld.swing.Combobox cboCPU;

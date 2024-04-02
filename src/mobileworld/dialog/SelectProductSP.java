@@ -6,19 +6,19 @@ import mobileworld.form.ViewBanHang;
 import mobileworld.service.BanHangService.BanHangService;
 import mobileworld.viewModel.ChiTietSanPhamViewModel;
 
-public class SelectProductImel extends javax.swing.JFrame {
+public class SelectProductSP extends javax.swing.JFrame {
 
     private final BanHangService bhService = new BanHangService();
     private DefaultTableModel tblModel = new DefaultTableModel();
     private ViewBanHang viewBanHang; // Add this field
 
-    public SelectProductImel(String idDsp, ViewBanHang viewBanHang) { // Modify constructor parameter
+    public SelectProductSP(String idDsp, ViewBanHang viewBanHang) { // Modify constructor parameter
         this.viewBanHang = viewBanHang; // Initialize viewBanHang field
         initComponents();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setTitle("Chọn Sản Phẩm");
-        tblModel = (DefaultTableModel) tblSelectImel.getModel();
+        tblModel = (DefaultTableModel) tblSelectDsp.getModel();
         showDataTableSP(bhService.selectIdDSP(idDsp));
     }
 
@@ -40,7 +40,7 @@ public class SelectProductImel extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         btnXacNhan = new mobileworld.swing.ButtonCustom();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblSelectImel = new mobileworld.swing.Table();
+        tblSelectDsp = new mobileworld.swing.Table();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -58,7 +58,7 @@ public class SelectProductImel extends javax.swing.JFrame {
 
         jScrollPane2.setBorder(null);
 
-        tblSelectImel.setModel(new javax.swing.table.DefaultTableModel(
+        tblSelectDsp.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -77,12 +77,12 @@ public class SelectProductImel extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(tblSelectImel);
-        if (tblSelectImel.getColumnModel().getColumnCount() > 0) {
-            tblSelectImel.getColumnModel().getColumn(0).setMinWidth(20);
-            tblSelectImel.getColumnModel().getColumn(0).setMaxWidth(40);
-            tblSelectImel.getColumnModel().getColumn(1).setMinWidth(30);
-            tblSelectImel.getColumnModel().getColumn(1).setMaxWidth(60);
+        jScrollPane2.setViewportView(tblSelectDsp);
+        if (tblSelectDsp.getColumnModel().getColumnCount() > 0) {
+            tblSelectDsp.getColumnModel().getColumn(0).setMinWidth(20);
+            tblSelectDsp.getColumnModel().getColumn(0).setMaxWidth(40);
+            tblSelectDsp.getColumnModel().getColumn(1).setMinWidth(30);
+            tblSelectDsp.getColumnModel().getColumn(1).setMaxWidth(60);
         }
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -127,18 +127,16 @@ public class SelectProductImel extends javax.swing.JFrame {
     private void btnXacNhanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXacNhanActionPerformed
         int totalQuantity = 0; // Biến để lưu tổng số lượng
 
-        for (int i = 0; i < tblSelectImel.getRowCount(); i++) {
-            boolean isSelected = (boolean) tblSelectImel.getValueAt(i, 0);
+        for (int i = 0; i < tblSelectDsp.getRowCount(); i++) {
+            boolean isSelected = (boolean) tblSelectDsp.getValueAt(i, 0);
             if (isSelected) {
                 totalQuantity++; // Tăng số lượng lên 1 mỗi khi có sản phẩm được chọn
-                String idDsp = (String) tblSelectImel.getValueAt(i, 3);
-                viewBanHang.updateGioHangWithImel(idDsp, totalQuantity);
+                String imel = (String) tblSelectDsp.getValueAt(i, 3);
+                viewBanHang.updateGioHangWithImel(imel, totalQuantity);
             }
         }
 
-        // Sử dụng totalQuantity cho các mục đích khác nếu cần
-        System.out.println("Tổng số sản phẩm được chọn: " + totalQuantity);
-
+        // Không cần sử dụng totalQuantity cho các mục đích khác nếu không cần thiết
         setVisible(false);
         dispose();
     }//GEN-LAST:event_btnXacNhanActionPerformed
@@ -148,6 +146,6 @@ public class SelectProductImel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
-    private mobileworld.swing.Table tblSelectImel;
+    private mobileworld.swing.Table tblSelectDsp;
     // End of variables declaration//GEN-END:variables
 }
