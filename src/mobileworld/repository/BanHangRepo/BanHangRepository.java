@@ -3,9 +3,12 @@ package mobileworld.repository.BanHangRepo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import mobileworld.config.DBConnect;
+import mobileworld.model.HoaDon;
 import mobileworld.viewModel.BanHangViewModel.HoaDonViewModel;
 import mobileworld.viewModel.ChiTietSanPhamViewModel;
 
@@ -22,11 +25,11 @@ public class BanHangRepository {
                          HoaDon.TrangThai
                      FROM   
                          dbo.HoaDon 
-                     INNER JOIN
+                     LEFT JOIN
                          dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon 
-                     INNER JOIN
+                     LEFT JOIN
                          dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
-                     INNER JOIN
+                     LEFT JOIN
                          dbo.HoaDonChiTiet ON HoaDon.ID = HoaDonChiTiet.IDHoaDon
                      GROUP BY
                          HoaDon.ID, 
@@ -34,7 +37,7 @@ public class BanHangRepository {
                          HoaDon.CreatedBy, 
                          HoaDon.TrangThai
                      ORDER BY 
-                         MAX(HoaDon.NgayThanhToan) ASC
+                         MAX(HoaDon.NgayThanhToan) DESC
                      """;
 
         try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
@@ -52,6 +55,93 @@ public class BanHangRepository {
             e.printStackTrace();
         }
         return list;
+    }
+    
+    public boolean addNewBlankInvoice(HoaDon hd, String idNV) {
+        int check = 0;
+        String sql = """
+            INSERT INTO [dbo].[HoaDon]
+                       ([IDKhachHang]
+                       ,[IDNhanVien]
+                       ,[NgayTao]
+                       ,[NgayThanhToan]
+                       ,[TongTien]
+                       ,[TongTienSauGiam]
+                       ,[TenKhachHang]
+                       ,[SoDienThoaiKhachHang]
+                       ,[DiaChiKhachHang]
+                       ,[Deleted]
+                       ,[CreatedAt]
+                       ,[CreatedBy]
+                       ,[UpdatedAt]
+                       ,[UpdatedBy] 
+                       ,[TrangThai])
+                           
+                 VALUES
+                       ((SELECT ID FROM KhachHang WHERE Ten = ?),?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                     """;
+
+        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+            // Thiết lập các tham số cho câu lệnh SQL
+            ps.setObject(1, hd.getIdKH());
+            ps.setObject(2, idNV);
+            ps.setObject(3, new Timestamp(new Date().getTime()));
+            ps.setObject(4, new Timestamp(new Date().getTime()));
+            ps.setObject(5, hd.getTongTien());
+            ps.setObject(6, hd.getTongTienSauGiam());
+            ps.setObject(7, hd.getTenKH());
+            ps.setObject(8, hd.getSdtKH());
+            ps.setObject(9, hd.getDiaChiKH());
+            ps.setObject(10, 1);
+            ps.setObject(11, new Timestamp(new Date().getTime()));
+            ps.setObject(12, idNV);
+            ps.setObject(13, new Timestamp(new Date().getTime()));
+            ps.setObject(14, idNV);
+            ps.setObject(15, 0);
+            // Thực thi câu lệnh SQL
+            check = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return check > 0;
+    }
+
+    public boolean updateHoaDon(HoaDon hd, String idNV, String idHD) {
+        int check = 0;
+        String sql = """
+                     UPDATE [dbo].[HoaDon]
+                        SET [IDKhachHang] = (SELECT ID FROM KhachHang WHERE Ten = ?)
+                           ,[NgayThanhToan] = ?
+                           ,[TongTien] = ?
+                           ,[TongTienSauGiam] = ?
+                           ,[TenKhachHang] = ?
+                           ,[SoDienThoaiKhachHang] = (SELECT SDT FROM KhachHang WHERE ID = ?)
+                           ,[DiaChiKhachHang] = (SELECT DiaChi FROM KhachHang WHERE ID = ?)
+                           ,[UpdatedAt] = ?
+                           ,[UpdatedBy] = ?
+                           ,[TrangThai] = ?
+                      WHERE [ID] = ?
+                     """;
+
+        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+            // Thiết lập các tham số cho câu lệnh SQL
+            ps.setObject(1, hd.getIdKH());
+            ps.setObject(2, hd.getNgayTao());
+            ps.setObject(3, hd.getTongTien());
+            ps.setObject(4, hd.getTongTienSauGiam());
+            ps.setObject(5, hd.getTenKH());
+            ps.setObject(6, hd.getSdtKH());
+            ps.setObject(7, hd.getDiaChiKH());
+            ps.setObject(8, new Timestamp(new Date().getTime()));
+            ps.setObject(9, idNV);
+            ps.setObject(10, 1);
+            ps.setObject(11, idHD);
+            // Thực thi câu lệnh SQL
+            check = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return check > 0;
     }
 
     public List<ChiTietSanPhamViewModel> getSP() {
@@ -218,7 +308,7 @@ WITH DSP_Count AS (
         }
         return listSP;
     }
-
+    
     public List<ChiTietSanPhamViewModel> getGioHang(String imel) {
         List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
 
