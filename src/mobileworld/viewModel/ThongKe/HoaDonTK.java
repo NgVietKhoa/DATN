@@ -18,7 +18,7 @@ public class HoaDonTK {
     private String thongKeThang;    
     private String dongSP;
     private int soLuong; 
-    
+    private LocalDateTime ngayTaoLCD;
     
     public HoaDonTK() {
     }
@@ -74,6 +74,14 @@ public class HoaDonTK {
 
     public void setSoLuong(int soLuong) {
         this.soLuong = soLuong;
+    }
+
+    public LocalDateTime getNgayTaoLCD() {
+        return ngayTaoLCD;
+    }
+
+    public void setNgayTaoLCD(LocalDateTime ngayTaoLCD) {
+        this.ngayTaoLCD = ngayTaoLCD;
     }
 
   

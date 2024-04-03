@@ -17,26 +17,28 @@ public class BanHangRepository {
     public List<HoaDonViewModel> getHD() {
         List<HoaDonViewModel> list = new ArrayList<>();
         String sql = """
-                    SELECT 
-                         HoaDon.ID, 
+                     SELECT
+                         HoaDon.ID,
                          HoaDon.CreatedAt,
-                         HoaDon.CreatedBy, 
+                         HoaDon.CreatedBy,
                          COUNT(HoaDonChiTiet.ID) AS TongSoSanPham,
                          HoaDon.TrangThai
-                     FROM   
-                         dbo.HoaDon 
+                     FROM
+                         dbo.HoaDon
                      LEFT JOIN
-                         dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon 
+                         dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon
                      LEFT JOIN
                          dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
                      LEFT JOIN
                          dbo.HoaDonChiTiet ON HoaDon.ID = HoaDonChiTiet.IDHoaDon
+                     WHERE
+                         HoaDon.Deleted = 1
                      GROUP BY
-                         HoaDon.ID, 
+                         HoaDon.ID,
                          HoaDon.CreatedAt,
-                         HoaDon.CreatedBy, 
+                         HoaDon.CreatedBy,
                          HoaDon.TrangThai
-                     ORDER BY 
+                     ORDER BY
                          MAX(HoaDon.NgayThanhToan) DESC
                      """;
 

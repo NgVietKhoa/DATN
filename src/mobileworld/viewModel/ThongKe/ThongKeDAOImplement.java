@@ -168,10 +168,10 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         List<HoaDonTK> ds = new ArrayList<>();
 
         String sql = """
-            SELECT HoaDon.ID, CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTienSauGiam
-            FROM HoaDon 
-            WHERE NgayTao >= ? AND NgayTao <= ?
-            ORDER BY CONVERT(DATE, HoaDon.NgayTao) DESC
+            SELECT HoaDon.ID,CONVERT(DATETIME2, HoaDon.NgayTao),CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTienSauGiam
+                        FROM HoaDon 
+                         WHERE CONVERT(DATE, HoaDon.NgayTao) >= ? AND  CONVERT(DATE, HoaDon.NgayTao) <= ?
+                        ORDER BY CONVERT(DATE, HoaDon.NgayTao) DESC
                           """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, ngayBD);
@@ -180,8 +180,9 @@ public class ThongKeDAOImplement implements ThongKeDAO {
             while (rs.next()) {
                 HoaDonTK tk = new HoaDonTK();
                 tk.setMaHD(rs.getString(1));
-                tk.setNgayTao(rs.getDate(2).toLocalDate());
-                tk.setThanhTien(rs.getFloat(3));
+                   tk.setNgayTaoLCD(rs.getTimestamp(2).toLocalDateTime());
+                tk.setNgayTao(rs.getDate(3).toLocalDate());
+                tk.setThanhTien(rs.getFloat(4));
                 ds.add(tk);
             }
         } catch (Exception e) {
@@ -218,19 +219,21 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         List<HoaDonTK> ds = new ArrayList<>();
 
         String sql = """
-            SELECT CONVERT(DATE, HoaDon.NgayTao), SUM(HoaDon.TongTienSauGiam) AS TongTien
+              SELECT  CONVERT(DATETIME2, HoaDon.NgayTao),CONVERT(DATE, HoaDon.NgayTao) AS NgayTao, 
+                   SUM(HoaDon.TongTienSauGiam) AS TongTien
             FROM HoaDon 
-            WHERE NgayTao = ?	
-            GROUP BY CONVERT(DATE, HoaDon.NgayTao)
-            ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC
+            WHERE CONVERT(DATE, HoaDon.NgayTao) = ?
+            GROUP BY  CONVERT(DATETIME2, HoaDon.NgayTao),CONVERT(DATE, HoaDon.NgayTao)
+            ORDER BY  CONVERT(DATETIME2, HoaDon.NgayTao),CONVERT(DATE, HoaDon.NgayTao)  ASC;
                           """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, ngayHT);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 HoaDonTK tk = new HoaDonTK();
-                tk.setNgayTao(rs.getDate(1).toLocalDate());
-                tk.setThanhTien(rs.getFloat(2));
+                tk.setNgayTaoLCD(rs.getTimestamp(1).toLocalDateTime());
+                tk.setNgayTao(rs.getDate(2).toLocalDate());
+                tk.setThanhTien(rs.getFloat(3));
                 ds.add(tk);
             }
         } catch (Exception e) {
@@ -245,10 +248,12 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         List<HoaDonTK> ds = new ArrayList<>();
 
         String sql = """
-          SELECT HoaDon.ID,CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTienSauGiam AS TongTien
-                       FROM HoaDon 
-                       WHERE NgayTao = ?	
-                       ORDER BY CONVERT(DATE, HoaDon.NgayTao) DESC
+          SELECT HoaDon.ID,CONVERT(DATETIME2, HoaDon.NgayTao),CONVERT(DATE, HoaDon.NgayTao) AS NgayTao, 
+                                          SUM(HoaDon.TongTienSauGiam) AS TongTien
+                                   FROM HoaDon 
+                                   WHERE CONVERT(DATE, HoaDon.NgayTao) = ?
+                                   GROUP BY HoaDon.ID,CONVERT(DATETIME2, HoaDon.NgayTao),CONVERT(DATE, HoaDon.NgayTao)
+                                   ORDER BY  CONVERT(DATETIME2, HoaDon.NgayTao),CONVERT(DATE, HoaDon.NgayTao) ASC;
                           """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, ngayHT);
@@ -256,8 +261,10 @@ public class ThongKeDAOImplement implements ThongKeDAO {
             while (rs.next()) {
                 HoaDonTK tk = new HoaDonTK();
                 tk.setMaHD(rs.getString(1));
-                tk.setNgayTao(rs.getDate(2).toLocalDate());
-                tk.setThanhTien(rs.getFloat(3));
+                                tk.setNgayTaoLCD(rs.getTimestamp(2).toLocalDateTime());
+
+                tk.setNgayTao(rs.getDate(3).toLocalDate());
+                tk.setThanhTien(rs.getFloat(4));
                 ds.add(tk);
             }
         } catch (Exception e) {
@@ -271,11 +278,10 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         List<HoaDonTK> ds = new ArrayList<>();
 
         String sql = """
-            	SELECT CONVERT(DATE, HoaDon.NgayTao), SUM(HoaDon.TongTienSauGiam)
-                        FROM HoaDon 				
-                        WHERE NgayTao >= ?  AND NgayTao <= ?
-                        GROUP BY CONVERT(DATE, HoaDon.NgayTao)
-            			ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC
+            	SELECT CONVERT(DATETIME2, HoaDon.NgayTao),CONVERT(DATE, HoaDon.NgayTao), HoaDon.TongTienSauGiam
+                FROM HoaDon 
+                WHERE CONVERT(DATE, HoaDon.NgayTao) >= ? AND  CONVERT(DATE, HoaDon.NgayTao) <= ?
+                ORDER BY CONVERT(DATE, HoaDon.NgayTao) ASC
                           """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, ngayBD);
@@ -283,8 +289,9 @@ public class ThongKeDAOImplement implements ThongKeDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 HoaDonTK tk = new HoaDonTK();
-                tk.setNgayTao(rs.getDate(1).toLocalDate());
-                tk.setThanhTien(rs.getFloat(2));
+                  tk.setNgayTaoLCD(rs.getTimestamp(1).toLocalDateTime());
+                tk.setNgayTao(rs.getDate(2).toLocalDate());
+                tk.setThanhTien(rs.getFloat(3));
                 ds.add(tk);
             }
         } catch (Exception e) {
@@ -390,7 +397,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
                                          dbo.ChiTietSP ON dbo.HoaDonChiTiet.IDCTSP = dbo.ChiTietSP.ID INNER JOIN
                                          dbo.DongSP ON dbo.ChiTietSP.IDDongSP = dbo.DongSP.ID INNER JOIN
                                          dbo.HoaDon ON dbo.HoaDonChiTiet.IDHoaDon = dbo.HoaDon.ID
-                						 where HoaDon.NgayTao = ?
+                                         where HoaDon.NgayTao = ?
                 GROUP BY dbo.DongSP.TenDsp
                 ORDER BY COUNT(dbo.DongSP.TenDsp)  DESC
                           """;
