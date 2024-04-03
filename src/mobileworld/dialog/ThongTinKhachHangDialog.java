@@ -55,7 +55,6 @@ public class ThongTinKhachHangDialog extends javax.swing.JFrame {
             }
             tableModel.addRow(new Object[]{
                 stt,
-                khachHangViewModel.getIdKH(),
                 khachHangViewModel.getTen(),
                 khachHangViewModel.getSoDienThoai(),
                 khachHangViewModel.getDiaChi(),
@@ -117,13 +116,13 @@ public class ThongTinKhachHangDialog extends javax.swing.JFrame {
 
         tblHienThi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "STT", "ID", "Tên", "SDT", "Địa chỉ", "Giới tính"
+                "STT", "Tên", "SDT", "Địa chỉ", "Giới tính"
             }
         ));
         jScrollPane2.setViewportView(tblHienThi);

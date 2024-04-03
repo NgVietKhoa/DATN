@@ -33,9 +33,15 @@ public class KHInBanHangRepository {
                      FROM 
                          [dbo].[KhachHang]
                      """;
-        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
+                String idKH = rs.getString(1);
+                // Kiểm tra xem ID có phải là KH00001 không, nếu có thì bỏ qua
+                if (idKH.equals("KH00001")) {
+                    continue;
+                }
+
                 KhachHangViewModel kh = new KhachHangViewModel();
                 kh.setIdKH(rs.getString(1));
                 kh.setTen(rs.getString(2));
@@ -78,7 +84,7 @@ public class KHInBanHangRepository {
                                 ,?
                                 ,?)
                      """;
-        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
             ps.setObject(1, kh.getTen());
             ps.setObject(2, kh.getSdt());
             ps.setObject(3, kh.getGioiTinh());

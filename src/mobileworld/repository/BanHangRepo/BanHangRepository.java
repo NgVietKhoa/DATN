@@ -22,7 +22,8 @@ public class BanHangRepository {
                          HoaDon.CreatedAt,
                          HoaDon.CreatedBy,
                          COUNT(HoaDonChiTiet.ID) AS TongSoSanPham,
-                         HoaDon.TrangThai
+                         HoaDon.TrangThai,
+                         HoaDon.Deleted
                      FROM
                          dbo.HoaDon
                      LEFT JOIN
@@ -37,12 +38,13 @@ public class BanHangRepository {
                          HoaDon.ID,
                          HoaDon.CreatedAt,
                          HoaDon.CreatedBy,
-                         HoaDon.TrangThai
+                         HoaDon.TrangThai,
+                         HoaDon.Deleted
                      ORDER BY
                          MAX(HoaDon.NgayThanhToan) DESC
                      """;
 
-        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 HoaDonViewModel hdvm = new HoaDonViewModel();
@@ -51,7 +53,62 @@ public class BanHangRepository {
                 hdvm.setCreateBy(rs.getString(3));
                 hdvm.setTongSP(rs.getInt(4));
                 hdvm.setTrangthai(rs.getInt(5));
+                hdvm.setDeleted(rs.getFloat(6));
                 list.add(hdvm);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<HoaDonViewModel> searchHD(String text) {
+        List<HoaDonViewModel> list = new ArrayList<>();
+        String sql = """
+                     SELECT
+                             HoaDon.ID,
+                             HoaDon.CreatedAt,
+                             HoaDon.CreatedBy,
+                             COUNT(HoaDonChiTiet.ID) AS TongSoSanPham,
+                             HoaDon.TrangThai
+                         FROM
+                             dbo.HoaDon
+                         LEFT JOIN
+                             dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon
+                         LEFT JOIN
+                             dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
+                         LEFT JOIN
+                             dbo.HoaDonChiTiet ON HoaDon.ID = HoaDonChiTiet.IDHoaDon
+                         WHERE
+                             HoaDon.ID LIKE ? ESCAPE '!'
+                             OR CONVERT(VARCHAR, HoaDon.CreatedAt, 111) LIKE ? ESCAPE '!'
+                             OR HoaDon.CreatedBy LIKE ? ESCAPE '!'
+                         GROUP BY
+                             HoaDon.ID,
+                             HoaDon.CreatedAt,
+                             HoaDon.CreatedBy,
+                             HoaDon.TrangThai
+                         ORDER BY
+                             MAX(HoaDon.NgayThanhToan) DESC
+                     """;
+
+        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+            for (int i = 0; i < text.length(); i++) {
+                ps.setString(1, "%" + text + "%");
+                ps.setString(2, "%" + text + "%");
+                ps.setString(3, "%" + text + "%");
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        HoaDonViewModel hdvm = new HoaDonViewModel();
+                        hdvm.setIdHD(rs.getString(1));
+                        hdvm.setCreateAt(rs.getDate(2));
+                        hdvm.setCreateBy(rs.getString(3));
+                        hdvm.setTongSP(rs.getInt(4));
+                        hdvm.setTrangthai(rs.getInt(5));
+                        list.add(hdvm);
+                    }
+                }
+                break;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,7 +140,7 @@ public class BanHangRepository {
                        ((SELECT ID FROM KhachHang WHERE Ten = ?),?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                      """;
 
-        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
             // Thiết lập các tham số cho câu lệnh SQL
             ps.setObject(1, hd.getIdKH());
             ps.setObject(2, idNV);
@@ -101,6 +158,23 @@ public class BanHangRepository {
             ps.setObject(14, idNV);
             ps.setObject(15, 0);
             // Thực thi câu lệnh SQL
+            check = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return check > 0;
+    }
+
+    public boolean deleteHD(String idHD) {
+        int check = 0;
+        String sql = """
+                     UPDATE [dbo].[HoaDon]
+                        SET [Deleted] = 0
+                        WHERE ID = ?
+                     """;
+
+        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+            ps.setObject(1, idHD);
             check = ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,7 +202,7 @@ public class BanHangRepository {
                      WHERE ID = ?;
                      """;
 
-        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
 
             ps.setObject(1, hd.getIdKH());
             ps.setObject(2, hd.getIdNV());
@@ -169,7 +243,7 @@ public class BanHangRepository {
                       WHERE [ID] = ?
                      """;
 
-        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
             // Thiết lập các tham số cho câu lệnh SQL
             ps.setObject(1, hd.getIdKH());
             ps.setObject(2, hd.getNgayTao());
@@ -249,7 +323,7 @@ WITH DSP_Count AS (
                  ORDER BY 
                      ID DESC;
                  """;
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
@@ -330,7 +404,7 @@ WITH DSP_Count AS (
                 + "        CPU.CPU LIKE ? "
                 + "    )";
 
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, Nsx);
             ps.setObject(2, Pin);
             ps.setObject(3, ManHinh);
@@ -397,7 +471,7 @@ WITH DSP_Count AS (
                          ID DESC;
                      """;
 
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, imel);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -464,7 +538,7 @@ WITH DSP_Count AS (
                          ID DESC;
                      """;
 
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, imel);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -507,7 +581,7 @@ WITH DSP_Count AS (
                              CTS.ID DESC;
                  """;
 
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, idDsp);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -542,7 +616,7 @@ WITH DSP_Count AS (
                              CTS.ID DESC;
                  """;
 
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, idDsp);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -562,7 +636,7 @@ WITH DSP_Count AS (
     public void updateSelectSP(String imel) {
         String updateSql = "UPDATE dbo.ChiTietSP SET Deleted = 0 WHERE IDImel = (SELECT ID FROM dbo.Imel WHERE Imel = ?)";
 
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(updateSql)) {
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(updateSql)) {
             ps.setString(1, imel);
             ps.executeUpdate();
         } catch (Exception e) {
@@ -573,7 +647,7 @@ WITH DSP_Count AS (
     public void updateDeleteSP(String imel) {
         String updateSql = "UPDATE dbo.ChiTietSP SET Deleted = 1 WHERE IDImel = (SELECT ID FROM dbo.Imel WHERE Imel = ?)";
 
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(updateSql)) {
+        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(updateSql)) {
             ps.setString(1, imel);
             ps.executeUpdate();
         } catch (Exception e) {

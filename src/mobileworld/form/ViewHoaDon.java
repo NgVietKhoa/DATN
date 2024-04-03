@@ -714,6 +714,7 @@ public class ViewHoaDon extends javax.swing.JPanel implements QRCodeListener {
             qrcode qr = new qrcode();
             qr.setQRCodeListener(this);
             qr.setVisible(true);
+            return;
         }
         if (check == JOptionPane.NO_OPTION) {
             JOptionPane.showMessageDialog(this, "Bạn đã chọn NO.");

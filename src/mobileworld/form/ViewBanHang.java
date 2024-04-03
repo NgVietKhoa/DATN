@@ -62,6 +62,7 @@ public class ViewBanHang extends javax.swing.JPanel {
     public ViewBanHang() {
         initComponents();
         setOpaque(false);
+        listHDM = bhService.getHD();
         tblModelHD = (DefaultTableModel) tblHoaDon.getModel();
         tblModelSP = (DefaultTableModel) tblSP.getModel();
         tblModelGH = (DefaultTableModel) tblGioHang.getModel();
@@ -508,6 +509,11 @@ public class ViewBanHang extends javax.swing.JPanel {
         txtTimKiemHD.setLabelText("Tìm Kiếm");
         txtTimKiemHD.setLineColor(new java.awt.Color(102, 102, 102));
         txtTimKiemHD.setSelectionColor(new java.awt.Color(102, 102, 102));
+        txtTimKiemHD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTimKiemHDActionPerformed(evt);
+            }
+        });
 
         jScrollPane3.setBorder(null);
 
@@ -1108,6 +1114,11 @@ public class ViewBanHang extends javax.swing.JPanel {
 //    }
     private void buttonCustom2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom2ActionPerformed
         // TODO add your handling code here:
+        int index = tblHoaDon.getSelectedRow();
+        HoaDonViewModel hdvm = listHDM.get(index);
+        bhService.deleteHD(hdvm.getIdHD());
+        listHDM = bhService.getHD();
+        showDataTableHoaDon(listHDM);
     }//GEN-LAST:event_buttonCustom2ActionPerformed
 
     private void cboPggActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboPggActionPerformed
@@ -1370,6 +1381,12 @@ public class ViewBanHang extends javax.swing.JPanel {
     private void buttonCustom4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom4ActionPerformed
 
     }//GEN-LAST:event_buttonCustom4ActionPerformed
+
+    private void txtTimKiemHDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemHDActionPerformed
+        // TODO add your handling code here:
+        listHDM = bhService.searchHD(txtTimKiemHD.getText());
+        showDataTableHoaDon(listHDM);
+    }//GEN-LAST:event_txtTimKiemHDActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

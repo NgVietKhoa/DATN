@@ -10,7 +10,7 @@ public class HoaDonViewModel {
     private String tenKH;
     private int tongSP;
     private int trangthai;
-
+    private Float deleted;
     public HoaDonViewModel() {
     }
 
@@ -23,6 +23,14 @@ public class HoaDonViewModel {
         this.trangthai = trangthai;
     }
 
+    public Float getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Float deleted) {
+        this.deleted = deleted;
+    }
+    
     public String getIdHD() {
         return idHD;
     }

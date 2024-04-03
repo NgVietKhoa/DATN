@@ -133,6 +133,7 @@ public class HoaDonRepository {
                          dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon 
                      INNER JOIN
                          dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
+                     WHERE HoaDon.Deleted = 1
                      ORDER BY HoaDon.NgayThanhToan ASC
                      """;
 
@@ -420,6 +421,7 @@ public class HoaDonRepository {
                       OR PhuongThucThanhToan.TenKieuThanhToan LIKE ? ESCAPE '!'
                       OR HoaDon.TongTien LIKE ? ESCAPE '!'
                       OR HoaDon.TrangThai LIKE ? ESCAPE '!'
+                    
                      ORDER BY HoaDon.NgayThanhToan ASC
                  """;
 
