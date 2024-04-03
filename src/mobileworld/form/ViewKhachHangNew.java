@@ -41,7 +41,7 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
         for (KhachHang khachHang1 : khachHangs) {
             String gioiTinh;
             stt++;
-            if (khachHang1.getGioiTinh()==0) {
+            if (khachHang1.getGioiTinh()) {
                 gioiTinh = "Nam";
             } else {
                 gioiTinh = "Nữ";
@@ -53,8 +53,9 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
                 khachHang1.getTen(),
                 khachHang1.getSdt(),
                 gioiTinh,
-                khachHang1.getDiaChi(),
-                khachHang1.getNgaySinh(),});
+                khachHang1.getNgaySinh(),
+                khachHang1.getDiaChi()
+                });
         }
     }
 
@@ -78,12 +79,7 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
     public KhachHang getFormData() {
         String ten = txtHoten.getText();
         String sdt = txtSđt.getText();
-        float gioiTinh=0;
-        if(rbtNam.isSelected()){
-            gioiTinh=0;
-        }else{
-            gioiTinh=1;
-        }
+        boolean gioiTinh = rbtNam.isSelected();
         String diaChi = txtDiaChi.getText();
         String ma = txtMaKH.getText();
         String email = txtEmail.getText().trim();
@@ -548,7 +544,7 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
             txtSđt.setText(kh.getSdt());
             txtDiaChi.setText(kh.getDiaChi());
             txtEmail.setText(kh.getEmail());           
-            if (kh.getGioiTinh()==0) {
+            if (kh.getGioiTinh()) {
                 rbtNam.setSelected(true);
             } else {
                 rbtNu.setSelected(true);
@@ -560,7 +556,7 @@ public class ViewKhachHangNew extends javax.swing.JPanel {
             txtSđt.setText(kh.getSdt());
             txtDiaChi.setText(kh.getDiaChi());
             txtEmail.setText(kh.getEmail());
-            if (kh.getGioiTinh()==0) {
+            if (kh.getGioiTinh()) {
                 rbtNam.setSelected(true);
             } else {
                 rbtNu.setSelected(true);

@@ -384,7 +384,7 @@ public class ChiTietSPRepository {
         return searchResult;
     }
 
-    public List<ChiTietSanPhamViewModel> LocCTSP(String tenSP, String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
+    public List<ChiTietSanPhamViewModel> LocCTSP(String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
         List<ChiTietSanPhamViewModel> searchResult = new ArrayList<>();
 
         String sql = "SELECT "
@@ -433,8 +433,7 @@ public class ChiTietSPRepository {
                 + "NSX.TenNsx LIKE ? OR "
                 + "Pin.DungLuongPin LIKE ? OR "
                 + "ManHinh.LoaiManHinh LIKE ? OR "
-                + "CPU.CPU LIKE ? OR "
-                + "DS.TenDsp LIKE ? "
+                + "CPU.CPU LIKE ? "
                 + ") "
                 + "GROUP BY "
                 + "CTS.IDImel, "
@@ -470,7 +469,6 @@ public class ChiTietSPRepository {
             ps.setObject(2, Pin);
             ps.setObject(3, ManHinh);
             ps.setObject(4, Cpu);
-            ps.setObject(5, tenSP);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();

@@ -59,8 +59,7 @@ public class BanHangService {
         return repo.deleteIdDSP(idDsp);
     }
 
-    public boolean removeGioHang(String Ten) {
-        return repo.removeGioHang(Ten);
+    public boolean ThanhToanHD(HoaDon hd, String idHD) {
+        return repo.ThanhToanHD(hd, idHD);
     }
-    
 }

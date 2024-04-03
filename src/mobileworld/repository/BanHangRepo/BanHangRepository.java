@@ -56,7 +56,7 @@ public class BanHangRepository {
         }
         return list;
     }
-    
+
     public boolean addNewBlankInvoice(HoaDon hd, String idNV) {
         int check = 0;
         String sql = """
@@ -81,7 +81,7 @@ public class BanHangRepository {
                        ((SELECT ID FROM KhachHang WHERE Ten = ?),?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                      """;
 
-        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
             // Thiết lập các tham số cho câu lệnh SQL
             ps.setObject(1, hd.getIdKH());
             ps.setObject(2, idNV);
@@ -98,6 +98,50 @@ public class BanHangRepository {
             ps.setObject(13, new Timestamp(new Date().getTime()));
             ps.setObject(14, idNV);
             ps.setObject(15, 0);
+            // Thực thi câu lệnh SQL
+            check = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return check > 0;
+    }
+
+    public boolean ThanhToanHD(HoaDon hd, String idHD) {
+        int check = 0;
+        String sql = """
+                     UPDATE [dbo].[HoaDon]
+                     SET [IDKhachHang] = ?,
+                         [IDNhanVien] = ?,
+                         [NgayTao] = ?,
+                         [NgayThanhToan] = ?,
+                         [TongTien] = ?,
+                         [TongTienSauGiam] = ?,
+                         [TenKhachHang] = (SELECT Ten FROM KhachHang WHERE ID = ?),
+                         [SoDienThoaiKhachHang] = (SELECT SDT FROM KhachHang WHERE ID = ?),
+                         [DiaChiKhachHang] = (SELECT DiaChi FROM KhachHang WHERE ID = ?),
+                         [Deleted] = ?,
+                         [UpdatedAt] = ?,
+                         [UpdatedBy] = ?,
+                         [TrangThai] = ?
+                     WHERE ID = ?;
+                     """;
+
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
+
+            ps.setObject(1, hd.getIdKH());
+            ps.setObject(2, hd.getIdNV());
+            ps.setObject(3, hd.getNgayTao());
+            ps.setObject(4, hd.getNgayThanhToan());
+            ps.setObject(5, hd.getTongTien());
+            ps.setObject(6, hd.getTongTienSauGiam());
+            ps.setObject(7, hd.getTenKH());
+            ps.setObject(8, hd.getSdtKH());
+            ps.setObject(9, hd.getDiaChiKH());
+            ps.setObject(10, 1);
+            ps.setObject(11, hd.getUpdateAt());
+            ps.setObject(12, hd.getUpdateBy());
+            ps.setObject(13, 1);
+            ps.setObject(14, idHD);
             // Thực thi câu lệnh SQL
             check = ps.executeUpdate();
         } catch (Exception e) {
@@ -123,7 +167,7 @@ public class BanHangRepository {
                       WHERE [ID] = ?
                      """;
 
-        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
             // Thiết lập các tham số cho câu lệnh SQL
             ps.setObject(1, hd.getIdKH());
             ps.setObject(2, hd.getNgayTao());
@@ -308,7 +352,7 @@ WITH DSP_Count AS (
         }
         return listSP;
     }
-    
+
     public List<ChiTietSanPhamViewModel> getGioHang(String imel) {
         List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
 
@@ -534,22 +578,4 @@ WITH DSP_Count AS (
             e.printStackTrace();
         }
     }
-
-    public boolean removeGioHang(String Ten) {
-        int check = 0;
-        String sql = "UPDATE dbo.ChiTietSP "
-                + "SET Deleted = 1 "
-                + "FROM dbo.ChiTietSP "
-                + "INNER JOIN dbo.DongSP ON ChiTietSP.IDDongSP = DongSP.ID "
-                + "WHERE DongSP.TenDsp = ?";
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, Ten);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check > 0;
-    }
-
 }

@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Date;
 import mobileworld.config.DBConnect;
-import mobileworld.model.KhachHang2;
+import mobileworld.model.KhachHang;
 
 /**
  *
@@ -33,7 +33,7 @@ public class KHInBanHangRepository {
                      FROM 
                          [dbo].[KhachHang]
                      """;
-        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 KhachHangViewModel kh = new KhachHangViewModel();
@@ -50,7 +50,7 @@ public class KHInBanHangRepository {
         return list;
     }
 
-    public boolean addKH(KhachHang2 kh,String idNV) {
+    public boolean addKH(KhachHang kh) {
         int check = 0;
         String sql = """
                      INSERT INTO [dbo].[KhachHang]
@@ -78,17 +78,17 @@ public class KHInBanHangRepository {
                                 ,?
                                 ,?)
                      """;
-        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
             ps.setObject(1, kh.getTen());
             ps.setObject(2, kh.getSdt());
             ps.setObject(3, kh.getGioiTinh());
             ps.setObject(4, kh.getNgaySinh());
             ps.setObject(5, kh.getDiaChi());
-            ps.setObject(6, 1);
-            ps.setObject(7, new Timestamp(new Date().getTime()));
-            ps.setObject(8, idNV);
-            ps.setObject(9, new Timestamp(new Date().getTime()));
-            ps.setObject(10, idNV);
+            ps.setObject(6, kh.getDeleted());
+            ps.setObject(7, kh.getCreatedat());
+            ps.setObject(8, kh.getCreatedby());
+            ps.setObject(9, kh.getUpdatedat());
+            ps.setObject(10, kh.getUpdatedby());
             ps.setObject(11, kh.getEmail());
             check = ps.executeUpdate();
         } catch (Exception e) {

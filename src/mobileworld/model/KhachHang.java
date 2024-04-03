@@ -1,5 +1,6 @@
 package mobileworld.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -7,7 +8,7 @@ public class KhachHang {
 
     private String ten;
     private String sdt;
-    private Float gioiTinh;
+    private boolean gioiTinh;
     private Date ngaySinh;
     private String diaChi;
     private int deleted;
@@ -21,7 +22,7 @@ public class KhachHang {
     public KhachHang() {
     }
 
-    public KhachHang(String ten, String sdt, Float gioiTinh, String diaChi, int deleted, LocalDateTime createdat, String createdby, LocalDateTime updatedat, String updatedby, String id, String email) {
+    public KhachHang(String ten, String sdt, boolean gioiTinh, String diaChi, int deleted, LocalDateTime createdat, String createdby, LocalDateTime updatedat, String updatedby, String id, String email) {
         this.ten = ten;
         this.sdt = sdt;
         this.gioiTinh = gioiTinh;
@@ -35,7 +36,19 @@ public class KhachHang {
         this.email = email;
     }
 
-    
+    public KhachHang(String ten, String sdt, boolean gioiTinh, Date ngaySinh, String diaChi, int deleted, LocalDateTime createdat, String createdby, LocalDateTime updatedat, String updatedby, String email) {
+        this.ten = ten;
+        this.sdt = sdt;
+        this.gioiTinh = gioiTinh;
+        this.ngaySinh = ngaySinh;
+        this.diaChi = diaChi;
+        this.deleted = deleted;
+        this.createdat = createdat;
+        this.createdby = createdby;
+        this.updatedat = updatedat;
+        this.updatedby = updatedby;
+        this.email = email;
+    }
 
     public String getTen() {
         return ten;
@@ -53,11 +66,11 @@ public class KhachHang {
         this.sdt = sdt;
     }
 
-    public Float getGioiTinh() {
+    public boolean getGioiTinh() {
         return gioiTinh;
     }
 
-    public void setGioiTinh(Float gioiTinh) {
+    public void setGioiTinh(boolean gioiTinh) {
         this.gioiTinh = gioiTinh;
     }
 
@@ -109,9 +122,6 @@ public class KhachHang {
         this.updatedby = updatedby;
     }
 
-
-    
-
     public String getCreatedby() {
         return createdby;
     }
@@ -119,10 +129,6 @@ public class KhachHang {
     public void setCreatedby(String createdby) {
         this.createdby = createdby;
     }
-
-
-
-   
 
     public String getId() {
         return id;

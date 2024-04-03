@@ -31,6 +31,7 @@ public class ChiTietSanPhamViewModel {
     private String cameraTruoc;
     private String cameraSau;
     private String ghiChu;
+    
 
     public ChiTietSanPhamViewModel() {
     }

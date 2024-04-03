@@ -32,7 +32,7 @@ public class KhachHangRepository {
                                ,[ID]
                                ,[Email]
                            FROM [dbo].[KhachHang]
-                           where deleted =1
+                           where deleted = 1 ORDER BY ID DESC
                      """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareCall(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -40,7 +40,7 @@ public class KhachHangRepository {
                 KhachHang kh = new KhachHang();
                 kh.setTen(rs.getString(1));
                 kh.setSdt(rs.getString(2));
-                kh.setGioiTinh(rs.getFloat(3));
+                kh.setGioiTinh(rs.getBoolean(3));
                 kh.setNgaySinh(rs.getDate(4));
                 kh.setDiaChi(rs.getString(5));
                 kh.setDeleted(rs.getInt(6));               
@@ -82,7 +82,7 @@ public class KhachHangRepository {
                     KhachHang kh = new KhachHang();
                     kh.setTen(rs.getString(1));
                     kh.setSdt(rs.getString(2));
-                    kh.setGioiTinh(rs.getFloat(3));
+                    kh.setGioiTinh(rs.getBoolean(3));
                     kh.setNgaySinh(rs.getDate(4));
                     kh.setDiaChi(rs.getString(5));
                     kh.setDeleted(rs.getInt(6));                   
