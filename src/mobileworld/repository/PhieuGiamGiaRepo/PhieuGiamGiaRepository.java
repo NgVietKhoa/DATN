@@ -846,7 +846,8 @@ public class PhieuGiamGiaRepository {
     public float layPGG(String tenPGG) {
        float pgg=0;
         String sql = """                                                            
-                    Select top 1 PhieuGiamGia.PhanTramGiam from PhieuGiamGia where PhieuGiamGia.TenGiamGia = ?			 
+                      Select top 1 PhieuGiamGia.PhanTramGiam from PhieuGiamGia where PhieuGiamGia.TenGiamGia = ?			 
+                      ORDER BY PhieuGiamGia.CreatedAt DESC	 
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, tenPGG);
@@ -860,4 +861,25 @@ public class PhieuGiamGiaRepository {
         return pgg;
     }
 
+    public List<PhieuGiamGia> getPGGPhuHop(float giaTien){
+        List<PhieuGiamGia> ds = new ArrayList<>();
+        String sql = """                                                            
+             select PhieuGiamGia.TenGiamGia from PhieuGiamGia
+                                                   where PhieuGiamGia.HoaDonToiThieu <= ? and Deleted = 1
+                                                   Order by PhieuGiamGia.PhanTramGiam DESC         				 
+                   """;
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, giaTien);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                PhieuGiamGia gg = new PhieuGiamGia();
+                gg.setTenGiamGia(rs.getString(1));
+                ds.add(gg);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ds;
+    }
+    
 }

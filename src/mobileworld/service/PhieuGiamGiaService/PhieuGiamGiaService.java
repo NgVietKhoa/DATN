@@ -91,4 +91,8 @@ public class PhieuGiamGiaService {
     public float layPGG(String tenPGG) {
         return repo.layPGG(tenPGG);
     }
+    
+     public List<PhieuGiamGia> getPGGPhuHop(float giaTien){
+         return repo.getPGGPhuHop(giaTien);
+     }
 }
