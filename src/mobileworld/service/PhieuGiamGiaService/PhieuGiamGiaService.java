@@ -92,7 +92,7 @@ public class PhieuGiamGiaService {
         return repo.layPGG(tenPGG);
     }
     
-     public List<PhieuGiamGia> getPGGPhuHop(float giaTien){
+    public List<PhieuGiamGia> getPGGPhuHop(float giaTien){
          return repo.getPGGPhuHop(giaTien);
      }
 }

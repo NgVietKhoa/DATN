@@ -1,14 +1,17 @@
 package mobileworld.repository.BanHangRepo;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import mobileworld.config.DBConnect;
 import mobileworld.model.HoaDon;
+import mobileworld.model.HoaDonChiTietEntity;
 import mobileworld.viewModel.BanHangViewModel.HoaDonViewModel;
 import mobileworld.viewModel.ChiTietSanPhamViewModel;
 
@@ -17,43 +20,70 @@ public class BanHangRepository {
     public List<HoaDonViewModel> getHD() {
         List<HoaDonViewModel> list = new ArrayList<>();
         String sql = """
-                     SELECT
-                         HoaDon.ID,
-                         HoaDon.CreatedAt,
-                         HoaDon.CreatedBy,
-                         COUNT(HoaDonChiTiet.ID) AS TongSoSanPham,
-                         HoaDon.TrangThai,
-                         HoaDon.Deleted
-                     FROM
-                         dbo.HoaDon
-                     LEFT JOIN
-                         dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon
-                     LEFT JOIN
-                         dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
-                     LEFT JOIN
-                         dbo.HoaDonChiTiet ON HoaDon.ID = HoaDonChiTiet.IDHoaDon
-                     WHERE
-                         HoaDon.Deleted = 1
-                     GROUP BY
-                         HoaDon.ID,
-                         HoaDon.CreatedAt,
-                         HoaDon.CreatedBy,
-                         HoaDon.TrangThai,
-                         HoaDon.Deleted
-                     ORDER BY
-                         MAX(HoaDon.NgayThanhToan) DESC
+                    SELECT
+                         	HoaDon.IDKhachHang,
+                         	HoaDon.IDNhanVien,
+                         	HoaDon.NgayTao,
+                         	HoaDon.NgayThanhToan,
+                         	HoaDon.TongTien,
+                         	HoaDon.TongTienSauGiam,
+                         	HoaDon.TenKhachHang,
+                         	HoaDon.SoDienThoaiKhachHang,
+                         	HoaDon.DiaChiKhachHang,
+                         	HoaDon.Deleted,
+                             HoaDon.ID,
+                             HoaDon.CreatedAt,
+                             HoaDon.CreatedBy,
+                             COUNT(HoaDonChiTiet.ID) AS TongSoSanPham,
+                             HoaDon.TrangThai
+                         FROM
+                             dbo.HoaDon
+                         LEFT JOIN
+                             dbo.HinhThucThanhToan ON HoaDon.ID = HinhThucThanhToan.IDHoaDon
+                         LEFT JOIN
+                             dbo.PhuongThucThanhToan ON HinhThucThanhToan.IDPhuongThucThanhToan = PhuongThucThanhToan.ID
+                         LEFT JOIN
+                             dbo.HoaDonChiTiet ON HoaDon.ID = HoaDonChiTiet.IDHoaDon
+                         WHERE
+                             HoaDon.Deleted = 1
+                         GROUP BY
+                             HoaDon.IDKhachHang,
+                         	HoaDon.IDNhanVien,
+                         	HoaDon.NgayTao,
+                         	HoaDon.NgayThanhToan,
+                         	HoaDon.TongTien,
+                         	HoaDon.TongTienSauGiam,
+                         	HoaDon.TenKhachHang,
+                         	HoaDon.SoDienThoaiKhachHang,
+                         	HoaDon.DiaChiKhachHang,
+                         	HoaDon.Deleted,
+                             HoaDon.ID,
+                             HoaDon.CreatedAt,
+                             HoaDon.CreatedBy,
+                             HoaDon.TrangThai
+                         ORDER BY
+                             MAX(HoaDon.NgayThanhToan) DESC
                      """;
 
-        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 HoaDonViewModel hdvm = new HoaDonViewModel();
-                hdvm.setIdHD(rs.getString(1));
-                hdvm.setCreateAt(rs.getDate(2));
-                hdvm.setCreateBy(rs.getString(3));
-                hdvm.setTongSP(rs.getInt(4));
-                hdvm.setTrangthai(rs.getInt(5));
-                hdvm.setDeleted(rs.getFloat(6));
+                hdvm.setIdKH(rs.getString(1));
+                hdvm.setIdNV(rs.getString(2));
+                hdvm.setNgayTao(rs.getDate(3));
+                hdvm.setNgayThanhToan(rs.getDate(4));
+                hdvm.setTongTien(rs.getBigDecimal(5));
+                hdvm.setTongTienSauGiam(rs.getBigDecimal(6));
+                hdvm.setTenKH(rs.getString(7));
+                hdvm.setSdtKH(rs.getString(8));
+                hdvm.setDiaChiKH(rs.getString(9));
+                hdvm.setDeleted(rs.getFloat(10));
+                hdvm.setIdHD(rs.getString(11));
+                hdvm.setCreateAt(rs.getDate(12));
+                hdvm.setCreateBy(rs.getString(13));
+                hdvm.setTongSP(rs.getInt(14));
+                hdvm.setTrangthai(rs.getInt(15));
                 list.add(hdvm);
             }
         } catch (Exception e) {
@@ -92,12 +122,12 @@ public class BanHangRepository {
                              MAX(HoaDon.NgayThanhToan) DESC
                      """;
 
-        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
             for (int i = 0; i < text.length(); i++) {
                 ps.setString(1, "%" + text + "%");
                 ps.setString(2, "%" + text + "%");
                 ps.setString(3, "%" + text + "%");
-                try (ResultSet rs = ps.executeQuery()) {
+                try ( ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         HoaDonViewModel hdvm = new HoaDonViewModel();
                         hdvm.setIdHD(rs.getString(1));
@@ -140,7 +170,7 @@ public class BanHangRepository {
                        ((SELECT ID FROM KhachHang WHERE Ten = ?),?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                      """;
 
-        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
             // Thiết lập các tham số cho câu lệnh SQL
             ps.setObject(1, hd.getIdKH());
             ps.setObject(2, idNV);
@@ -173,7 +203,7 @@ public class BanHangRepository {
                         WHERE ID = ?
                      """;
 
-        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
             ps.setObject(1, idHD);
             check = ps.executeUpdate();
         } catch (Exception e) {
@@ -182,47 +212,110 @@ public class BanHangRepository {
         return check > 0;
     }
 
-    public boolean ThanhToanHD(HoaDon hd, String idHD) {
+    public boolean ThanhToanHD(HoaDon hd, List<HoaDonChiTietEntity> hdctList, String idHD) {
         int check = 0;
-        String sql = """
-                     UPDATE [dbo].[HoaDon]
-                     SET [IDKhachHang] = ?,
-                         [IDNhanVien] = ?,
-                         [NgayTao] = ?,
-                         [NgayThanhToan] = ?,
-                         [TongTien] = ?,
-                         [TongTienSauGiam] = ?,
-                         [TenKhachHang] = (SELECT Ten FROM KhachHang WHERE ID = ?),
-                         [SoDienThoaiKhachHang] = (SELECT SDT FROM KhachHang WHERE ID = ?),
-                         [DiaChiKhachHang] = (SELECT DiaChi FROM KhachHang WHERE ID = ?),
-                         [Deleted] = ?,
-                         [UpdatedAt] = ?,
-                         [UpdatedBy] = ?,
-                         [TrangThai] = ?
-                     WHERE ID = ?;
-                     """;
+        String sqlUpdateHoaDon = """
+             UPDATE [dbo].[HoaDon]
+             SET [IDKhachHang] = ?,
+                 [IDNhanVien] = ?,
+                 [NgayTao] = ?,
+                 [NgayThanhToan] = ?,
+                 [TongTien] = ?,
+                 [TongTienSauGiam] = ?,
+                 [TenKhachHang] = (SELECT Ten FROM KhachHang WHERE ID = ?),
+                 [SoDienThoaiKhachHang] = (SELECT SDT FROM KhachHang WHERE ID = ?),
+                 [DiaChiKhachHang] = (SELECT DiaChi FROM KhachHang WHERE ID = ?),
+                 [Deleted] = ?,
+                 [UpdatedAt] = ?,
+                 [UpdatedBy] = ?,
+                 [TrangThai] = ?
+             WHERE ID = ?;
+             """;
 
-        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+        String sqlInsertHoaDonChiTiet = """
+             INSERT INTO [dbo].[HoaDonChiTiet]
+                        (
+                            [IDImel],
+                            [IDCTSP],
+                            [IDHoaDon],
+                            [DonGia],
+                            [Deleted],
+                            [CreatedAt],
+                            [CreatedBy],
+                            [UpdatedAt],
+                            [UpdatedBy]
+                        )
+                        VALUES
+                        (?,?,?,?,?,?,?,?,?)
+                          
+             """;
 
-            ps.setObject(1, hd.getIdKH());
-            ps.setObject(2, hd.getIdNV());
-            ps.setObject(3, hd.getNgayTao());
-            ps.setObject(4, hd.getNgayThanhToan());
-            ps.setObject(5, hd.getTongTien());
-            ps.setObject(6, hd.getTongTienSauGiam());
-            ps.setObject(7, hd.getTenKH());
-            ps.setObject(8, hd.getSdtKH());
-            ps.setObject(9, hd.getDiaChiKH());
-            ps.setObject(10, 1);
-            ps.setObject(11, hd.getUpdateAt());
-            ps.setObject(12, hd.getUpdateBy());
-            ps.setObject(13, 1);
-            ps.setObject(14, idHD);
-            // Thực thi câu lệnh SQL
-            check = ps.executeUpdate();
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement psUpdate = cnt.prepareStatement(sqlUpdateHoaDon);  PreparedStatement psInsert = cnt.prepareStatement(sqlInsertHoaDonChiTiet)) {
+
+            cnt.setAutoCommit(false); // Bắt đầu một giao dịch
+
+            // Thực hiện cập nhật thông tin hóa đơn
+            psUpdate.setObject(1, hd.getIdKH());
+            psUpdate.setObject(2, hd.getIdNV());
+            psUpdate.setObject(3, hd.getNgayTao());
+            psUpdate.setObject(4, hd.getNgayThanhToan());
+            psUpdate.setObject(5, hd.getTongTien());
+            psUpdate.setObject(6, hd.getTongTienSauGiam());
+            psUpdate.setObject(7, hd.getTenKH());
+            psUpdate.setObject(8, hd.getSdtKH());
+            psUpdate.setObject(9, hd.getDiaChiKH());
+            psUpdate.setObject(10, 1);
+            psUpdate.setObject(11, hd.getUpdateAt());
+            psUpdate.setObject(12, hd.getUpdateBy());
+            psUpdate.setObject(13, 1);
+            psUpdate.setObject(14, idHD);
+            psUpdate.addBatch(); // Thêm câu lệnh update vào batch
+
+            // Thực hiện cập nhật danh sách chi tiết hóa đơn
+            for (HoaDonChiTietEntity hdct : hdctList) {
+                // Tách giá trị idimel và idCTSP
+                String[] idimelList = hdct.getIdImel().split("\n");
+                String[] idCTSPList = hdct.getIdCtsp().split("\n");
+
+                // Thêm từng cặp idimel và idCTSP vào cơ sở dữ liệu
+                for (int i = 0; i < idimelList.length; i++) {
+                    psInsert.setObject(1, idimelList[i]);
+                    psInsert.setObject(2, idCTSPList[i]);
+                    psInsert.setObject(3, hdct.getIdHoaDon());
+                    psInsert.setObject(4, hdct.getDonGia());
+                    psInsert.setObject(5, 1);
+                    psInsert.setObject(6, hdct.getCreatedAt());
+                    psInsert.setObject(7, hdct.getCreatedBy());
+                    psInsert.setObject(8, hdct.getUpdatedAt());
+                    psInsert.setObject(9, hdct.getUpdateBy());
+                    psInsert.addBatch(); // Thêm câu lệnh insert vào batch
+                }
+            }
+
+            // Thực thi batch cho cả update và insert
+            int[] updateCounts = psUpdate.executeBatch();
+            int[] insertCounts = psInsert.executeBatch();
+
+            // Kiểm tra kết quả của cả hai batch
+            for (int updateCount : updateCounts) {
+                if (updateCount == PreparedStatement.EXECUTE_FAILED) {
+                    throw new Exception("Update hoa don failed");
+                }
+                check += updateCount;
+            }
+            for (int insertCount : insertCounts) {
+                if (insertCount == PreparedStatement.EXECUTE_FAILED) {
+                    throw new Exception("Insert hoa don chi tiet failed");
+                }
+                check += insertCount;
+            }
+
+            cnt.commit(); // Commit giao dịch
         } catch (Exception e) {
             e.printStackTrace();
+            check = 0;
         }
+
         return check > 0;
     }
 
@@ -243,7 +336,7 @@ public class BanHangRepository {
                       WHERE [ID] = ?
                      """;
 
-        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
             // Thiết lập các tham số cho câu lệnh SQL
             ps.setObject(1, hd.getIdKH());
             ps.setObject(2, hd.getNgayTao());
@@ -268,7 +361,7 @@ public class BanHangRepository {
         List<ChiTietSanPhamViewModel> listSp = new ArrayList<>();
 
         String sql = """
-WITH DSP_Count AS (
+                WITH DSP_Count AS (
                      SELECT
                          IDDongSP,
                          COUNT(*) AS SoLuongDSP
@@ -323,7 +416,7 @@ WITH DSP_Count AS (
                  ORDER BY 
                      ID DESC;
                  """;
-        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
@@ -404,7 +497,7 @@ WITH DSP_Count AS (
                 + "        CPU.CPU LIKE ? "
                 + "    )";
 
-        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, Nsx);
             ps.setObject(2, Pin);
             ps.setObject(3, ManHinh);
@@ -471,7 +564,7 @@ WITH DSP_Count AS (
                          ID DESC;
                      """;
 
-        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, imel);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -496,50 +589,63 @@ WITH DSP_Count AS (
         return listSP;
     }
 
-    public List<ChiTietSanPhamViewModel> deleteGioHang(String imel) {
+    public List<ChiTietSanPhamViewModel> getSPTuHoaDon(String idHD) {
         List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
 
         String sql = """
                      SELECT
-                         Imel.Imel,
-                         DS.TenDSP,
-                         Pin.DungLuongPin,
-                         ManHinh.LoaiManHinh,
-                         CPU.CPU,
-                         Ram.DungLuongRam,
-                         BoNho.DungLuongBoNho,
-                         MauSac.TenMau,
-                         CTS.GiaBan,
-                         CTS.ID,
-                         CTS.IDDongSP
-                     FROM
-                         dbo.ChiTietSP AS CTS
-                     INNER JOIN 
-                         dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID
-                     INNER JOIN 
-                         dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
-                     INNER JOIN 
-                         dbo.Pin ON CTS.IDPin = Pin.ID
-                     INNER JOIN 
-                         dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
-                     INNER JOIN 
-                         dbo.CPU ON CTS.IDCPU = CPU.ID
-                     INNER JOIN 
-                         dbo.Ram ON CTS.IDRam = Ram.ID
-                     INNER JOIN 
-                         dbo.BoNho ON CTS.IDBoNho = BoNho.ID
-                     INNER JOIN 
-                         dbo.MauSac ON CTS.IDMauSac = MauSac.ID
-                     INNER JOIN 
-                         dbo.Imel ON CTS.IDImel = Imel.ID
-                     WHERE 
-                         CTS.Deleted = 0 AND Imel.Imel = ?
-                     ORDER BY 
-                         ID DESC;
+                                 Imel.Imel,
+                                 DS.TenDSP,
+                                 Pin.DungLuongPin,
+                                 ManHinh.LoaiManHinh,
+                                 CPU.CPU,
+                                 Ram.DungLuongRam,
+                                 BoNho.DungLuongBoNho,
+                                 MauSac.TenMau,
+                                 CTS.GiaBan,
+                                 CTS.ID,
+                                 CTS.IDDongSP,
+                                 COUNT(CTS.IDImel) AS SoLuong
+                             FROM
+                                 dbo.ChiTietSP CTS
+                             JOIN
+                                 dbo.NhaSanXuat NSX ON CTS.IDNSX = NSX.ID
+                             JOIN
+                                 dbo.DongSP DS ON CTS.IDDongSP = DS.ID
+                             JOIN
+                                 dbo.Pin ON CTS.IDPin = Pin.ID
+                             JOIN
+                                 dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
+                             JOIN
+                                 dbo.CPU ON CTS.IDCPU = CPU.ID
+                             JOIN
+                                 dbo.Ram ON CTS.IDRam = Ram.ID
+                             JOIN
+                                 dbo.BoNho ON CTS.IDBoNho = BoNho.ID
+                             JOIN
+                                 dbo.MauSac ON CTS.IDMauSac = MauSac.ID
+                             JOIN
+                                 dbo.Imel ON CTS.IDImel = Imel.ID
+                             WHERE
+                                 CTS.ID IN (SELECT IDCTSP FROM HoaDonChiTiet WHERE IDHoaDon = ?)
+                             GROUP BY
+                                 Imel.Imel,
+                                 DS.TenDSP,
+                                 Pin.DungLuongPin,
+                                 ManHinh.LoaiManHinh,
+                                 CPU.CPU,
+                                 Ram.DungLuongRam,
+                                 BoNho.DungLuongBoNho,
+                                 MauSac.TenMau,
+                                 CTS.GiaBan,
+                                 CTS.ID,
+                                 CTS.IDDongSP
+                             ORDER BY
+                                 CTS.ID DESC;
                      """;
 
-        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, imel);
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, idHD);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
@@ -554,9 +660,79 @@ WITH DSP_Count AS (
                 spvm.setGiaBan(rs.getBigDecimal(9));
                 spvm.setId(rs.getString(10));
                 spvm.setIdDsp(rs.getString(11));
+                spvm.setSoLuong(rs.getInt(12));
                 listSP.add(spvm);
             }
-            updateDeleteSP(imel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listSP;
+    }
+
+    public List<ChiTietSanPhamViewModel> deleteGioHang(List<String> imels) {
+        List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
+
+        String sql = """
+                 SELECT
+                     Imel.Imel,
+                     DS.TenDSP,
+                     Pin.DungLuongPin,
+                     ManHinh.LoaiManHinh,
+                     CPU.CPU,
+                     Ram.DungLuongRam,
+                     BoNho.DungLuongBoNho,
+                     MauSac.TenMau,
+                     CTS.GiaBan,
+                     CTS.ID,
+                     CTS.IDDongSP
+                 FROM
+                     dbo.ChiTietSP AS CTS
+                 INNER JOIN 
+                     dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID
+                 INNER JOIN 
+                     dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
+                 INNER JOIN 
+                     dbo.Pin ON CTS.IDPin = Pin.ID
+                 INNER JOIN 
+                     dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID
+                 INNER JOIN 
+                     dbo.CPU ON CTS.IDCPU = CPU.ID
+                 INNER JOIN 
+                     dbo.Ram ON CTS.IDRam = Ram.ID
+                 INNER JOIN 
+                     dbo.BoNho ON CTS.IDBoNho = BoNho.ID
+                 INNER JOIN 
+                     dbo.MauSac ON CTS.IDMauSac = MauSac.ID
+                 INNER JOIN 
+                     dbo.Imel ON CTS.IDImel = Imel.ID
+                 WHERE 
+                     CTS.Deleted = 0 AND Imel.Imel = ?
+                 ORDER BY 
+                     ID DESC;
+                 """;
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            for (String imel : imels) {
+                ps.setString(1, imel);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
+                    spvm.setImel(rs.getString(1));
+                    spvm.setTenDsp(rs.getString(2));
+                    spvm.setDungLuongPin(rs.getString(3));
+                    spvm.setLoaiManHinh(rs.getString(4));
+                    spvm.setCpu(rs.getString(5));
+                    spvm.setDungLuongRam(rs.getString(6));
+                    spvm.setDungLuongBoNho(rs.getString(7));
+                    spvm.setTenMau(rs.getString(8));
+                    spvm.setGiaBan(rs.getBigDecimal(9));
+                    spvm.setId(rs.getString(10));
+                    spvm.setIdDsp(rs.getString(11));
+                    listSP.add(spvm);
+                }
+            }
+            // Gọi phương thức updateDeleteSP sau khi truy vấn cho tất cả các Imel
+            updateDeleteSP(imels);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -567,28 +743,32 @@ WITH DSP_Count AS (
         List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
 
         String sql = """
-                 SELECT
-                             CTS.IDDongSP,
-                             DS.TenDsp,
-                             Imel.Imel
-                         FROM
-                             dbo.ChiTietSP AS CTS
-                             INNER JOIN dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
-                             INNER JOIN dbo.Imel ON CTS.IDImel = Imel.ID
-                         WHERE
-                             CTS.Deleted = 1 AND DS.ID = (SELECT ID FROM DongSP WHERE TenDsp = ?)
-                         ORDER BY
-                             CTS.ID DESC;
+                   SELECT
+                                                          CTS.ID,
+                                                          CTS.IDDongSP,
+                                                          DS.TenDsp,
+                                                          Imel.Imel,
+                                                  CTS.IDImel
+                                                      FROM
+                                                          dbo.ChiTietSP AS CTS
+                                                          INNER JOIN dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
+                                                          INNER JOIN dbo.Imel ON CTS.IDImel = Imel.ID
+                                                      WHERE
+                                                          CTS.Deleted = 1 AND DS.ID = (SELECT ID FROM DongSP WHERE TenDsp = ?)
+                                                      ORDER BY
+                                                          CTS.ID DESC;
                  """;
 
-        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, idDsp);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
-                spvm.setIdDsp(rs.getString(1));
-                spvm.setTenDsp(rs.getString(2));
-                spvm.setImel(rs.getString(3));
+                spvm.setId(rs.getString(1));
+                spvm.setIdDsp(rs.getString(2));
+                spvm.setTenDsp(rs.getString(3));
+                spvm.setImel(rs.getString(4));
+                spvm.setIdimel(rs.getString(5));
                 listSP.add(spvm);
             }
 
@@ -598,32 +778,42 @@ WITH DSP_Count AS (
         return listSP;
     }
 
-    public List<ChiTietSanPhamViewModel> deleteIdDSP(String idDsp) {
+    public List<ChiTietSanPhamViewModel> deleteIdDSP(List<String> idDsp) {
         List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
 
-        String sql = """
-                 SELECT
-                             CTS.IDDongSP,
-                             DS.TenDsp,
-                             Imel.Imel
-                         FROM
-                             dbo.ChiTietSP AS CTS
-                             INNER JOIN dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
-                             INNER JOIN dbo.Imel ON CTS.IDImel = Imel.ID
-                         WHERE
-                             CTS.Deleted = 0 AND DS.ID = (SELECT ID FROM DongSP WHERE TenDsp = ?)
-                         ORDER BY
-                             CTS.ID DESC;
-                 """;
+        // Xây dựng chuỗi 'IN' parameter từ danh sách idDsp
+        String inParams = String.join(",", Collections.nCopies(idDsp.size(), "?"));
 
-        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, idDsp);
+        String sql = """
+               SELECT
+                                      CTS.ID,
+                                      CTS.IDDongSP,
+                                      DS.TenDsp,
+                                      Imel.Imel,
+                              CTS.IDImel
+                                  FROM
+                                      dbo.ChiTietSP AS CTS
+                                      INNER JOIN dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID
+                                      INNER JOIN dbo.Imel ON CTS.IDImel = Imel.ID
+                                  WHERE
+                                      CTS.ID IN (%s)
+                                  ORDER BY
+                                      CTS.ID DESC;
+             """.formatted(inParams);
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+
+            for (int i = 0; i < idDsp.size(); i++) {
+                ps.setString(i + 1, idDsp.get(i));
+            }
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
-                spvm.setIdDsp(rs.getString(1));
-                spvm.setTenDsp(rs.getString(2));
-                spvm.setImel(rs.getString(3));
+                spvm.setId(rs.getString(1));
+                spvm.setIdDsp(rs.getString(2));
+                spvm.setTenDsp(rs.getString(3));
+                spvm.setImel(rs.getString(4));
+                spvm.setIdimel(rs.getString(5));
                 listSP.add(spvm);
             }
 
@@ -636,7 +826,7 @@ WITH DSP_Count AS (
     public void updateSelectSP(String imel) {
         String updateSql = "UPDATE dbo.ChiTietSP SET Deleted = 0 WHERE IDImel = (SELECT ID FROM dbo.Imel WHERE Imel = ?)";
 
-        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(updateSql)) {
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(updateSql)) {
             ps.setString(1, imel);
             ps.executeUpdate();
         } catch (Exception e) {
@@ -644,14 +834,39 @@ WITH DSP_Count AS (
         }
     }
 
-    public void updateDeleteSP(String imel) {
-        String updateSql = "UPDATE dbo.ChiTietSP SET Deleted = 1 WHERE IDImel = (SELECT ID FROM dbo.Imel WHERE Imel = ?)";
+    public void updateDeleteSP(List<String> imels) {
+        // Xây dựng chuỗi 'IN' parameter từ danh sách imels
+        String inParams = String.join(",", Collections.nCopies(imels.size(), "?"));
 
-        try (Connection con = DBConnect.getConnection(); PreparedStatement ps = con.prepareStatement(updateSql)) {
-            ps.setString(1, imel);
+        // Tạo câu lệnh SQL với IN và PreparedStatement
+        String updateSql = "UPDATE dbo.ChiTietSP SET Deleted = 1 WHERE IDImel IN (SELECT ID FROM dbo.Imel WHERE Imel IN (" + inParams + "))";
+
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(updateSql)) {
+            // Gán giá trị từ mảng imels vào câu lệnh SQL
+            for (int i = 0; i < imels.size(); i++) {
+                ps.setString(i + 1, imels.get(i));
+            }
+            // Thực thi câu lệnh SQL
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    public boolean updateDeleteHD(String idHD) {
+        String updateSql = """
+                           UPDATE [dbo].[HoaDon]
+                              SET [Deleted] = 0
+                            WHERE ID = ?
+                           """;
+        int check = 0;
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(updateSql)) {
+            ps.setObject(1, idHD);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return check > 0;
+    }
+
 }

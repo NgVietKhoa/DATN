@@ -846,8 +846,7 @@ public class PhieuGiamGiaRepository {
     public float layPGG(String tenPGG) {
        float pgg=0;
         String sql = """                                                            
-                      Select top 1 PhieuGiamGia.PhanTramGiam from PhieuGiamGia where PhieuGiamGia.TenGiamGia = ?			 
-                      ORDER BY PhieuGiamGia.CreatedAt DESC	 
+                    Select top 1 PhieuGiamGia.PhanTramGiam from PhieuGiamGia where PhieuGiamGia.TenGiamGia = ?			 
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, tenPGG);
@@ -860,7 +859,7 @@ public class PhieuGiamGiaRepository {
         }
         return pgg;
     }
-
+    
     public List<PhieuGiamGia> getPGGPhuHop(float giaTien){
         List<PhieuGiamGia> ds = new ArrayList<>();
         String sql = """                                                            
@@ -881,5 +880,5 @@ public class PhieuGiamGiaRepository {
         }
         return ds;
     }
-    
+
 }
