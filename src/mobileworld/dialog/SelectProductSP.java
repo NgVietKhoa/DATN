@@ -1,5 +1,6 @@
 package mobileworld.dialog;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class SelectProductSP extends javax.swing.JFrame {
         for (ChiTietSanPhamViewModel sp : listSP) {
             stt++;
             tblModel.addRow(new Object[]{
-                false, stt, sp.getTenDsp(), sp.getImel()
+                false, stt, sp.getId(), sp.getTenDsp(), sp.getImel(), sp.getIdimel()
             });
         }
     }
@@ -62,17 +63,17 @@ public class SelectProductSP extends javax.swing.JFrame {
 
         tblSelectDsp.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "#", "STT", "Tên Sản Phẩm", "Imel Sản Phẩm"
+                "#", "STT", "Mã CTSP", "Tên Sản Phẩm", "Imel Sản Phẩm", "Mã Imel"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -128,12 +129,25 @@ public class SelectProductSP extends javax.swing.JFrame {
 
     private void btnXacNhanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXacNhanActionPerformed
         Map<String, Integer> selectedQuantities = new HashMap<>();
-
+        List<String> selectedImels = new ArrayList<>(); // Danh sách các imel được chọn
+        List<String> selectedCTSPs = new ArrayList<>();
+        List<String> selectedIdCTSPs = new ArrayList<>();
+        List<String> selectedImelDeletes = new ArrayList<>();
         for (int i = 0; i < tblSelectDsp.getRowCount(); i++) {
             boolean isSelected = (boolean) tblSelectDsp.getValueAt(i, 0);
             if (isSelected) {
-                String imel = (String) tblSelectDsp.getValueAt(i, 3);
-                int currentQuantity = selectedQuantities.getOrDefault(imel, 0); // Lấy số lượng đã chọn trước đó, nếu không có thì lấy 0
+                String imel = (String) tblSelectDsp.getValueAt(i, 4);
+                String idimel = (String) tblSelectDsp.getValueAt(i, 5);
+                String CTSP = (String) tblSelectDsp.getValueAt(i, 2);
+                String idCTSP = (String) tblSelectDsp.getValueAt(i, 2);
+                selectedCTSPs.add(CTSP);
+                selectedImels.add(idimel); // Thêm idimel được chọn vào danh sách
+                selectedIdCTSPs.add(idCTSP);
+                selectedImelDeletes.add(imel);// Thêm idCTSP được chọn vào danh sách
+                int currentQuantity = 0;
+                if (selectedQuantities.containsKey(imel)) {
+                    currentQuantity = selectedQuantities.get(imel);
+                }
                 selectedQuantities.put(imel, currentQuantity + 1); // Tăng số lượng lên 1 và lưu lại vào bản đồ
             }
         }
@@ -144,6 +158,12 @@ public class SelectProductSP extends javax.swing.JFrame {
             int quantity = entry.getValue();
             viewBanHang.updateGioHangWithImel(imel, quantity);
         }
+
+        // Cập nhật giỏ hàng với danh sách imel đã chọn
+        viewBanHang.getImel(selectedImels);
+        viewBanHang.getCTSP(selectedCTSPs);
+        viewBanHang.getIdCTSP(selectedIdCTSPs);
+        viewBanHang.getImelDelete(selectedImelDeletes);
 
         setVisible(false);
         dispose();

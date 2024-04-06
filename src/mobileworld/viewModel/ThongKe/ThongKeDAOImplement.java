@@ -334,13 +334,13 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         List<HoaDonTK> ds = new ArrayList<>();
         String sql = """
             	SELECT TOP 10 dbo.DongSP.TenDsp, COUNT(dbo.DongSP.TenDsp) AS Expr1
-                                FROM            dbo.HoaDonChiTiet INNER JOIN
-                                                         dbo.ChiTietSP ON dbo.HoaDonChiTiet.IDCTSP = dbo.ChiTietSP.ID INNER JOIN
-                                                         dbo.DongSP ON dbo.ChiTietSP.IDDongSP = dbo.DongSP.ID INNER JOIN
-                                                         dbo.HoaDon ON dbo.HoaDonChiTiet.IDHoaDon = dbo.HoaDon.ID
-                                                         where YEAR(HoaDon.NgayTao) = ?
-                                GROUP BY dbo.DongSP.TenDsp
-                                ORDER BY COUNT(dbo.DongSP.TenDsp)  DESC
+                                                                FROM            dbo.HoaDonChiTiet INNER JOIN
+                                                                                         dbo.ChiTietSP ON dbo.HoaDonChiTiet.IDCTSP = dbo.ChiTietSP.ID INNER JOIN
+                                                                                         dbo.DongSP ON dbo.ChiTietSP.IDDongSP = dbo.DongSP.ID INNER JOIN
+                                                                                         dbo.HoaDon ON dbo.HoaDonChiTiet.IDHoaDon = dbo.HoaDon.ID
+                                                                                         where YEAR(HoaDon.NgayTao) = ?
+                                                                GROUP BY dbo.DongSP.TenDsp
+                                                                ORDER BY COUNT(dbo.DongSP.TenDsp)  DESC
                           """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, Year);
@@ -363,13 +363,13 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         List<HoaDonTK> ds = new ArrayList<>();
         String sql = """
                 SELECT TOP 10 dbo.DongSP.TenDsp, COUNT(dbo.DongSP.TenDsp) AS Expr1
-                FROM            dbo.HoaDonChiTiet INNER JOIN
-                                         dbo.ChiTietSP ON dbo.HoaDonChiTiet.IDCTSP = dbo.ChiTietSP.ID INNER JOIN
-                                         dbo.DongSP ON dbo.ChiTietSP.IDDongSP = dbo.DongSP.ID INNER JOIN
-                                         dbo.HoaDon ON dbo.HoaDonChiTiet.IDHoaDon = dbo.HoaDon.ID
-                                         where HoaDon.NgayTao >= ?  AND HoaDon.NgayTao <= ?
-                GROUP BY dbo.DongSP.TenDsp
-                ORDER BY COUNT(dbo.DongSP.TenDsp)  DESC
+                                FROM            dbo.HoaDonChiTiet INNER JOIN
+                                                         dbo.ChiTietSP ON dbo.HoaDonChiTiet.IDCTSP = dbo.ChiTietSP.ID INNER JOIN
+                                                         dbo.DongSP ON dbo.ChiTietSP.IDDongSP = dbo.DongSP.ID INNER JOIN
+                                                         dbo.HoaDon ON dbo.HoaDonChiTiet.IDHoaDon = dbo.HoaDon.ID
+                                                         where CONVERT(DATE, HoaDon.NgayTao) >= ?  AND CONVERT(DATE, HoaDon.NgayTao) <= ?
+                                GROUP BY dbo.DongSP.TenDsp
+                                ORDER BY COUNT(dbo.DongSP.TenDsp)  DESC
                           """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, ngayBD);
@@ -397,7 +397,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
                                          dbo.ChiTietSP ON dbo.HoaDonChiTiet.IDCTSP = dbo.ChiTietSP.ID INNER JOIN
                                          dbo.DongSP ON dbo.ChiTietSP.IDDongSP = dbo.DongSP.ID INNER JOIN
                                          dbo.HoaDon ON dbo.HoaDonChiTiet.IDHoaDon = dbo.HoaDon.ID
-                                         where HoaDon.NgayTao = ?
+                                         where CONVERT(DATE, HoaDon.NgayTao) = ?
                 GROUP BY dbo.DongSP.TenDsp
                 ORDER BY COUNT(dbo.DongSP.TenDsp)  DESC
                           """;

@@ -859,5 +859,26 @@ public class PhieuGiamGiaRepository {
         }
         return pgg;
     }
+    
+    public List<PhieuGiamGia> getPGGPhuHop(float giaTien){
+        List<PhieuGiamGia> ds = new ArrayList<>();
+        String sql = """                                                            
+             select PhieuGiamGia.TenGiamGia from PhieuGiamGia
+                                                   where PhieuGiamGia.HoaDonToiThieu <= ? and Deleted = 1
+                                                   Order by PhieuGiamGia.PhanTramGiam DESC         				 
+                   """;
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, giaTien);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                PhieuGiamGia gg = new PhieuGiamGia();
+                gg.setTenGiamGia(rs.getString(1));
+                ds.add(gg);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ds;
+    }
 
 }
