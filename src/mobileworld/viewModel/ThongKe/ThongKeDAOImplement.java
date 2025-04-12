@@ -82,7 +82,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
     public float hoaDonChuaThanhToan() {
         float soLieu = 0;
         String sql = """
-			Select SUM(HoaDon.TongTienSauGiam) from HoaDon where TrangThai = 0
+			Select SUM(HoaDon.TongTienSauGiam) from HoaDon where TrangThai = 0 or TrangThai=2 or TrangThai=3
                                             """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -180,7 +180,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
             while (rs.next()) {
                 HoaDonTK tk = new HoaDonTK();
                 tk.setMaHD(rs.getString(1));
-                   tk.setNgayTaoLCD(rs.getTimestamp(2).toLocalDateTime());
+                tk.setNgayTaoLCD(rs.getTimestamp(2).toLocalDateTime());
                 tk.setNgayTao(rs.getDate(3).toLocalDate());
                 tk.setThanhTien(rs.getFloat(4));
                 ds.add(tk);
@@ -219,28 +219,25 @@ public class ThongKeDAOImplement implements ThongKeDAO {
         List<HoaDonTK> ds = new ArrayList<>();
 
         String sql = """
-              SELECT  CONVERT(DATETIME2, HoaDon.NgayTao),CONVERT(DATE, HoaDon.NgayTao) AS NgayTao, 
-                   SUM(HoaDon.TongTienSauGiam) AS TongTien
-            FROM HoaDon 
-            WHERE CONVERT(DATE, HoaDon.NgayTao) = ?
-            GROUP BY  CONVERT(DATETIME2, HoaDon.NgayTao),CONVERT(DATE, HoaDon.NgayTao)
-            ORDER BY  CONVERT(DATETIME2, HoaDon.NgayTao),CONVERT(DATE, HoaDon.NgayTao)  ASC;
+             SELECT  CONVERT(DATE, HoaDon.NgayTao) AS NgayTao, 
+                               SUM(HoaDon.TongTienSauGiam) AS TongTien
+                        FROM HoaDon 
+                        WHERE CONVERT(DATE, HoaDon.NgayTao) = ?
+                        GROUP BY  CONVERT(DATE, HoaDon.NgayTao)
                           """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, ngayHT);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 HoaDonTK tk = new HoaDonTK();
-                tk.setNgayTaoLCD(rs.getTimestamp(1).toLocalDateTime());
-                tk.setNgayTao(rs.getDate(2).toLocalDate());
-                tk.setThanhTien(rs.getFloat(3));
+                tk.setNgayTao(rs.getDate(1).toLocalDate());
+                tk.setThanhTien(rs.getFloat(2));
                 ds.add(tk);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return ds;
-
     }
 
     @Override
@@ -261,7 +258,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
             while (rs.next()) {
                 HoaDonTK tk = new HoaDonTK();
                 tk.setMaHD(rs.getString(1));
-                                tk.setNgayTaoLCD(rs.getTimestamp(2).toLocalDateTime());
+                tk.setNgayTaoLCD(rs.getTimestamp(2).toLocalDateTime());
 
                 tk.setNgayTao(rs.getDate(3).toLocalDate());
                 tk.setThanhTien(rs.getFloat(4));
@@ -289,7 +286,7 @@ public class ThongKeDAOImplement implements ThongKeDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 HoaDonTK tk = new HoaDonTK();
-                  tk.setNgayTaoLCD(rs.getTimestamp(1).toLocalDateTime());
+                tk.setNgayTaoLCD(rs.getTimestamp(1).toLocalDateTime());
                 tk.setNgayTao(rs.getDate(2).toLocalDate());
                 tk.setThanhTien(rs.getFloat(3));
                 ds.add(tk);

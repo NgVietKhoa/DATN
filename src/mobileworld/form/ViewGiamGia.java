@@ -32,10 +32,10 @@ import javax.swing.text.View;
 import mobileworld.model.PhieuGiamGia;
 import mobileworld.service.PhieuGiamGiaService.PhieuGiamGiaService;
 import mobileworld.thread.ThreadTinhTrang;
-import mobileworld.tablecutoms.TableActionCellRender;
-import mobileworld.tablecutoms.TableActionCellEditor;
-import mobileworld.tablecutoms.TableActionCellRender;
-import mobileworld.tablecutoms.TableActionEvent;
+import mobileworld.tablecutoms.delete.TableActionCellRender;
+import mobileworld.tablecutoms.delete.TableActionCellEditor;
+import mobileworld.tablecutoms.delete.TableActionCellRender;
+import mobileworld.tablecutoms.delete.TableActionEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -479,8 +479,9 @@ public class ViewGiamGia extends javax.swing.JPanel {
         );
 
         btnCallAdd.setForeground(new java.awt.Color(255, 255, 255));
-        btnCallAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-add-24.png"))); // NOI18N
-        btnCallAdd.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCallAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-add-30.png"))); // NOI18N
+        btnCallAdd.setText("Thêm");
+        btnCallAdd.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnCallAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCallAddActionPerformed(evt);
@@ -524,8 +525,9 @@ public class ViewGiamGia extends javax.swing.JPanel {
         });
 
         btnRefesh.setForeground(new java.awt.Color(255, 255, 255));
-        btnRefesh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-clear-24.png"))); // NOI18N
-        btnRefesh.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnRefesh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-clear-30.png"))); // NOI18N
+        btnRefesh.setText("Làm Mới");
+        btnRefesh.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnRefesh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRefeshActionPerformed(evt);
@@ -533,8 +535,9 @@ public class ViewGiamGia extends javax.swing.JPanel {
         });
 
         btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
-        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-update-30.png"))); // NOI18N
-        btnUpdate.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-update-30 (1).png"))); // NOI18N
+        btnUpdate.setText("Sửa");
+        btnUpdate.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateActionPerformed(evt);
@@ -557,11 +560,11 @@ public class ViewGiamGia extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addComponent(cboTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnRefesh, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnRefesh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 299, Short.MAX_VALUE)
-                                .addComponent(btnCallAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 193, Short.MAX_VALUE)
+                                .addComponent(btnCallAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())))
             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -577,10 +580,12 @@ public class ViewGiamGia extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                         .addComponent(txtSearchAll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(cboTrangThai, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(btnCallAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnRefesh, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnUpdate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                            .addComponent(btnRefesh, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnCallAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
                 .addContainerGap())
@@ -774,6 +779,7 @@ public class ViewGiamGia extends javax.swing.JPanel {
             return;
         }
         String soPhanTramFormat = txtPhanTramGiam.getText().trim().replace("%", "");
+        Float phanTramGiam=Float.parseFloat(txtPhanTramGiam.getText().trim().replace("%", ""));
         if (txtPhanTramGiam.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập phần trăm giảm");
             return;
@@ -788,6 +794,10 @@ public class ViewGiamGia extends javax.swing.JPanel {
         }
         if (!soTienFormat.matches("[0-9]+")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập lại số tiền giảm tối đa");
+            return;
+        }
+        if(phanTramGiam>100){
+            JOptionPane.showMessageDialog(this, "Vui lòng phần trăm giảm dưới hoặc bằng 100");
             return;
         }
 
@@ -1030,7 +1040,8 @@ public class ViewGiamGia extends javax.swing.JPanel {
                 }
             }
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+           JOptionPane.showMessageDialog(this, "Vui lòng nhập phần trăm dạng số");
+           return;
         }
     }//GEN-LAST:event_txtPhanTramGiamKeyReleased
 

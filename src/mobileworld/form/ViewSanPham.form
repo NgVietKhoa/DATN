@@ -29,8 +29,12 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="materialTabbed1" alignment="0" max="32767" attributes="0"/>
           <Component id="jLabel13" alignment="0" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="materialTabbed1" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -189,6 +193,7 @@
                 <Property name="name" type="java.lang.String" value="" noResource="true"/>
               </Properties>
               <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtTimKiemSPActionPerformed"/>
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtTimKiemSPKeyReleased"/>
               </Events>
             </Component>
@@ -210,13 +215,13 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                           <Component id="txtTenSP" min="-2" pref="300" max="-2" attributes="0"/>
-                          <EmptySpace pref="709" max="32767" attributes="0"/>
-                          <Component id="btnAddSp" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="646" max="32767" attributes="0"/>
+                          <Component id="btnAddSp" min="-2" pref="120" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnUpdateSp" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnUpdateSp" min="-2" pref="111" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnClearSp" min="-2" pref="116" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                          <Component id="btnClearSp" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -252,11 +257,11 @@
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/mobileworld/icon/icons8-add-24.png"/>
+                      <Image iconType="3" name="/mobileworld/icon/icons8-add-30.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Th&#xea;m"/>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Segoe UI" size="14" style="1"/>
+                      <Font name="Segoe UI" size="13" style="1"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -269,11 +274,11 @@
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/mobileworld/icon/icons8-refresh-24.png"/>
+                      <Image iconType="3" name="/mobileworld/icon/icons8-update-30 (1).png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="S&#x1eed;a"/>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Segoe UI" size="14" style="1"/>
+                      <Font name="Segoe UI" size="13" style="1"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -286,11 +291,11 @@
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/mobileworld/icon/icons8-clear-24 (1).png"/>
+                      <Image iconType="3" name="/mobileworld/icon/icons8-clear-30.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="L&#xe0;m M&#x1edb;i"/>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Segoe UI" size="14" style="1"/>
+                      <Font name="Segoe UI" size="13" style="1"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -426,10 +431,10 @@
                               <Component id="txtTimKiem" min="-2" pref="240" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jCheckBox1" min="-2" pref="50" max="-2" attributes="0"/>
-                              <EmptySpace pref="500" max="32767" attributes="0"/>
-                              <Component id="buttonCustom10" min="-2" pref="110" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="buttonCustom10" min="-2" pref="120" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="btnTaiQR" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnTaiQR" min="-2" pref="110" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Component id="btnQuetQR" min="-2" pref="124" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
@@ -482,11 +487,11 @@
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/mobileworld/icon/icons8-add-24.png"/>
+                  <Image iconType="3" name="/mobileworld/icon/icons8-add-30.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Th&#xea;m"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Segoe UI" size="14" style="1"/>
+                  <Font name="Segoe UI" size="13" style="1"/>
                 </Property>
               </Properties>
               <Events>
@@ -499,11 +504,11 @@
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/mobileworld/icon/icons8-clear-24 (1).png"/>
+                  <Image iconType="3" name="/mobileworld/icon/icons8-clear-30.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="L&#xe0;m M&#x1edb;i"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Segoe UI" size="14" style="1"/>
+                  <Font name="Segoe UI" size="13" style="1"/>
                 </Property>
               </Properties>
               <Events>
@@ -637,11 +642,11 @@
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/mobileworld/icon/icons8-export-excel-24.png"/>
+                  <Image iconType="3" name="/mobileworld/icon/icons8-excel-30.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Xu&#x1ea5;t File"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Segoe UI" size="14" style="1"/>
+                  <Font name="Segoe UI" size="13" style="1"/>
                 </Property>
               </Properties>
               <Events>
@@ -658,7 +663,7 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="T&#x1ea3;i QR"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Segoe UI" size="14" style="1"/>
+                  <Font name="Segoe UI" size="13" style="1"/>
                 </Property>
               </Properties>
               <Events>
@@ -675,7 +680,7 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Qu&#xe9;t QR"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Segoe UI" size="14" style="1"/>
+                  <Font name="Segoe UI" size="13" style="1"/>
                 </Property>
               </Properties>
               <Events>
@@ -713,9 +718,9 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="jPanel2" min="-2" pref="900" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="108" max="32767" attributes="0"/>
+                          <Component id="jPanel2" min="-2" pref="1110" max="-2" attributes="0"/>
+                          <EmptySpace pref="139" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -779,6 +784,22 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboCPUActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="mobileworld.swing.Combobox" name="cboRam">
+                      <Properties>
+                        <Property name="labeText" type="java.lang.String" value="Ram"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboRamActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="mobileworld.swing.Combobox" name="cboCameraSau">
+                      <Properties>
+                        <Property name="labeText" type="java.lang.String" value="Camera Sau"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboCameraSauActionPerformed"/>
                       </Events>
                     </Component>
                     <Component class="mobileworld.swing.Combobox" name="cboGia">
@@ -947,9 +968,9 @@
                               <Component id="txtMaSP" pref="240" max="32767" attributes="0"/>
                               <Component id="txtTenThuocTinhSP" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="163" max="32767" attributes="0"/>
+                          <EmptySpace pref="151" max="32767" attributes="0"/>
                           <Component id="jPanel10" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="180" max="32767" attributes="0"/>
+                          <EmptySpace pref="167" max="32767" attributes="0"/>
                           <Component id="jPanel11" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -1157,9 +1178,9 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
                     <Property name="columns" type="int" value="0"/>
-                    <Property name="horizontalGap" type="int" value="15"/>
+                    <Property name="horizontalGap" type="int" value="20"/>
                     <Property name="rows" type="int" value="2"/>
-                    <Property name="verticalGap" type="int" value="15"/>
+                    <Property name="verticalGap" type="int" value="20"/>
                   </Layout>
                   <SubComponents>
                     <Component class="mobileworld.swing.ButtonCustom" name="btnAddThuocTinh">
@@ -1168,12 +1189,12 @@
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
                         </Property>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/mobileworld/icon/icons8-add-24.png"/>
+                          <Image iconType="3" name="/mobileworld/icon/icons8-add-30.png"/>
                         </Property>
+                        <Property name="text" type="java.lang.String" value="Th&#xea;m"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Segoe UI" size="14" style="1"/>
+                          <Font name="Segoe UI" size="13" style="1"/>
                         </Property>
-                        <Property name="label" type="java.lang.String" value="Insert"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddThuocTinhActionPerformed"/>
@@ -1185,11 +1206,11 @@
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
                         </Property>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/mobileworld/icon/icons8-refresh-24.png"/>
+                          <Image iconType="3" name="/mobileworld/icon/icons8-update-30 (1).png"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Update"/>
+                        <Property name="text" type="java.lang.String" value="S&#x1eed;a "/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Segoe UI" size="14" style="1"/>
+                          <Font name="Segoe UI" size="13" style="1"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -1202,11 +1223,11 @@
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
                         </Property>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/mobileworld/icon/icons8-delete-24.png"/>
+                          <Image iconType="3" name="/mobileworld/icon/icons8-delete-30.png"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Remove"/>
+                        <Property name="text" type="java.lang.String" value="X&#xf3;a"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Segoe UI" size="14" style="1"/>
+                          <Font name="Segoe UI" size="13" style="1"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -1219,11 +1240,11 @@
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
                         </Property>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/mobileworld/icon/icons8-clear-24.png"/>
+                          <Image iconType="3" name="/mobileworld/icon/icons8-clear-30.png"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Clear"/>
+                        <Property name="text" type="java.lang.String" value="L&#xe0;m M&#x1edb;i"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Segoe UI" size="14" style="1"/>
+                          <Font name="Segoe UI" size="13" style="1"/>
                         </Property>
                       </Properties>
                       <Events>

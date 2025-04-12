@@ -1,5 +1,6 @@
 package mobileworld.repository.ChiTietSanPhamRepo;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -384,9 +386,10 @@ public class ChiTietSPRepository {
         return searchResult;
     }
 
-    public List<ChiTietSanPhamViewModel> LocCTSP(String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
+    public List<ChiTietSanPhamViewModel> LocCTSP(String Nsx, String Pin, String ManHinh, String Cpu, String Ram, String CameraSau, boolean sapXepGiaTangDan) {
         List<ChiTietSanPhamViewModel> searchResult = new ArrayList<>();
 
+        // Xây dựng câu truy vấn SQL cơ bản
         String sql = "SELECT "
                 + "CTS.IDImel, "
                 + "CTS.IDNSX, "
@@ -420,7 +423,7 @@ public class ChiTietSPRepository {
                 + "INNER JOIN dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID "
                 + "INNER JOIN dbo.Pin ON CTS.IDPin = Pin.ID "
                 + "INNER JOIN dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID "
-                + "INNER JOIN dbo.CPU ON CTS.IDCPU = CPU.ID "
+                + "INNER JOIN dbo.CPU AS CPU ON CTS.IDCPU = CPU.ID "
                 + "INNER JOIN dbo.Ram ON CTS.IDRam = Ram.ID "
                 + "INNER JOIN dbo.BoNho ON CTS.IDBoNho = BoNho.ID "
                 + "INNER JOIN dbo.MauSac ON CTS.IDMauSac = MauSac.ID "
@@ -428,14 +431,44 @@ public class ChiTietSPRepository {
                 + "INNER JOIN dbo.CameraTruoc ON CTS.IDCamTruoc = CameraTruoc.ID "
                 + "INNER JOIN dbo.Imel ON CTS.IDImel = Imel.ID "
                 + "WHERE "
-                + "CTS.Deleted = 1 "
-                + "AND ( "
-                + "NSX.TenNsx LIKE ? OR "
-                + "Pin.DungLuongPin LIKE ? OR "
-                + "ManHinh.LoaiManHinh LIKE ? OR "
-                + "CPU.CPU LIKE ? "
-                + ") "
-                + "GROUP BY "
+                + "CTS.Deleted = 1 ";
+
+// Danh sách điều kiện
+        List<String> conditions = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+
+        if (Nsx != null && !Nsx.isEmpty()) {
+            conditions.add("NSX.TenNsx LIKE ?");
+            params.add(Nsx);
+        }
+        if (Pin != null && !Pin.isEmpty()) {
+            conditions.add("Pin.DungLuongPin LIKE ?");
+            params.add(Pin);
+        }
+        if (ManHinh != null && !ManHinh.isEmpty()) {
+            conditions.add("ManHinh.LoaiManHinh LIKE ?");
+            params.add(ManHinh);
+        }
+        if (Cpu != null && !Cpu.isEmpty()) {
+            conditions.add("CPU.CPU LIKE ?");
+            params.add(Cpu);
+        }
+        if (Ram != null && !Ram.isEmpty()) {
+            conditions.add("Ram.DungLuongRam LIKE ?");
+            params.add(Ram);
+        }
+        if (CameraSau != null && !CameraSau.isEmpty()) {
+            conditions.add("CameraSau.SoMP LIKE ?");
+            params.add(CameraSau);
+        }
+
+// Thêm các điều kiện vào câu truy vấn
+        if (!conditions.isEmpty()) {
+            sql += "AND (" + String.join(" AND ", conditions) + ")";
+        }
+
+// Tiếp tục câu truy vấn
+        sql += "GROUP BY "
                 + "CTS.IDImel, "
                 + "CTS.IDNSX, "
                 + "CTS.IDDongSP, "
@@ -465,10 +498,11 @@ public class ChiTietSPRepository {
                 + "CTS.GiaBan " + (sapXepGiaTangDan ? "ASC" : "DESC");
 
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, Nsx);
-            ps.setObject(2, Pin);
-            ps.setObject(3, ManHinh);
-            ps.setObject(4, Cpu);
+            // Gán các tham số vào câu truy vấn SQL
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, "%" + params.get(i) + "%");
+            }
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
@@ -501,166 +535,8 @@ public class ChiTietSPRepository {
                 searchResult.add(spvm);
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return searchResult;
-    }
-
-    public List<ChiTietSanPhamViewModel> LocSP(String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
-        List<ChiTietSanPhamViewModel> listSP = new ArrayList<>();
-
-        String sql = "WITH DSP_Count AS ("
-                + "SELECT "
-                + "    IDDongSP, "
-                + "    COUNT(*) AS SoLuongDSP "
-                + "FROM "
-                + "    dbo.ChiTietSP "
-                + "WHERE "
-                + "    Deleted = 1 "
-                + "GROUP BY "
-                + "    IDDongSP "
-                + "), "
-                + "CTE_RN AS ("
-                + "SELECT "
-                + "    CTS.IDImel, "
-                + "    CTS.IDNSX, "
-                + "    CTS.IDDongSP, "
-                + "    CTS.IDMauSac, "
-                + "    CTS.IDPin, "
-                + "    CTS.IDManHinh, "
-                + "    CTS.IDRam, "
-                + "    CTS.IDBoNho, "
-                + "    CTS.IDCPU, "
-                + "    CTS.IDCamSau, "
-                + "    CTS.IDCamTruoc, "
-                + "    Imel.Imel, "
-                + "    DS.TenDSP, "
-                + "    NSX.TenNsx, "
-                + "    Pin.DungLuongPin, "
-                + "    ManHinh.LoaiManHinh, "
-                + "    CPU.CPU, "
-                + "    Ram.DungLuongRam, "
-                + "    BoNho.DungLuongBoNho, "
-                + "    MauSac.TenMau, "
-                + "    SUM(CTS.GiaBan) OVER(PARTITION BY CTS.IDDongSP) AS TongGiaBan, "
-                + "    CTS.GhiChu, "
-                + "    DC.SoLuongDSP, "
-                + "    CameraSau.SoMP AS CameraSau, "
-                + "    CameraTruoc.SoMP AS CameraTruoc, "
-                + "    CTS.ID, "
-                + "    ROW_NUMBER() OVER(PARTITION BY CTS.IDDongSP ORDER BY CTS.GiaBan " + (sapXepGiaTangDan ? "ASC" : "DESC") + ") AS RN "
-                + "FROM "
-                + "    dbo.ChiTietSP AS CTS "
-                + "INNER JOIN "
-                + "    DSP_Count AS DC ON CTS.IDDongSP = DC.IDDongSP "
-                + "INNER JOIN "
-                + "    dbo.NhaSanXuat AS NSX ON CTS.IDNSX = NSX.ID "
-                + "INNER JOIN "
-                + "    dbo.DongSP AS DS ON CTS.IDDongSP = DS.ID "
-                + "INNER JOIN "
-                + "    dbo.Pin ON CTS.IDPin = Pin.ID "
-                + "INNER JOIN "
-                + "    dbo.ManHinh ON CTS.IDManHinh = ManHinh.ID "
-                + "INNER JOIN "
-                + "    dbo.CPU ON CTS.IDCPU = CPU.ID "
-                + "INNER JOIN "
-                + "    dbo.Ram ON CTS.IDRam = Ram.ID "
-                + "INNER JOIN "
-                + "    dbo.BoNho ON CTS.IDBoNho = BoNho.ID "
-                + "INNER JOIN "
-                + "    dbo.MauSac ON CTS.IDMauSac = MauSac.ID "
-                + "INNER JOIN "
-                + "    dbo.CameraSau ON CTS.IDCamSau = CameraSau.ID "
-                + "INNER JOIN "
-                + "    dbo.CameraTruoc ON CTS.IDCamTruoc = CameraTruoc.ID "
-                + "INNER JOIN "
-                + "    dbo.Imel ON CTS.IDImel = Imel.ID "
-                + "WHERE "
-                + "CTS.Deleted = 1 "
-                + "AND ( "
-                + "NSX.TenNsx LIKE ? OR "
-                + "Pin.DungLuongPin LIKE ? OR "
-                + "ManHinh.LoaiManHinh LIKE ? OR "
-                + "CPU.CPU LIKE ? "
-                + ") "
-                + "), "
-                + "CTE_Final AS ("
-                + "SELECT "
-                + "    Imel, "
-                + "    IDNSX, "
-                + "    IDDongSP, "
-                + "    IDMauSac, "
-                + "    IDPin, "
-                + "    IDManHinh, "
-                + "    IDRam, "
-                + "    IDBoNho, "
-                + "    IDCPU, "
-                + "    IDCamSau, "
-                + "    IDCamTruoc, "
-                + "    TenDsp, "
-                + "    TenNsx, "
-                + "    DungLuongPin, "
-                + "    LoaiManHinh, "
-                + "    CPU, "
-                + "    DungLuongRam, "
-                + "    DungLuongBoNho, "
-                + "    TenMau, "
-                + "    (SELECT SUM(GiaBan) FROM dbo.ChiTietSP WHERE IDDongSP = CTE_RN.IDDongSP) AS TongGiaBan, "
-                + "    GhiChu, "
-                + "    SoLuongDSP, "
-                + "    CameraSau, "
-                + "    CameraTruoc, "
-                + "    ID, "
-                + "    ROW_NUMBER() OVER(PARTITION BY IDDongSP ORDER BY ID DESC) AS RN "
-                + "FROM "
-                + "    CTE_RN "
-                + "WHERE "
-                + "    RN = 1 "
-                + ") "
-                + "SELECT "
-                + "    * "
-                + "FROM "
-                + "    CTE_Final ";
-
-        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setObject(1, Nsx);
-            ps.setObject(2, Pin);
-            ps.setObject(3, ManHinh);
-            ps.setObject(4, Cpu);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                ChiTietSanPhamViewModel spvm = new ChiTietSanPhamViewModel();
-                spvm.setImel(rs.getString(1));
-                spvm.setIdNsx(rs.getString(2));
-                spvm.setIdDsp(rs.getString(3));
-                spvm.setIdMauSac(rs.getString(4));
-                spvm.setIdPin(rs.getString(5));
-                spvm.setIdManHinh(rs.getString(6));
-                spvm.setIdRam(rs.getString(7));
-                spvm.setIdboNho(rs.getString(8));
-                spvm.setIdCpu(rs.getString(9));
-                spvm.setIdCameraSau(rs.getString(10));
-                spvm.setIdCameraTruoc(rs.getString(11));
-                spvm.setTenDsp(rs.getString(12));
-                spvm.setTenNsx(rs.getString(13));
-                spvm.setDungLuongPin(rs.getString(14));
-                spvm.setLoaiManHinh(rs.getString(15));
-                spvm.setCpu(rs.getString(16));
-                spvm.setDungLuongRam(rs.getString(17));
-                spvm.setDungLuongBoNho(rs.getString(18));
-                spvm.setTenMau(rs.getString(19));
-                spvm.setGiaBan(rs.getBigDecimal(20));
-                spvm.setGhiChu(rs.getString(21));
-                spvm.setSoLuong(rs.getInt(22));
-                spvm.setCameraSau(rs.getString(23));
-                spvm.setCameraTruoc(rs.getString(24));
-                spvm.setId(rs.getString(25));
-                listSP.add(spvm);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listSP;
     }
 
     public List<ChiTietSanPhamViewModel> getSP(String idDsp) {
@@ -1336,23 +1212,37 @@ public class ChiTietSPRepository {
                         row.createCell(24).setCellValue(resultSet.getString("ID"));
                     }
 
-                    // Save workbook to file
-                    String fileName = "DanhSachSanPham_" + System.currentTimeMillis() + ".xlsx";
-                    try ( FileOutputStream fileOut = new FileOutputStream(fileName)) {
-                        workbook.write(fileOut);
-                        System.out.println("Đã xuất file Excel: " + fileName);
-                        return true;
-                    } catch (FileNotFoundException ex) {
-                        ex.printStackTrace();
-                    } catch (IOException ex) {
-                        Logger.getLogger(ChiTietSPRepository.class.getName()).log(Level.SEVERE, null, ex);
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setDialogTitle("Chọn nơi lưu file");
+                    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+                    // Show save dialog
+                    if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                        File selectedFile = fileChooser.getSelectedFile();
+
+                        // Append .xlsx extension if not provided
+                        String filePath = selectedFile.getAbsolutePath();
+                        if (!filePath.toLowerCase().endsWith(".xlsx")) {
+                            filePath += ".xlsx";
+                        }
+
+                        // Save workbook to selected file
+                        try ( FileOutputStream fileOut = new FileOutputStream(filePath)) {
+                            workbook.write(fileOut);
+                            System.out.println("Đã xuất file Excel: " + filePath);
+                            return true;
+                        } catch (FileNotFoundException ex) {
+                            ex.printStackTrace();
+                        } catch (IOException ex) {
+                            Logger.getLogger(ChiTietSPRepository.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
-
 }

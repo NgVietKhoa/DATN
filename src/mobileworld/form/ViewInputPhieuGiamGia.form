@@ -42,29 +42,27 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="btnBack" min="-2" pref="99" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="404" max="-2" attributes="0"/>
-                          <Component id="btnAdd" min="-2" pref="99" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="btnBack" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="btnAdd" min="-2" pref="120" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="cboNgayKT" alignment="0" pref="602" max="32767" attributes="0"/>
-                          <Component id="cboNgayBatDau" max="32767" attributes="0"/>
-                          <Component id="txtSoTienGiamToiDa" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtTen" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txtPhanTramGiam" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="rdoCK" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="rdoNCK" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="txtSoLan" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txtHoaDonToiThieu" alignment="0" max="32767" attributes="0"/>
+                      <Component id="cboNgayKT" alignment="0" pref="602" max="32767" attributes="0"/>
+                      <Component id="cboNgayBatDau" max="32767" attributes="0"/>
+                      <Component id="txtSoTienGiamToiDa" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtTen" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txtPhanTramGiam" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="rdoCK" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="rdoNCK" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="txtSoLan" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txtHoaDonToiThieu" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
                   <Component id="JScroll" pref="627" max="32767" attributes="0"/>
@@ -106,9 +104,9 @@
                               <Component id="rdoNCK" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" pref="37" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btnAdd" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
-                              <Component id="btnBack" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="btnBack" pref="40" max="32767" attributes="0"/>
+                              <Component id="btnAdd" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
@@ -227,10 +225,11 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/mobileworld/icon/icons8-add-24.png"/>
+              <Image iconType="3" name="/mobileworld/icon/icons8-add-30.png"/>
             </Property>
+            <Property name="text" type="java.lang.String" value="Th&#xea;m"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Segoe UI" size="14" style="1"/>
+              <Font name="Segoe UI" size="13" style="1"/>
             </Property>
           </Properties>
           <Events>
@@ -243,11 +242,12 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/mobileworld/icon/icons8-back-24.png"/>
+              <Image iconType="3" name="/mobileworld/icon/icons8-back-30.png"/>
             </Property>
+            <Property name="text" type="java.lang.String" value="Quay L&#x1ea1;i"/>
             <Property name="alignmentX" type="float" value="0.5"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Segoe UI" size="14" style="1"/>
+              <Font name="Segoe UI" size="13" style="1"/>
             </Property>
           </Properties>
           <Events>

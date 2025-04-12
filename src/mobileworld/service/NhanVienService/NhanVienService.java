@@ -40,4 +40,8 @@ public class NhanVienService {
     public List<NhanVienViewModel> search(String search) {
         return repo.search(search);
     }
+
+    public boolean xuatDanhSachNhanVien() {
+        return repo.xuatDanhSachNhanVien();
+    }
 }

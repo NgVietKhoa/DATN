@@ -1,7 +1,7 @@
 package mobileworld.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class HinhThucThanhToanEntity {
 
@@ -10,26 +10,24 @@ public class HinhThucThanhToanEntity {
     private BigDecimal tienChuyenKhoan;
     private BigDecimal tienMat;
     private float deleted;
-    private Date createdAt;
+    private LocalDateTime createdAt;
     private String createdBy;
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
     private String updateBy;
     private String id;
 
     public HinhThucThanhToanEntity() {
     }
 
-    public HinhThucThanhToanEntity(String idHoaDon, String idPhuongThucThanhToan, BigDecimal tienChuyenKhoan, BigDecimal tienMat, float deleted, Date createdAt, String createdBy, Date updatedAt, String updateBy, String id) {
+    public HinhThucThanhToanEntity(String idHoaDon, BigDecimal tienChuyenKhoan, BigDecimal tienMat, LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updateBy) {
         this.idHoaDon = idHoaDon;
         this.idPhuongThucThanhToan = idPhuongThucThanhToan;
         this.tienChuyenKhoan = tienChuyenKhoan;
         this.tienMat = tienMat;
-        this.deleted = deleted;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
         this.updatedAt = updatedAt;
         this.updateBy = updateBy;
-        this.id = id;
     }
 
     public String getIdHoaDon() {
@@ -72,11 +70,11 @@ public class HinhThucThanhToanEntity {
         this.deleted = deleted;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -88,11 +86,11 @@ public class HinhThucThanhToanEntity {
         this.createdBy = createdBy;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 

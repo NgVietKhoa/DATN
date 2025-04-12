@@ -25,4 +25,15 @@ public class KHInBanHangService {
         return repo.addKH(kh);
     }
 
+    public String getFirstCustomerId() {
+        return repo.getFirstCustomerId();
+    }
+
+    public String getTen() {
+        return repo.getTen();
+    }
+
+    public String getID() {
+        return repo.getID();
+    }
 }

@@ -1,23 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package mobileworld.thread;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import mobileworld.model.PhieuGiamGia;
-import mobileworld.form.ViewGiamGia;
-import mobileworld.service.PhieuGiamGiaService.PhieuGiamGiaService;
 import mobileworld.service.PhieuGiamGiaService.PhieuGiamGiaService;
 
-/**
- *
- * @author Admin
- */
 public class ThreadTinhTrang extends Thread {
 
     List<PhieuGiamGia> ds = new ArrayList<>();
@@ -37,18 +25,18 @@ public class ThreadTinhTrang extends Thread {
         for (PhieuGiamGia pgg : ds) {
             LocalDate ngayBDLocalDate = pgg.getNgayBatDau().toLocalDate();
             LocalDate ngayKTLocalDate = pgg.getNgayKetThuc().toLocalDate();
-            LocalDate ngayHT= LocalDate.now();
-            
+            LocalDate ngayHT = LocalDate.now();
+
             if (ngayBDLocalDate.isEqual(LocalDate.now()) && pgg.getDeleted() == 1) {
                 trangThaiBatDau = 1;
                 deleted = (float) 1.0;
-                sr.updateTTThread(pgg.getID(), trangThaiBatDau, deleted,ngayHT);
+                sr.updateTTThread(pgg.getID(), trangThaiBatDau, deleted, ngayHT);
             }
-            
+
             if (ngayBDLocalDate.isBefore(LocalDate.now()) && ngayKTLocalDate.isBefore(LocalDate.now())) {
                 trangThaiKetThuc = 0;
                 deleted = (float) 0.0;
-                sr.updateTTThread(pgg.getID(), trangThaiKetThuc, deleted,ngayHT);
+                sr.updateTTThread(pgg.getID(), trangThaiKetThuc, deleted, ngayHT);
             }
         }
     }

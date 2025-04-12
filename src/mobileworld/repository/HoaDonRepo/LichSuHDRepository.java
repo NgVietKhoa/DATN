@@ -40,7 +40,7 @@ public class LichSuHDRepository {
                 LichSuHDModel lshdm = new LichSuHDModel();
                 lshdm.setIdHD(rs.getString(1));
                 lshdm.setIdNV(rs.getString(2));
-                lshdm.setNgayGio(rs.getTimestamp(3).toLocalDateTime());
+                lshdm.setCreatedAt(rs.getTimestamp(3).toLocalDateTime());
                 lshdm.setHanhDong(rs.getString(4));
                 list.add(lshdm);
             }

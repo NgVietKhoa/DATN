@@ -1,30 +1,40 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package mobileworld.viewModel;
 
 import java.time.LocalDateTime;
 
-/**
- *
- * @author ADMIN
- */
 public class LichSuHDModel {
 
     private String idHD;
     private String idNV;
-    private LocalDateTime ngayGio;
     private String hanhDong;
+    private float deleted;
+    private LocalDateTime createdAt;
+    private String createdBy;
+    private LocalDateTime updatedAt;
+    private String updateBy;
 
     public LichSuHDModel() {
     }
 
-    public LichSuHDModel(String idHD, String idNV, LocalDateTime ngayGio, String hanhDong) {
+    public LichSuHDModel(String idHD, String idNV, String hanhDong, float deleted, LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updateBy) {
         this.idHD = idHD;
         this.idNV = idNV;
-        this.ngayGio = ngayGio;
         this.hanhDong = hanhDong;
+        this.deleted = deleted;
+        this.createdAt = createdAt;
+        this.createdBy = createdBy;
+        this.updatedAt = updatedAt;
+        this.updateBy = updateBy;
+    }
+
+    public LichSuHDModel(String idNV, String hanhDong, float deleted, LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updateBy) {
+        this.idNV = idNV;
+        this.hanhDong = hanhDong;
+        this.deleted = deleted;
+        this.createdAt = createdAt;
+        this.createdBy = createdBy;
+        this.updatedAt = updatedAt;
+        this.updateBy = updateBy;
     }
 
     public String getIdHD() {
@@ -43,14 +53,6 @@ public class LichSuHDModel {
         this.idNV = idNV;
     }
 
-    public LocalDateTime getNgayGio() {
-        return ngayGio;
-    }
-
-    public void setNgayGio(LocalDateTime ngayGio) {
-        this.ngayGio = ngayGio;
-    }
-
     public String getHanhDong() {
         return hanhDong;
     }
@@ -59,9 +61,44 @@ public class LichSuHDModel {
         this.hanhDong = hanhDong;
     }
 
-    @Override
-    public String toString() {
-        return "LichSuHDModel{" + "idHD=" + idHD + ", idNV=" + idNV + ", ngayGio=" + ngayGio + ", hanhDong=" + hanhDong + '}';
+    public float getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(float deleted) {
+        this.deleted = deleted;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
     }
 
 }

@@ -1,11 +1,15 @@
 package mobileworld.service.BanHangService;
 
+import java.math.BigDecimal;
 import java.util.List;
+import mobileworld.model.HinhThucThanhToanEntity;
 import mobileworld.model.HoaDon;
 import mobileworld.model.HoaDonChiTietEntity;
+import mobileworld.model.PhuongThucThanhToan;
 import mobileworld.repository.BanHangRepo.BanHangRepository;
 import mobileworld.viewModel.BanHangViewModel.HoaDonViewModel;
 import mobileworld.viewModel.ChiTietSanPhamViewModel;
+import mobileworld.viewModel.LichSuHDModel;
 
 public class BanHangService {
 
@@ -32,8 +36,8 @@ public class BanHangService {
         return null;
     }
 
-    public boolean addNewBlankInvoice(HoaDon hd, String idNV) {
-        return repo.addNewBlankInvoice(hd, idNV);
+    public boolean addNewBlankInvoice(HoaDon hd, LichSuHDModel lshdm) {
+        return repo.addNewBlankInvoice(hd, lshdm);
     }
 
     public List<HoaDonViewModel> searchHD(String text) {
@@ -60,19 +64,83 @@ public class BanHangService {
         return repo.deleteGioHang(imels);
     }
 
-    public List<ChiTietSanPhamViewModel> selectIdDSP(String idDsp) {
-        return repo.selectIdDSP(idDsp);
+    public List<ChiTietSanPhamViewModel> selectIdDSP(String idDsp, BigDecimal giaBan) {
+        return repo.selectIdDSP(idDsp, giaBan);
     }
 
-    public List<ChiTietSanPhamViewModel> deleteIdDSP(List<String> idDsp) {
-        return repo.deleteIdDSP(idDsp);
+    public List<ChiTietSanPhamViewModel> deleteIdDSP(String idDsp, BigDecimal giaBan) {
+        return repo.deleteIdDSP(idDsp, giaBan);
     }
 
-    public boolean ThanhToanHD(HoaDon hd, List<HoaDonChiTietEntity> hdctList, String idHD) {
-        return repo.ThanhToanHD(hd, hdctList, idHD);
+    public boolean ThanhToanHD(HoaDon hd, List<HoaDonChiTietEntity> hdctList, String idHD, PhuongThucThanhToan pttt, HinhThucThanhToanEntity httte, LichSuHDModel lshdm) {
+        return repo.ThanhToanHD(hd, hdctList, idHD, pttt, httte, lshdm);
     }
 
     public List<ChiTietSanPhamViewModel> getSPTuHoaDon(String idHD) {
         return repo.getSPTuHoaDon(idHD);
+    }
+
+    public boolean updateDeleteHD(String idHD) {
+        return repo.updateDeleteHD(idHD);
+    }
+
+    public boolean GiaoHang(HoaDon hd, List<HoaDonChiTietEntity> hdctList, String idHD, PhuongThucThanhToan pttt, HinhThucThanhToanEntity httte, LichSuHDModel lshdm) {
+        return repo.GiaoHang(hd, hdctList, idHD, pttt, httte, lshdm);
+    }
+
+    public boolean HuyGiaoHang(String idHD) {
+        return repo.HuyGiaoHang(idHD);
+    }
+
+    public boolean GiaoLaiHang(String idHD) {
+        return repo.GiaoLaiHang(idHD);
+    }
+
+    public List<ChiTietSanPhamViewModel> searchBySelectDsp(String keyword, List<ChiTietSanPhamViewModel> listSpSelect) {
+        return repo.searchBySelectDsp(keyword, listSpSelect);
+    }
+
+    public List<String> getIdCtspQR(String Imel) {
+        return repo.getIdCtspQR(Imel);
+    }
+
+    public int countChuaThanhToan() {
+        return repo.countChuaThanhToan();
+    }
+
+    public int countChoGiaoHang() {
+        return repo.countChoGiaoHang();
+    }
+
+    public int countDangGiaoHang() {
+        return repo.countDangGiaoHang();
+    }
+
+    public int countDaThanhToan() {
+        return repo.countDaThanhToan();
+    }
+
+    public int countAll() {
+        return repo.countAll();
+    }
+
+    public boolean ThanhToanGiaoHangHD(String idHD) {
+        return repo.ThanhToanGiaoHangHD(idHD);
+    }
+
+    public List<String> getCTSPFromImels(List<String> idImels) {
+        return repo.getCTSPFromImels(idImels);
+    }
+
+    public List<String> getIdImelFromImels(List<String> Imels) {
+        return repo.getIdImelFromImels(Imels);
+    }
+
+    public List<String> getCTSPFromImelsAdd(String idImel) {
+        return repo.getCTSPFromImelsAdd(idImel);
+    }
+
+    public List<String> getIdImelFromImelsAdd(String Imel) {
+        return repo.getIdImelFromImelsAdd(Imel);
     }
 }

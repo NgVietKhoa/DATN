@@ -22,15 +22,15 @@ public class PhuongThucThanhToan {
     public PhuongThucThanhToan() {
     }
 
-    public PhuongThucThanhToan(String idPTTT, String teKieuThanhToan, Float Delete, LocalDateTime CcreateAt, String createBy, LocalDateTime updateAt, String updateBy) {
-        this.idPTTT = idPTTT;
+    public PhuongThucThanhToan(String teKieuThanhToan, LocalDateTime CcreateAt, String createBy, LocalDateTime updateAt, String updateBy) {
         this.teKieuThanhToan = teKieuThanhToan;
-        this.Delete = Delete;
         this.CcreateAt = CcreateAt;
         this.createBy = createBy;
         this.updateAt = updateAt;
         this.updateBy = updateBy;
     }
+    
+    
 
     public String getIdPTTT() {
         return idPTTT;

@@ -24,6 +24,13 @@ public class HoaDonViewModel {
     private String diaChiKH;
     private LocalDateTime updateAt;
     private String updateBy;
+    private String tenNV;
+    private String sdtNV;
+    private BigDecimal tienCK;
+    private BigDecimal tienMat;
+    private Float phiShip;
+    private Date ngayNhan;
+    private String getTenKieuThanhToan;
 
     public HoaDonViewModel() {
 
@@ -37,6 +44,16 @@ public class HoaDonViewModel {
         this.tongSP = tongSP;
         this.trangthai = trangthai;
     }
+
+    public String getGetTenKieuThanhToan() {
+        return getTenKieuThanhToan;
+    }
+
+    public void setGetTenKieuThanhToan(String getTenKieuThanhToan) {
+        this.getTenKieuThanhToan = getTenKieuThanhToan;
+    }
+    
+    
 
     public String getIdHD() {
         return idHD;
@@ -180,6 +197,54 @@ public class HoaDonViewModel {
 
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
+    }
+
+    public String getTenNV() {
+        return tenNV;
+    }
+
+    public void setTenNV(String tenNV) {
+        this.tenNV = tenNV;
+    }
+
+    public String getSdtNV() {
+        return sdtNV;
+    }
+
+    public void setSdtNV(String sdtNV) {
+        this.sdtNV = sdtNV;
+    }
+
+    public BigDecimal getTienCK() {
+        return tienCK;
+    }
+
+    public void setTienCK(BigDecimal tienCK) {
+        this.tienCK = tienCK;
+    }
+
+    public BigDecimal getTienMat() {
+        return tienMat;
+    }
+
+    public void setTienMat(BigDecimal tienMat) {
+        this.tienMat = tienMat;
+    }
+
+    public Float getPhiShip() {
+        return phiShip;
+    }
+
+    public void setPhiShip(Float phiShip) {
+        this.phiShip = phiShip;
+    }
+
+    public Date getNgayNhan() {
+        return ngayNhan;
+    }
+
+    public void setNgayNhan(Date ngayNhan) {
+        this.ngayNhan = ngayNhan;
     }
 
 }

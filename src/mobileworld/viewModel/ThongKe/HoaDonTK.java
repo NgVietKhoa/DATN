@@ -1,25 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package mobileworld.viewModel.ThongKe;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/**
- *
- * @author Admin
- */
 public class HoaDonTK {
+
     private float thanhTien;
     private LocalDate ngayTao;
-    private String  maHD;
-    private String thongKeThang;    
+    private String maHD;
+    private String thongKeThang;
     private String dongSP;
-    private int soLuong; 
+    private int soLuong;
     private LocalDateTime ngayTaoLCD;
-    
+
     public HoaDonTK() {
     }
 
@@ -84,14 +77,4 @@ public class HoaDonTK {
         this.ngayTaoLCD = ngayTaoLCD;
     }
 
-  
-    
-    
-
-    
-    
-
-   
-    
-    
 }

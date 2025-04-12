@@ -2,7 +2,6 @@ package mobileworld.model;
 
 import java.time.LocalDate;
 
-
 public class NhanVien {
 
     private int stt;
@@ -24,21 +23,21 @@ public class NhanVien {
     public NhanVien() {
     }
 
-    public NhanVien(String tenNhanVien, LocalDate ngaySinh, String diaChi, String sdt, String email, String idChucVu, float deleted, LocalDate createdAt, String createdBy, String cccd) {
+    public NhanVien(String tenNhanVien, LocalDate ngaySinh, String diaChi, String sdt, String email, String idChucVu, float deleted, LocalDate createdAt, String createdBy, LocalDate updatedAt, String updateBy, String cccd) {
         this.tenNhanVien = tenNhanVien;
         this.ngaySinh = ngaySinh;
         this.diaChi = diaChi;
         this.sdt = sdt;
         this.email = email;
         this.idChucVu = idChucVu;
+        this.password = password;
         this.deleted = deleted;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
+        this.updatedAt = updatedAt;
+        this.updateBy = updateBy;
         this.cccd = cccd;
     }
-
-    
-
 
     public int getStt() {
         return stt;

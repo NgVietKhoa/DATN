@@ -25,15 +25,16 @@ public class KHInBanHangRepository {
         List<KhachHangViewModel> list = new ArrayList<>();
         String sql = """
                      SELECT 
-                         [ID],
-                         [Ten],
-                         [SDT],
-                         [DiaChi],
-                         [GioiTinh]
-                     FROM 
-                         [dbo].[KhachHang]
+                                                  [ID],
+                                                  [Ten],
+                                                  [SDT],
+                                                  [DiaChi],
+                                                  [GioiTinh]
+                                              FROM 
+                                                  [dbo].[KhachHang]
+                         						 ORDER BY CreatedAt DESC
                      """;
-        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String idKH = rs.getString(1);
@@ -54,6 +55,61 @@ public class KHInBanHangRepository {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public String getFirstCustomerId() {
+        String customerId = null;
+        String sql = """
+                 SELECT 
+                     [ID]
+                 FROM 
+                     [dbo].[KhachHang]
+                 ORDER BY 
+                     CreatedAt DESC
+                 OFFSET 0 ROWS
+                 FETCH NEXT 1 ROWS ONLY
+                 """;
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                customerId = rs.getString("ID");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return customerId;
+    }
+
+    public String getTen() {
+        String customerId = null;
+        String sql = """
+                 SELECT Ten FROM KhachHang WHERE Ten = N'Khách Bán Lẻ'
+                 """;
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                customerId = rs.getString("Ten");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return customerId;
+    }
+
+    public String getID() {
+        String customerId = null;
+        String sql = """
+                 SELECT ID FROM KhachHang WHERE ID = 'KH00001'
+                 """;
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                customerId = rs.getString("ID");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return customerId;
     }
 
     public boolean addKH(KhachHang kh) {
@@ -84,7 +140,7 @@ public class KHInBanHangRepository {
                                 ,?
                                 ,?)
                      """;
-        try (Connection cnt = DBConnect.getConnection(); PreparedStatement ps = cnt.prepareStatement(sql)) {
+        try ( Connection cnt = DBConnect.getConnection();  PreparedStatement ps = cnt.prepareStatement(sql)) {
             ps.setObject(1, kh.getTen());
             ps.setObject(2, kh.getSdt());
             ps.setObject(3, kh.getGioiTinh());

@@ -45,12 +45,8 @@ public class ChiTietSPService {
         return repo.search(keyword);
     }
 
-    public List<ChiTietSanPhamViewModel> LocSP(String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
-        return repo.LocSP(Nsx, Pin, ManHinh, Cpu, sapXepGiaTangDan);
-    }
-
-    public List<ChiTietSanPhamViewModel> LocCTSP(String Nsx, String Pin, String ManHinh, String Cpu, boolean sapXepGiaTangDan) {
-        return repo.LocCTSP(Nsx, Pin, ManHinh, Cpu, sapXepGiaTangDan);
+    public List<ChiTietSanPhamViewModel> LocCTSP(String Nsx, String Pin, String ManHinh, String Cpu, String Ram, String CameraSau, boolean sapXepGiaTangDan) {
+        return repo.LocCTSP(Nsx, Pin, ManHinh, Cpu, Ram, CameraSau, sapXepGiaTangDan);
     }
 
     public List<ChiTietSanPhamViewModel> getAllQR(String imel) {

@@ -846,7 +846,9 @@ public class PhieuGiamGiaRepository {
     public float layPGG(String tenPGG) {
        float pgg=0;
         String sql = """                                                            
-                    Select top 1 PhieuGiamGia.PhanTramGiam from PhieuGiamGia where PhieuGiamGia.TenGiamGia = ?			 
+                    Select top 1 PhieuGiamGia.PhanTramGiam from PhieuGiamGia where PhieuGiamGia.TenGiamGia = ?
+                                 and PhieuGiamGia.TrangThai=1 AND SoLuongDung>0
+                                                       ORDER BY PhieuGiamGia.SoTienGiamToiDa DESC		 
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, tenPGG);
@@ -864,8 +866,8 @@ public class PhieuGiamGiaRepository {
         List<PhieuGiamGia> ds = new ArrayList<>();
         String sql = """                                                            
              select PhieuGiamGia.TenGiamGia from PhieuGiamGia
-                                                   where PhieuGiamGia.HoaDonToiThieu <= ? and Deleted = 1
-                                                   Order by PhieuGiamGia.PhanTramGiam DESC         				 
+             where PhieuGiamGia.HoaDonToiThieu <= ? and Deleted = 1 AND TrangThai=1 AND SoLuongDung>0
+         Order by PhieuGiamGia.SoTienGiamToiDa DESC        				 
                    """;
         try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setObject(1, giaTien);
@@ -879,6 +881,48 @@ public class PhieuGiamGiaRepository {
             e.printStackTrace();
         }
         return ds;
+    }
+    
+    public List<PhieuGiamGia> goiY(float giaTien){
+        List<PhieuGiamGia> ds = new ArrayList<>();
+        String sql = """                                                            
+            		  select top 1 PhieuGiamGia.TenGiamGia,PhieuGiamGia.HoaDonToiThieu,SoTienGiamToiDa from PhieuGiamGia
+                                        where PhieuGiamGia.HoaDonToiThieu >= ? and Deleted = 1 AND TrangThai=1 AND SoLuongDung>0
+                                    Order by PhieuGiamGia.HoaDonToiThieu Asc          				 
+                   """;
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, giaTien);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                PhieuGiamGia gg = new PhieuGiamGia();
+                gg.setTenGiamGia(rs.getString(1));
+                gg.setHoatDonToiThieu(rs.getFloat(2));
+                gg.setSoTiemGiamToiDa(rs.getFloat(3));
+                ds.add(gg);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ds;
+    }
+    
+    public float laySTGTD(String tenPGG) {
+        float stgtd = 0;
+        String sql = """                                                            
+                     Select top 1 PhieuGiamGia.SoTienGiamToiDa from PhieuGiamGia where PhieuGiamGia.TenGiamGia = ?
+                                                     and PhieuGiamGia.TrangThai=1 AND SoLuongDung>0 and Deleted = 1
+                                                                           ORDER BY PhieuGiamGia.SoTienGiamToiDa DESC		 
+                   """;
+        try ( Connection con = DBConnect.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setObject(1, tenPGG);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                stgtd = rs.getFloat(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return stgtd;
     }
 
 }

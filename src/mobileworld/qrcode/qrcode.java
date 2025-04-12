@@ -10,7 +10,7 @@ import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
-        
+
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.Executor;
@@ -26,7 +26,6 @@ public class qrcode extends javax.swing.JFrame implements Runnable, ThreadFactor
 
     private static final long serialVersionUID = 6441489157408381878L;
     private Executor executor = Executors.newSingleThreadExecutor(this);
-
 
     public interface QRCodeListener {
 
@@ -46,17 +45,14 @@ public class qrcode extends javax.swing.JFrame implements Runnable, ThreadFactor
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
-        @Override
-        public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-            if (webcam != null) {
-                webcam.close();
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (webcam != null) {
+                    webcam.close();
+                }
             }
-        }
-    });
+        });
     }
-    
-    
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -94,35 +90,6 @@ public class qrcode extends javax.swing.JFrame implements Runnable, ThreadFactor
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(qrcode.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new qrcode().setVisible(true);
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -142,7 +109,6 @@ public class qrcode extends javax.swing.JFrame implements Runnable, ThreadFactor
         panel.setFPSDisplayed(true);
 
         jPanel2.add(panel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 470, 300));
-
 
         executor.execute(this);
     }
@@ -173,18 +139,19 @@ public class qrcode extends javax.swing.JFrame implements Runnable, ThreadFactor
             try {
                 result = new MultiFormatReader().decode(bitmap);
             } catch (NotFoundException e) {
-                //No result...
+                // No result...
             }
 
             if (result != null) {
                 result_field.setText(result.getText());
-               
 
                 if (qrCodeListener != null) {
                     qrCodeListener.onQRCodeScanned(result.getText());
                 }
-                JOptionPane.showMessageDialog(this, result.getText());
                 System.out.println("Giá trị QR Code: " + result.getText());
+
+                // Close the QR code scanner JFrame
+                closeWindowAndWebcam();
             }
 
         } while (true);

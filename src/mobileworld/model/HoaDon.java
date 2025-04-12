@@ -18,6 +18,8 @@ public class HoaDon {
     private String idNV;
     private LocalDateTime NgayTao;
     private LocalDateTime ngayThanhToan;
+    private LocalDateTime ngayNhan;
+    private Float phiShip;
     private BigDecimal tongTienSauGiam;
     private String idCTDG;
     private BigDecimal tongTien;
@@ -50,6 +52,33 @@ public class HoaDon {
         this.updateBy = updateBy;
         this.trangthai = trangthai;
     }
+
+    public HoaDon(String idHD, String idKH, String idNV, LocalDateTime NgayTao, LocalDateTime ngayThanhToan, LocalDateTime ngayNhan, Float phiShip, BigDecimal tongTienSauGiam, BigDecimal tongTien, String tenKH, String sdtKH, String diaChiKH, LocalDateTime updateAt, String updateBy, int trangthai) {
+        this.idHD = idHD;
+        this.idKH = idKH;
+        this.idNV = idNV;
+        this.NgayTao = NgayTao;
+        this.ngayThanhToan = ngayThanhToan;
+        this.ngayNhan = ngayNhan;
+        this.phiShip = phiShip;
+        this.tongTienSauGiam = tongTienSauGiam;
+        this.tongTien = tongTien;
+        this.tenKH = tenKH;
+        this.sdtKH = sdtKH;
+        this.diaChiKH = diaChiKH;
+        this.updateAt = updateAt;
+        this.updateBy = updateBy;
+        this.trangthai = trangthai;
+    }
+
+    public HoaDon(String idNV, String createBy, String updateBy, int trangthai) {
+        this.idNV = idNV;
+        this.createBy = createBy;
+        this.updateBy = updateBy;
+        this.trangthai = trangthai;
+    }
+    
+    
     
 
     public HoaDon(String idHD, String idKH, String idNV, LocalDateTime NgayTao, LocalDateTime ngayThanhToan, BigDecimal tongTienSauGiam, String idCTDG, BigDecimal tongTien, String idHTTT, String tenKH, String sdtKH, String diaChiKH, Float Delete, LocalDateTime createAt, String createBy, LocalDateTime updateAt, String updateBy, int trangthai) {
@@ -71,6 +100,22 @@ public class HoaDon {
         this.updateAt = updateAt;
         this.updateBy = updateBy;
         this.trangthai = trangthai;
+    }
+
+    public LocalDateTime getNgayNhan() {
+        return ngayNhan;
+    }
+
+    public void setNgayNhan(LocalDateTime ngayNhan) {
+        this.ngayNhan = ngayNhan;
+    }
+
+    public Float getPhiShip() {
+        return phiShip;
+    }
+
+    public void setPhiShip(Float phiShip) {
+        this.phiShip = phiShip;
     }
 
     public BigDecimal getTongTienSauGiam() {

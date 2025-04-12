@@ -12,7 +12,7 @@ import mobileworld.form.ViewBanHang;
 import mobileworld.form.ViewSanPham;
 import mobileworld.form.ViewHoaDon;
 import mobileworld.form.ViewGiamGia;
-import mobileworld.form.ViewKhachHangNew;
+import mobileworld.form.ViewKhachHang;
 import mobileworld.form.ViewNhanVienNew;
 import mobileworld.form.ViewThongKe;
 import mobileworld.model.ModelMenu;
@@ -27,7 +27,7 @@ public class Main extends javax.swing.JFrame {
     private final JPanel main = new JPanel();
     private MigLayout layout;
     private Animator animator;
-    private boolean menuShow;
+    private boolean menuShow; 
 
     public Main() {
         initComponents();
@@ -35,7 +35,7 @@ public class Main extends javax.swing.JFrame {
         SessionStorage.getInstance().getUsername();
         jPanel1.setBackground(decode("#FBA834"));
         ImageIcon icon = new ImageIcon("E:\\mobileWorld\\src\\mobileworld\\icon\\Logomb.png");
-        setIconImage(icon.getImage());
+        setIconImage(icon.getImage()); 
     }
 
     private void init() {
@@ -43,7 +43,6 @@ public class Main extends javax.swing.JFrame {
         body.setLayout(layout);
         main.setOpaque(false);
         main.setLayout(new BorderLayout());
-
         menu.addEventLogOut((ActionEvent e) -> {
 
             Login lg = new Login();
@@ -57,8 +56,6 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        ViewHoaDon viewHoaDon = new ViewHoaDon(this, menu);
-
         menu.setEvent((int index) -> {
             switch (index) {
                 case 0 ->
@@ -66,13 +63,13 @@ public class Main extends javax.swing.JFrame {
                 case 1 ->
                     showForm(new ViewSanPham());
                 case 2 ->
-                    showForm(viewHoaDon);
+                    showForm(new ViewHoaDon());
                 case 3 ->
                     showForm(new ViewGiamGia());
                 case 4 ->
                     showForm(new ViewNhanVienNew());
                 case 5 ->
-                    showForm(new ViewKhachHangNew());
+                    showForm(new ViewKhachHang());
                 case 6 ->
                     showForm(new ViewThongKe());
                 default -> {
@@ -174,11 +171,10 @@ public class Main extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(1233, 1233, 1233)
+                .addGap(0, 1336, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addGap(0, 0, 0)
-                .addComponent(jLabel1)
-                .addGap(0, 0, 0))
+                .addComponent(jLabel1))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

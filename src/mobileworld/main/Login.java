@@ -11,9 +11,9 @@ import mobileworld.dialog.LoginDialog;
 import mobileworld.service.NhanVienService.NhanVienService;
 
 public class Login extends javax.swing.JFrame {
-    
+
     private final NhanVienService nvService = new NhanVienService();
-    
+
     public Login() {
         initComponents();
         ImageIcon icon = new ImageIcon("D:\\mobileWorldCopy\\src\\mobileworld\\icon\\Logomb.png");
@@ -21,7 +21,7 @@ public class Login extends javax.swing.JFrame {
         txtID.setText("NV00002");
         txtPass.setText("Khoa212");
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -177,13 +177,13 @@ public class Login extends javax.swing.JFrame {
     private void buttonCustom11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom11ActionPerformed
         String maNhanVien = txtID.getText();
         char[] password = txtPass.getPassword();
-        
-        if (nvService.checkLogin(maNhanVien, password)) {            
+
+        if (nvService.checkLogin(maNhanVien, password)) {
             SessionStorage.getInstance().setUsername(maNhanVien);
             LoadingDialog loading = new LoadingDialog(this, true);
             this.setVisible(false);
             this.dispose();
-            
+
             Timer timerLoading = new Timer(1500, (ActionEvent e) -> {
                 loading.setVisible(false);
                 loading.dispose();
@@ -191,28 +191,28 @@ public class Login extends javax.swing.JFrame {
                 main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 main.setVisible(true);
             });
-            
+
             timerLoading.setRepeats(false);
             timerLoading.start();
             loading.setVisible(true);
-            
+
             LoginDialog login = new LoginDialog(this, true);
-            
+
             Timer timerLogin = new Timer(1500, (ActionEvent e) -> {
                 login.setVisible(false);
                 login.dispose();
             });
-            
+
             timerLogin.setRepeats(false);
             timerLogin.start();
             login.setVisible(true);
-            
+
         } else {
             JOptionPane.showMessageDialog(null, "Sai mã nhân viên hoặc mật khẩu. Vui lòng thử lại.");
         }
 
     }//GEN-LAST:event_buttonCustom11ActionPerformed
-    
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -226,26 +226,17 @@ public class Login extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(() -> {
+        java.awt.EventQueue.invokeLater(() -> {
             JFrame loginFrame = new Login();
             loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             loginFrame.setVisible(true);
-//        });
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

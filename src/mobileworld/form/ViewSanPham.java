@@ -1,6 +1,5 @@
 package mobileworld.form;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -15,6 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import mobileworld.dialog.ReadQRCode;
+import mobileworld.dialog.ThemChiTietSPDiaLog;
 import mobileworld.event.DataChangeListener;
 import mobileworld.event.EventChiTietSP;
 import mobileworld.model.BoNho;
@@ -44,11 +45,13 @@ import mobileworld.viewModel.ChiTietSanPhamViewModel;
 import mobileworld.main.SessionStorage;
 import mobileworld.model.CameraTruoc;
 import mobileworld.model.ChiTietSP;
+import mobileworld.service.ChiTietSanPhamService.CameraSauService;
 import mobileworld.service.ChiTietSanPhamService.ImelService;
+import mobileworld.service.ChiTietSanPhamService.RamService;
 import mobileworld.service.ChiTietSanPhamService.ThuocTinhSPService;
-import mobileworld.tablecutoms.TableActionCellEditor;
-import mobileworld.tablecutoms.TableActionCellRender;
-import mobileworld.tablecutoms.TableActionEvent;
+import mobileworld.tablecutoms.delete.TableActionCellEditor;
+import mobileworld.tablecutoms.delete.TableActionCellRender;
+import mobileworld.tablecutoms.delete.TableActionEvent;
 import mobileworld.viewModel.DongSPViewModel;
 import net.glxn.qrgen.QRCode;
 import net.glxn.qrgen.image.ImageType;
@@ -57,29 +60,33 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
     //chi tiet san pham
     DecimalFormat decimalFormat = new DecimalFormat("###,###");
-    private DefaultTableModel tblModel = new DefaultTableModel();
-    private DefaultTableModel tblModelSP = new DefaultTableModel();
-    private DefaultTableModel tblModelTTSP = new DefaultTableModel();
-    private final ThuocTinhSPService ttspService = new ThuocTinhSPService();
-    private final ChiTietSPService ctspService = new ChiTietSPService();
-    private DefaultComboBoxModel cbbPin = new DefaultComboBoxModel();
-    private final PinService pinService = new PinService();
-    private DefaultComboBoxModel cbbManHinh = new DefaultComboBoxModel();
-    private final ManHinhService mhService = new ManHinhService();
-    private DefaultComboBoxModel cbbCpu = new DefaultComboBoxModel();
-    private final CpuService cpuService = new CpuService();
-    private final DongSPService dspService = new DongSPService();
-    private DefaultComboBoxModel cbbNsx = new DefaultComboBoxModel();
-    private final NhaSanXuatService NsxService = new NhaSanXuatService();
-    private final ImelService imelService = new ImelService();
-    private List<ChiTietSanPhamViewModel> searchResults = new ArrayList<>();
-    private List<ChiTietSanPhamViewModel> BoLocCtsp = new ArrayList<>();
-    private List<ChiTietSanPhamViewModel> listDsp = new ArrayList<>();
-    private List<DongSPViewModel> listConHang = new ArrayList<>();
-    private List<DongSPViewModel> listHetHang = new ArrayList<>();
-    private final ThongTinChiTietSP thongTinChiTietSP;
-    private String idChiTietSP, CameraSau, CameraTruoc, Cpu, Imel, ManHinh, MauSac, NSX, Pin, Ram, Rom, TenDsp, MoTa, QRImagePath;
-    private BigDecimal gia;
+    DefaultTableModel tblModel = new DefaultTableModel();
+    DefaultTableModel tblModelSP = new DefaultTableModel();
+    DefaultTableModel tblModelTTSP = new DefaultTableModel();
+    ThuocTinhSPService ttspService = new ThuocTinhSPService();
+    ChiTietSPService ctspService = new ChiTietSPService();
+    DefaultComboBoxModel cbbPin = new DefaultComboBoxModel();
+    PinService pinService = new PinService();
+    DefaultComboBoxModel cbbManHinh = new DefaultComboBoxModel();
+    ManHinhService mhService = new ManHinhService();
+    DefaultComboBoxModel cbbCpu = new DefaultComboBoxModel();
+    CpuService cpuService = new CpuService();
+    DongSPService dspService = new DongSPService();
+    DefaultComboBoxModel cbbNsx = new DefaultComboBoxModel();
+    NhaSanXuatService NsxService = new NhaSanXuatService();
+    DefaultComboBoxModel cbbRam = new DefaultComboBoxModel();
+    RamService ramService = new RamService();
+    DefaultComboBoxModel cbbCameraSau = new DefaultComboBoxModel();
+    CameraSauService cameraSauService = new CameraSauService();
+    ImelService imelService = new ImelService();
+    List<ChiTietSanPhamViewModel> searchResults = new ArrayList<>();
+    List<ChiTietSanPhamViewModel> BoLocCtsp = new ArrayList<>();
+    List<ChiTietSanPhamViewModel> listDsp = new ArrayList<>();
+    List<DongSPViewModel> listConHang = new ArrayList<>();
+    List<DongSPViewModel> listHetHang = new ArrayList<>();
+    ThongTinChiTietSP thongTinChiTietSP;
+    String idChiTietSP, CameraSau, CameraTruoc, Cpu, Imel, ManHinh, MauSac, NSX, Pin, Ram, Rom, TenDsp, MoTa, QRImagePath;
+    BigDecimal gia;
 
     public ViewSanPham() {
         initComponents();
@@ -93,10 +100,14 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         cbbPin = (DefaultComboBoxModel) cboPin.getModel();
         cbbManHinh = (DefaultComboBoxModel) cboManHinh.getModel();
         cbbCpu = (DefaultComboBoxModel) cboCPU.getModel();
+        cbbCameraSau = (DefaultComboBoxModel) cboCameraSau.getModel();
+        cbbRam = (DefaultComboBoxModel) cboRam.getModel();
         setDataCboCpu(cpuService.getAll());
         setDataCboManHinh(mhService.getAll());
         setDataCboNsx(NsxService.getAll());
         setDataCboPin(pinService.getAll());
+        setDataCboRam(ramService.getAll());
+        setDataCboCameraSau(cameraSauService.getAll());
         setDataCboGia();
 
         tblSP.addMouseListener(new MouseAdapter() {
@@ -116,7 +127,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 if (index >= 0 && evt.getClickCount() == 2) {
                     List<ChiTietSanPhamViewModel> productListImel = getSelectedProductListImel();
                     if (productListImel.isEmpty()) {
-                        if (searchResults != null && !searchResults.isEmpty()) {
+                        if (cboNsx.getSelectedItem() == null) {
+                            displayProductDetails(ctspService.getAll().get(index));
+                        } else if (searchResults != null && !searchResults.isEmpty()) {
                             displayProductDetails(searchResults.get(index));
                         } else if (BoLocCtsp != null && !BoLocCtsp.isEmpty()) {
                             displayProductDetails(BoLocCtsp.get(index));
@@ -124,7 +137,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                             displayProductDetails(ctspService.getAll().get(index));
                         }
                     } else {
-                        if (searchResults != null && !searchResults.isEmpty()) {
+                        if (cboNsx.getSelectedItem() == null) {
+                            displayProductDetails(productListImel.get(index));
+                        } else if (searchResults != null && !searchResults.isEmpty()) {
                             ChiTietSanPhamViewModel product = searchResults.get(index);
                             displayProductDetails(product);
                         } else if (BoLocCtsp != null && !BoLocCtsp.isEmpty()) {
@@ -342,6 +357,12 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         if (cboNsx.getSelectedItem() != null) {
             cboNsx.setSelectedItem(null);
         }
+        if (cboRam.getSelectedItem() != null) {
+            cboRam.setSelectedItem(null);
+        }
+        if (cboCameraSau.getSelectedItem() != null) {
+            cboCameraSau.setSelectedItem(null);
+        }
         jCheckBox1.setSelected(false);
         showDataTableCTSP(ctspService.getAll());
         showDataTableSP(dspService.getAll());
@@ -514,6 +535,24 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         cboGia.setSelectedItem(null);
     }
 
+    private void setDataCboRam(List<Ram> setRam) {
+        cbbRam.removeAllElements();
+
+        for (Ram ram : setRam) {
+            cbbRam.addElement(ram.getDungLuongRam());
+        }
+        cbbRam.setSelectedItem(null);
+    }
+
+    private void setDataCboCameraSau(List<CameraSau> setCamSau) {
+        cbbCameraSau.removeAllElements();
+
+        for (CameraSau cam : setCamSau) {
+            cbbCameraSau.addElement(cam.getSoMP());
+        }
+        cbbCameraSau.setSelectedItem(null);
+    }
+
     //getformcombobox
     private Pin getFormDataPin() {
         String tenPin = txtTenThuocTinhSP.getText();
@@ -618,11 +657,13 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         String pin = (String) cboPin.getSelectedItem();
         String manHinh = (String) cboManHinh.getSelectedItem();
         String cpu = (String) cboCPU.getSelectedItem();
+        String Ram = (String) cboRam.getSelectedItem();
+        String CameraSau = (String) cboCameraSau.getSelectedItem();
 
         // Kiểm tra xem giá trị được chọn từ combobox có null không
         boolean sapXepGiaTangDan = "Giá Tăng Dần".equals(cboGia.getSelectedItem());
 
-        List<ChiTietSanPhamViewModel> list = ctspService.LocCTSP(nsx, pin, manHinh, cpu, sapXepGiaTangDan);
+        List<ChiTietSanPhamViewModel> list = ctspService.LocCTSP(nsx, pin, manHinh, cpu, Ram, CameraSau, sapXepGiaTangDan);
         BoLocCtsp = list;
         showDataTableCTSP(BoLocCtsp);
     }
@@ -665,6 +706,8 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         cboPin = new mobileworld.swing.Combobox();
         cboManHinh = new mobileworld.swing.Combobox();
         cboCPU = new mobileworld.swing.Combobox();
+        cboRam = new mobileworld.swing.Combobox();
+        cboCameraSau = new mobileworld.swing.Combobox();
         cboGia = new mobileworld.swing.Combobox();
         jCheckBox1 = new javax.swing.JCheckBox();
         panelThuocTinhSP = new javax.swing.JPanel();
@@ -725,6 +768,11 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
         txtTimKiemSP.setLabelText("Tìm Kiếm");
         txtTimKiemSP.setName(""); // NOI18N
+        txtTimKiemSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTimKiemSPActionPerformed(evt);
+            }
+        });
         txtTimKiemSP.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtTimKiemSPKeyReleased(evt);
@@ -738,9 +786,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         txtTenSP.setLabelText("Tên Sản Phẩm");
 
         btnAddSp.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddSp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-add-24.png"))); // NOI18N
+        btnAddSp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-add-30.png"))); // NOI18N
         btnAddSp.setText("Thêm");
-        btnAddSp.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAddSp.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnAddSp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddSpActionPerformed(evt);
@@ -748,9 +796,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         });
 
         btnUpdateSp.setForeground(new java.awt.Color(255, 255, 255));
-        btnUpdateSp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-refresh-24.png"))); // NOI18N
+        btnUpdateSp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-update-30 (1).png"))); // NOI18N
         btnUpdateSp.setText("Sửa");
-        btnUpdateSp.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnUpdateSp.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnUpdateSp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateSpActionPerformed(evt);
@@ -758,9 +806,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         });
 
         btnClearSp.setForeground(new java.awt.Color(255, 255, 255));
-        btnClearSp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-clear-24 (1).png"))); // NOI18N
+        btnClearSp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-clear-30.png"))); // NOI18N
         btnClearSp.setText("Làm Mới");
-        btnClearSp.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnClearSp.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnClearSp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnClearSpActionPerformed(evt);
@@ -774,13 +822,13 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(txtTenSP, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 709, Short.MAX_VALUE)
-                .addComponent(btnAddSp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 646, Short.MAX_VALUE)
+                .addComponent(btnAddSp, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnUpdateSp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnUpdateSp, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnClearSp, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addComponent(btnClearSp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -890,9 +938,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         panelSanPhamCT.setOpaque(false);
 
         buttonCustom10.setForeground(new java.awt.Color(255, 255, 255));
-        buttonCustom10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-add-24.png"))); // NOI18N
+        buttonCustom10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-add-30.png"))); // NOI18N
         buttonCustom10.setText("Thêm");
-        buttonCustom10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        buttonCustom10.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         buttonCustom10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonCustom10ActionPerformed(evt);
@@ -900,9 +948,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         });
 
         btnClear.setForeground(new java.awt.Color(255, 255, 255));
-        btnClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-clear-24 (1).png"))); // NOI18N
+        btnClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-clear-30.png"))); // NOI18N
         btnClear.setText("Làm Mới");
-        btnClear.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnClear.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnClearActionPerformed(evt);
@@ -957,9 +1005,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         });
 
         buttonCustom16.setForeground(new java.awt.Color(255, 255, 255));
-        buttonCustom16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-export-excel-24.png"))); // NOI18N
+        buttonCustom16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-excel-30.png"))); // NOI18N
         buttonCustom16.setText("Xuất File");
-        buttonCustom16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        buttonCustom16.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         buttonCustom16.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonCustom16ActionPerformed(evt);
@@ -969,7 +1017,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         btnTaiQR.setForeground(new java.awt.Color(255, 255, 255));
         btnTaiQR.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-qr-code-30.png"))); // NOI18N
         btnTaiQR.setText("Tải QR");
-        btnTaiQR.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnTaiQR.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnTaiQR.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTaiQRActionPerformed(evt);
@@ -979,7 +1027,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         btnQuetQR.setForeground(new java.awt.Color(255, 255, 255));
         btnQuetQR.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-qr-code-30.png"))); // NOI18N
         btnQuetQR.setText("Quét QR");
-        btnQuetQR.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnQuetQR.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnQuetQR.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnQuetQRActionPerformed(evt);
@@ -1030,6 +1078,22 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         });
         jPanel2.add(cboCPU);
 
+        cboRam.setLabeText("Ram");
+        cboRam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboRamActionPerformed(evt);
+            }
+        });
+        jPanel2.add(cboRam);
+
+        cboCameraSau.setLabeText("Camera Sau");
+        cboCameraSau.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboCameraSauActionPerformed(evt);
+            }
+        });
+        jPanel2.add(cboCameraSau);
+
         cboGia.setLabeText("Giá");
         cboGia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1043,9 +1107,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(108, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 1110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(139, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1078,10 +1142,10 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                         .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 500, Short.MAX_VALUE)
-                        .addComponent(buttonCustom10, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(buttonCustom10, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(btnTaiQR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnTaiQR, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(btnQuetQR, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
@@ -1250,12 +1314,12 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
         jPanel11.setBackground(new java.awt.Color(255, 255, 255));
         jPanel11.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        jPanel11.setLayout(new java.awt.GridLayout(2, 0, 15, 15));
+        jPanel11.setLayout(new java.awt.GridLayout(2, 0, 20, 20));
 
         btnAddThuocTinh.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddThuocTinh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-add-24.png"))); // NOI18N
-        btnAddThuocTinh.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnAddThuocTinh.setLabel("Insert");
+        btnAddThuocTinh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-add-30.png"))); // NOI18N
+        btnAddThuocTinh.setText("Thêm");
+        btnAddThuocTinh.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnAddThuocTinh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddThuocTinhActionPerformed(evt);
@@ -1264,9 +1328,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         jPanel11.add(btnAddThuocTinh);
 
         btnUpdateThuocTinh.setForeground(new java.awt.Color(255, 255, 255));
-        btnUpdateThuocTinh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-refresh-24.png"))); // NOI18N
-        btnUpdateThuocTinh.setText("Update");
-        btnUpdateThuocTinh.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnUpdateThuocTinh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-update-30 (1).png"))); // NOI18N
+        btnUpdateThuocTinh.setText("Sửa ");
+        btnUpdateThuocTinh.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnUpdateThuocTinh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateThuocTinhActionPerformed(evt);
@@ -1275,9 +1339,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         jPanel11.add(btnUpdateThuocTinh);
 
         btnRemoveThuocTinh.setForeground(new java.awt.Color(255, 255, 255));
-        btnRemoveThuocTinh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-delete-24.png"))); // NOI18N
-        btnRemoveThuocTinh.setText("Remove");
-        btnRemoveThuocTinh.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnRemoveThuocTinh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-delete-30.png"))); // NOI18N
+        btnRemoveThuocTinh.setText("Xóa");
+        btnRemoveThuocTinh.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnRemoveThuocTinh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoveThuocTinhActionPerformed(evt);
@@ -1286,9 +1350,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         jPanel11.add(btnRemoveThuocTinh);
 
         btnClearThuocTinh.setForeground(new java.awt.Color(255, 255, 255));
-        btnClearThuocTinh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-clear-24.png"))); // NOI18N
-        btnClearThuocTinh.setText("Clear");
-        btnClearThuocTinh.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnClearThuocTinh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-clear-30.png"))); // NOI18N
+        btnClearThuocTinh.setText("Làm Mới");
+        btnClearThuocTinh.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnClearThuocTinh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnClearThuocTinhActionPerformed(evt);
@@ -1305,9 +1369,9 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtMaSP, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
                     .addComponent(txtTenThuocTinhSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -1366,8 +1430,11 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(materialTabbed1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(materialTabbed1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1385,23 +1452,8 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
 
 
     private void buttonCustom10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom10ActionPerformed
-        ThemChiTietSP themChiTietSP = new ThemChiTietSP();
-
-        // Lấy tham chiếu đến viewsanpham và xóa tất cả các thành phần hiện tại
-        JPanel viewsanphamCT = panelSanPhamCT;
-        viewsanphamCT.removeAll();
-
-        // Thêm ThemChiTietSP vào viewsanpham
-        viewsanphamCT.add(themChiTietSP);
-
-        viewsanphamCT.setLayout(new BorderLayout());
-
-        // Thêm ThemChiTietSP vào viewsanpham với ràng buộc layout phù hợp
-        viewsanphamCT.add(themChiTietSP, BorderLayout.CENTER);
-
-        // Cập nhật giao diện
-        viewsanphamCT.revalidate();
-        viewsanphamCT.repaint();
+        ThemChiTietSPDiaLog chiTietSPDiaLog = new ThemChiTietSPDiaLog();
+        chiTietSPDiaLog.setVisible(true);
     }//GEN-LAST:event_buttonCustom10ActionPerformed
 
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyReleased
@@ -1415,43 +1467,50 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     }//GEN-LAST:event_txtTimKiemKeyReleased
 
     private void buttonCustom16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom16ActionPerformed
-        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn xuất danh sách sản phẩm không", "Thông Báo", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            try {
-                // Create a list to store selected IMEI values
-                List<String> selectedImels = new ArrayList<>();
 
-                // Iterate through the table rows
-                DefaultTableModel model = (DefaultTableModel) tblCTSP.getModel();
-                for (int i = 0; i < model.getRowCount(); i++) {
-                    // Get the value of the checkbox (column 13)
-                    Boolean column13Value = (Boolean) model.getValueAt(i, 0);
+        boolean hasSelectedProduct = false;
+        for (int i = 0; i < tblCTSP.getRowCount(); i++) {
+            Boolean column0Value = (Boolean) tblCTSP.getValueAt(i, 0);
+            if (column0Value != null && column0Value) {
+                hasSelectedProduct = true;
+                break;
+            }
+        }
 
-                    // Check if the checkbox is ticked
-                    if (column13Value != null && column13Value) {
-                        // Get the IMEI from column 2 (assuming column index is 1)
-                        String imel = (String) model.getValueAt(i, 3);
-                        selectedImels.add(imel);
+        if (!hasSelectedProduct) {
+            JOptionPane.showMessageDialog(this, "Bạn cần chọn ít nhất một sản phẩm để xuất danh sách.");
+        } else {
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn xuất danh sách sản phẩm không?", "Xác Nhận Xuất Danh Sách", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    // Create a list to store selected IMEI values
+                    List<String> selectedImels = new ArrayList<>();
+
+                    // Iterate through the table rows
+                    for (int i = 0; i < tblCTSP.getRowCount(); i++) {
+                        // Get the value of the checkbox (column 13)
+                        Boolean column13Value = (Boolean) tblCTSP.getValueAt(i, 0);
+
+                        // Check if the checkbox is ticked
+                        if (column13Value != null && column13Value) {
+                            // Get the IMEI from column 2 (assuming column index is 1)
+                            String imel = (String) tblCTSP.getValueAt(i, 3);
+                            selectedImels.add(imel);
+                        }
                     }
-                }
 
-                // Check if any products were selected
-                if (selectedImels.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Không có sản phẩm nào được chọn.");
-                    return;
-                }
+                    // Call the service method to export all selected products
+                    boolean result = ctspService.xuatSanPham(selectedImels);
+                    if (result) {
+                        JOptionPane.showMessageDialog(this, "Xuất Thành Công!");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Xuất Thất Bại!");
+                    }
 
-                // Call the service method to export all selected products
-                boolean result = ctspService.xuatSanPham(selectedImels);
-                if (result) {
-                    JOptionPane.showMessageDialog(this, "Xuất Thành Công!");
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     JOptionPane.showMessageDialog(this, "Xuất Thất Bại!");
                 }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Xuất Thất Bại!");
             }
         }
     }//GEN-LAST:event_buttonCustom16ActionPerformed
@@ -1468,40 +1527,67 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
             sp = dspService.getAll().get(index);
         }
 
-        txtTenSP.setText(sp.getTenDsp());
+        if (!txtTimKiemSP.getText().isEmpty()) {
+            txtTenSP.setText("");
+        } else {
+            txtTenSP.setText(sp.getTenDsp());
+        }
     }//GEN-LAST:event_tblSPMouseClicked
 
     private void btnTaiQRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaiQRActionPerformed
         try {
-            // Lặp qua các hàng của table view
+            // Kiểm tra xem có sản phẩm nào được chọn không
+            boolean atLeastOneSelected = false;
             for (int i = 0; i < tblCTSP.getRowCount(); i++) {
-                // Lấy giá trị của cột thứ 13 của hàng hiện tại
-                Boolean column13Value = (Boolean) tblCTSP.getValueAt(i, 0);
+                Boolean column0Value = (Boolean) tblCTSP.getValueAt(i, 0);
+                if (column0Value != null && column0Value) {
+                    atLeastOneSelected = true;
+                    break;
+                }
+            }
 
-                // Kiểm tra nếu cả cột thứ 2 và cột thứ 13 không null và cột thứ 13 là true
-                if (tblCTSP.getValueAt(i, 2) != null && column13Value != null && column13Value) {
-                    // Lấy giá trị từ cột thứ 2 của hàng hiện tại (assumed column index: 1)
-                    String imel = (String) tblCTSP.getValueAt(i, 3);
+            // Nếu không có sản phẩm nào được chọn, hiển thị thông báo và không mở JFileChooser
+            if (!atLeastOneSelected) {
+                JOptionPane.showMessageDialog(null, "Không có sản phẩm nào được chọn.");
+                return;
+            }
 
-                    // Tạo và lưu mã QR cho Imel
-                    ByteArrayOutputStream out = QRCode.from(imel)
-                            .to(ImageType.PNG).stream();
+            // Hiển thị JFileChooser để chọn thư mục lưu QR codes
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Chọn thư mục lưu QR codes");
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-                    // Thay thế các ký tự không hợp lệ trong tên tệp
-                    String f_name = imel.replaceAll("[^a-zA-Z0-9.-]", "_");
-                    String Path_name = "D:\\mobileWorldCopy\\QR\\";
+            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File selectedDirectory = fileChooser.getSelectedFile();
 
-                    FileOutputStream fout = new FileOutputStream(new File(Path_name + (f_name + ".PNG")));
-                    fout.write(out.toByteArray());
-                    fout.flush();
+                // Tạo thư mục nếu nó không tồn tại
+                File qrDirectory = new File(selectedDirectory.getAbsolutePath() + File.separator + "QR");
+                if (!qrDirectory.exists()) {
+                    qrDirectory.mkdirs();
+                }
 
-                    // Thông báo cho người dùng rằng mã QR đã được tải xuống thành công
-                    System.out.println("QR code for Imel " + imel + " has been downloaded successfully.");
+                // Tiếp tục với quá trình tải QR cho các sản phẩm được chọn
+                for (int i = 0; i < tblCTSP.getRowCount(); i++) {
+                    Boolean column13Value = (Boolean) tblCTSP.getValueAt(i, 0);
+                    if (column13Value != null && column13Value) {
+                        String imel = (String) tblCTSP.getValueAt(i, 3);
+                        // Tạo và lưu mã QR cho Imel
+                        ByteArrayOutputStream out = QRCode.from(imel).to(ImageType.PNG).stream();
+                        // Thay thế các ký tự không hợp lệ trong tên tệp
+                        String f_name = imel.replaceAll("[^a-zA-Z0-9.-]", "_");
+                        String filePath = qrDirectory.getAbsolutePath() + File.separator + f_name + ".PNG";
+                        FileOutputStream fout = new FileOutputStream(filePath);
+                        fout.write(out.toByteArray());
+                        fout.flush();
+                        // Thông báo cho người dùng rằng mã QR đã được tải xuống thành công
+                        System.out.println("QR code for Imel " + imel + " has been downloaded successfully.");
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace(); // In ra lỗi nếu có
         }
+
     }//GEN-LAST:event_btnTaiQRActionPerformed
 
 
@@ -1534,6 +1620,11 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     private void btnUpdateSpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateSpActionPerformed
         int i = tblSP.getSelectedRow();
         int selectedRow = tblSP.getSelectedRow();
+        if (txtTenSP.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Tên Sản Phẩm Không Được Để Trống!");
+            return;
+        }
+
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 sản phẩm để cập nhật!");
             return;
@@ -1687,6 +1778,10 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     }//GEN-LAST:event_btnAddThuocTinhActionPerformed
 
     private void btnUpdateThuocTinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateThuocTinhActionPerformed
+        if (txtTenThuocTinhSP.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Hãy Nhập Tên Thuộc Tính Sản Phẩm");
+            return;
+        }
         int selectedRow = tblThuocTinhSP.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 sản phẩm để cập nhật!");
@@ -1750,6 +1845,7 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
                 JOptionPane.showMessageDialog(this, "Cập Nhật Thành Công!");
             }
         }
+
     }//GEN-LAST:event_btnUpdateThuocTinhActionPerformed
 
     private void btnRemoveThuocTinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveThuocTinhActionPerformed
@@ -1882,6 +1978,18 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
+    private void cboRamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboRamActionPerformed
+        filterCTSP();
+    }//GEN-LAST:event_cboRamActionPerformed
+
+    private void cboCameraSauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboCameraSauActionPerformed
+        filterCTSP();
+    }//GEN-LAST:event_cboCameraSauActionPerformed
+
+    private void txtTimKiemSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemSPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTimKiemSPActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private mobileworld.swing.ButtonCustom btnAddSp;
@@ -1900,10 +2008,12 @@ public class ViewSanPham extends JPanel implements DataChangeListener, EventChiT
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
     private mobileworld.swing.Combobox cboCPU;
+    private mobileworld.swing.Combobox cboCameraSau;
     private mobileworld.swing.Combobox cboGia;
     private mobileworld.swing.Combobox cboManHinh;
     private mobileworld.swing.Combobox cboNsx;
     private mobileworld.swing.Combobox cboPin;
+    private mobileworld.swing.Combobox cboRam;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;

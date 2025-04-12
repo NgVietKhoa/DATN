@@ -33,7 +33,10 @@ public class ThongTinKhachHangDialog extends javax.swing.JFrame {
                 if (index >= 0 && evt.getClickCount() == 2) {
                     String TenKh = (String) tblHienThi.getValueAt(index, 2);
                     String maKh = (String) tblHienThi.getValueAt(index, 1);
+                    String sdtKh = (String) tblHienThi.getValueAt(index, 3);
+                    String diaChiKh = (String) tblHienThi.getValueAt(index, 4);
                     viewBanHang.getThongTinKH(TenKh, maKh);
+                    viewBanHang.getThongTinKHĐH(TenKh, sdtKh, diaChiKh);
                     setVisible(false);
                 }
             }

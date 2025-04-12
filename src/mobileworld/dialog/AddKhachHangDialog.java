@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import mobileworld.form.ViewBanHang;
 import mobileworld.main.SessionStorage;
@@ -15,6 +16,7 @@ public class AddKhachHangDialog extends javax.swing.JFrame {
     KHInBanHangService srKH = new KHInBanHangService();
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private ViewBanHang viewBanHang;
+    JLabel maKh = new JLabel();
 
     public AddKhachHangDialog(ViewBanHang viewBanHang) {
         this.viewBanHang = viewBanHang;
@@ -211,8 +213,11 @@ public class AddKhachHangDialog extends javax.swing.JFrame {
             if (confirm == JOptionPane.YES_OPTION) {
                 srKH.addKH(getFormData());
                 String ten = getFormData().getTen();
-                String ma = getFormData().getId();
+                String ma = srKH.getFirstCustomerId();
+                String diaChi = getFormData().getDiaChi();
+                String sdtKh = getFormData().getSdt();
                 viewBanHang.getAddThongTinKH(ten, ma);
+                viewBanHang.getAddThongTinKHĐH(ten, sdtKh, diaChi);
                 clearData();
                 JOptionPane.showMessageDialog(this, "Thêm Thành Công!");
                 setVisible(false);

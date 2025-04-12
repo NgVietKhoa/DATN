@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -58,6 +59,7 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
         for (ChucVu cv : chucVus) {
             cbb.addElement(cv.getTenChucVu());
         }
+        cbbchucvu.setSelectedItem(null);
     }
 
     public NhanVien getFormData() {
@@ -72,17 +74,13 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
         String nhanVien = SessionStorage.getInstance().getUsername();
         LocalDate dateTime = LocalDate.now();
 
-        NhanVien nv = new NhanVien(tennv, ngaySinh, diachi, sdt, email, chucvu, 1, dateTime, nhanVien, cccd);
+        NhanVien nv = new NhanVien(tennv, ngaySinh, diachi, sdt, email, chucvu, 1, dateTime, nhanVien, dateTime, nhanVien, cccd);
         return nv;
     }
 
     public boolean check() {
         if (txthovaten.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng không được để trống tên nhân viên");
-            return false;
-        }
-        if (txtma.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng không được để trống mã nhân viên");
             return false;
         }
         if (txtsdt.getText().trim().isEmpty()) {
@@ -99,6 +97,19 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
         }
         if (txtcccd.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng không được để trống cccd nhân viên");
+            return false;
+        }
+
+        Date selectedDate = dcngaysinh.getDate();
+        if (selectedDate == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày sinh khách hàng");
+            return false;
+        }
+
+// Check if selected date is before current date
+        Date currentDate = new Date();
+        if (selectedDate.after(currentDate)) {
+            JOptionPane.showMessageDialog(this, "Ngày sinh không được lớn hơn ngày hiện tại");
             return false;
         }
         return true;
@@ -123,7 +134,6 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
         btnadd = new mobileworld.swing.ButtonCustom();
         btnsua = new mobileworld.swing.ButtonCustom();
         btnxoa = new mobileworld.swing.ButtonCustom();
-        buttonCustom5 = new mobileworld.swing.ButtonCustom();
         jPanel2 = new javax.swing.JPanel();
         txttimkiem = new mobileworld.swing.TextField();
         jPanel3 = new javax.swing.JPanel();
@@ -132,6 +142,7 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
         buttonCustom1 = new mobileworld.swing.ButtonCustom();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblbang11 = new mobileworld.swing.Table();
+        buttonCustom2 = new mobileworld.swing.ButtonCustom();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -146,6 +157,7 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
         txtsdt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtsdt.setLabelText("Số Điện Thoại");
 
+        txtma.setEnabled(false);
         txtma.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtma.setLabelText("Mã");
 
@@ -187,8 +199,9 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
         );
 
         btnadd.setForeground(new java.awt.Color(255, 255, 255));
+        btnadd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-add-30.png"))); // NOI18N
         btnadd.setText("Thêm");
-        btnadd.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnadd.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnaddActionPerformed(evt);
@@ -196,8 +209,9 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
         });
 
         btnsua.setForeground(new java.awt.Color(255, 255, 255));
+        btnsua.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-update-30 (1).png"))); // NOI18N
         btnsua.setText("Sửa");
-        btnsua.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnsua.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnsua.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnsuaActionPerformed(evt);
@@ -205,18 +219,14 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
         });
 
         btnxoa.setForeground(new java.awt.Color(255, 255, 255));
+        btnxoa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-delete-30.png"))); // NOI18N
         btnxoa.setText("Xóa");
-        btnxoa.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnxoa.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnxoa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnxoaActionPerformed(evt);
             }
         });
-
-        buttonCustom5.setForeground(new java.awt.Color(255, 255, 255));
-        buttonCustom5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-fingerprint-scan-36.png"))); // NOI18N
-        buttonCustom5.setText("Quét QR CCCD");
-        buttonCustom5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -225,13 +235,6 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(buttonCustom5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnadd, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnsua, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnxoa, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(cbbchucvu, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtcccd, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtemail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -241,11 +244,17 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
                     .addComponent(txthovaten, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(15, 15, 15))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(btnadd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(btnsua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnxoa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(34, Short.MAX_VALUE)
                 .addComponent(txthovaten, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(txtma, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -261,14 +270,12 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
                 .addComponent(cbbchucvu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnadd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnsua, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnxoa, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
-                .addComponent(buttonCustom5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                    .addComponent(btnadd, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnsua, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnxoa, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(73, 73, 73))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh Sách Nhân Viên", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(12, 45, 87))); // NOI18N
@@ -321,7 +328,15 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
                     .addComponent(rbnDaNghi)))
         );
 
+        buttonCustom1.setForeground(new java.awt.Color(255, 255, 255));
         buttonCustom1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-excel-30.png"))); // NOI18N
+        buttonCustom1.setText("Xuất Execl");
+        buttonCustom1.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        buttonCustom1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCustom1ActionPerformed(evt);
+            }
+        });
 
         jScrollPane1.setBorder(null);
         jScrollPane1.setOpaque(false);
@@ -349,6 +364,16 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
             tblbang11.getColumnModel().getColumn(0).setMaxWidth(60);
         }
 
+        buttonCustom2.setForeground(new java.awt.Color(255, 255, 255));
+        buttonCustom2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/mobileworld/icon/icons8-clear-30.png"))); // NOI18N
+        buttonCustom2.setText("Làm Mới");
+        buttonCustom2.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        buttonCustom2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCustom2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -358,8 +383,11 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
                 .addComponent(txttimkiem, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 397, Short.MAX_VALUE)
-                .addComponent(buttonCustom1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buttonCustom1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonCustom2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel2Layout.setVerticalGroup(
@@ -367,20 +395,21 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonCustom1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txttimkiem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txttimkiem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonCustom2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonCustom1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 635, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1130, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1160, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
@@ -417,7 +446,7 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
             if (confirm == JOptionPane.YES_OPTION) {
                 sv.add(getFormData());
                 ShowDataTable(sv.getAll());
-                JOptionPane.showMessageDialog(this, "Thêm Thành Công!");
+                JOptionPane.showMessageDialog(this, "Thêm Nhân Viên Thành Công!");
                 return;
             }
             JOptionPane.showMessageDialog(this, "Thêm Thất Bại!");
@@ -436,14 +465,14 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
             NhanVienViewModel nv = sv.getAll().get(row);
             sv.delete(nv.getId());
             ShowDataTable(sv.getAll());
-            JOptionPane.showMessageDialog(this, "Xóa Thành Công!");
+            JOptionPane.showMessageDialog(this, "Xóa Nhân Viên Thành Công!");
             return;
         }
         JOptionPane.showMessageDialog(this, "Xóa Thất Bại!");
     }//GEN-LAST:event_btnxoaActionPerformed
 
     private void btnsuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsuaActionPerformed
-        int row = tblbang11.getSelectedRow();
+       int row = tblbang11.getSelectedRow();
         if (row == -1) {
             JOptionPane.showMessageDialog(this, "Hãy Chọn 1 dòng để cập nhật", "Thông Báo", JOptionPane.WARNING_MESSAGE);
             return;
@@ -454,11 +483,10 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
             NhanVienViewModel nv = sv.getAll().get(row);
             sv.update(getFormData(), nv.getId());
             ShowDataTable(sv.getAll());
-            JOptionPane.showMessageDialog(this, "cập nhật Thành Công!");
+            JOptionPane.showMessageDialog(this, "cập nhật Nhân Viên Thành Công!");
             return;
         }
         JOptionPane.showMessageDialog(this, "cập nhật Thất Bại!");
-
     }//GEN-LAST:event_btnsuaActionPerformed
 
     private void txttimkiemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txttimkiemKeyReleased
@@ -475,13 +503,41 @@ public class ViewNhanVienNew extends javax.swing.JPanel {
         ShowDataTable(nvDaNghi);
     }//GEN-LAST:event_rbnDaNghiActionPerformed
 
+    private void buttonCustom2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom2ActionPerformed
+        txthovaten.setText("");
+        txtma.setText("");
+        txtsdt.setText("");
+        txtdiachi.setText("");
+        txtcccd.setText("");
+        txtemail.setText("");
+        cbbchucvu.setSelectedItem(null);
+        dcngaysinh.setDate(null);
+        ShowDataTable(sv.getAll());
+    }//GEN-LAST:event_buttonCustom2ActionPerformed
+
+    private void buttonCustom1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustom1ActionPerformed
+        int check = JOptionPane.showConfirmDialog(this, "Bạn có muốn xuất danh sách không?", "Confirm", JOptionPane.YES_NO_CANCEL_OPTION);
+        if (check == JOptionPane.YES_OPTION) {
+            sv.xuatDanhSachNhanVien();
+            JOptionPane.showMessageDialog(this, "Xuất thành công!");
+            return;
+        }
+        if (check == JOptionPane.NO_OPTION) {
+            JOptionPane.showMessageDialog(this, "Bạn đã chọn NO.");
+            return;
+        } else {
+            JOptionPane.showMessageDialog(this, "Bạn đã chọn Cancel.");
+            return;
+        }
+    }//GEN-LAST:event_buttonCustom1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private mobileworld.swing.ButtonCustom btnadd;
     private mobileworld.swing.ButtonCustom btnsua;
     private mobileworld.swing.ButtonCustom btnxoa;
     private mobileworld.swing.ButtonCustom buttonCustom1;
-    private mobileworld.swing.ButtonCustom buttonCustom5;
+    private mobileworld.swing.ButtonCustom buttonCustom2;
     private javax.swing.ButtonGroup buttonGroup2;
     private mobileworld.swing.Combobox cbbchucvu;
     private com.toedter.calendar.JDateChooser dcngaysinh;
